@@ -1,214 +1,198 @@
-DROP DATABASE IF EXISTS moodle;
-CREATE DATABASE moodle;
-USE moodle;
- 
- /* Tabella del Docente */
- create table DOCENTE(
- /* Attributi comuni che hanno entrambi gli utenti */
-	Mail VARCHAR(40) PRIMARY KEY,
-    Nome VARCHAR(40),
-    Cognome VARCHAR(40) ,
-    Telefono BIGINT,
-    
-/* Attributi speciali di cui solo il Docente dispone*/
-    Corso VARCHAR(30),
-    Dipartimento VARCHAR(60)
- ) engine=INNODB;
- 
- 
-/* Tabella dello Studente */
- create table STUDENTE(
-/* Attributi comuni che hanno entrambi gli utenti */
-	Mail VARCHAR(40) PRIMARY KEY,
-    Nome VARCHAR(40),
-    Cognome VARCHAR(40) ,
-    Telefono BIGINT, /*Il recapito telefonico è eventuale */
-    
-/* Attributi speciali di cui solo lo Studente dispone*/
-    AnnoImmatricolazione INT,
-    /* Attenzione deve essere un codice alfanumerico di lunghezza pari a 16 caratteri */ 
-    CodiceMatricola VARCHAR(16),
-	CONSTRAINT FORMATO_Codice CHECK( LENGTH(CodiceMatricola) = 16)
- ) engine=INNODB;
- 
- 
-/* Tabella del Test*/
- create table TEST(
-	Titolo VARCHAR(30) PRIMARY KEY,
-    DataTest datetime,
-    
-    /*la foto è eventuale */
-    Foto boolean,  
-    /*VisualizzaRisposte è eventuale: se true gli studenti possono vederle, altrimenti se settato a false non possono.*/
-    VisualizzaRisposte boolean 
- ) engine=INNODB;
- 
-   /* Tabella dello Studente */
- create table SVOLGIMENTO(
-	MailStudente VARCHAR(40),
-    TitoloTest VARCHAR(30),
-    DataInizio datetime,
-    DataFine datetime,
-    Stato ENUM('Aperto','InCompletamento','Concluso') DEFAULT 'Aperto',
-    
-    PRIMARY KEY (MailStudente, TitoloTest),
-    FOREIGN KEY (MailStudente) REFERENCES STUDENTE(Mail) ON DELETE CASCADE,
-    FOREIGN KEY (TitoloTest) REFERENCES TEST(Titolo) ON DELETE CASCADE
- ) engine=INNODB;
- 
- create table QUESITO(
-	Progressivo INT,
-    TitoloTest VARCHAR(30),
-    Difficoltà ENUM ('Basso','Medio','Alto'),
-    Descrizione VARCHAR(40),
-    NumRisposte INT,
-    
-	PRIMARY KEY (Progressivo, TitoloTest), 
-    FOREIGN KEY (TitoloTest) REFERENCES TEST(Titolo) ON DELETE CASCADE
- ) engine=INNODB;
- 
- create table RISPOSTA(
-    Progressivo INT,
-    TitoloTest VARCHAR(30),
-    MailStudente VARCHAR(40),
-    
-    /* Campi di Risposta. */
-    Esito boolean,
-    Testo VARCHAR(60),
-    
-    PRIMARY KEY(Progressivo, TitoloTest, MailStudente),
-    FOREIGN KEY (Progressivo) REFERENCES QUESITO(Progressivo) ON DELETE CASCADE,
-	FOREIGN KEY (TitoloTest) REFERENCES QUESITO(TitoloTest) ON DELETE CASCADE,
-    FOREIGN KEY (MailStudente) REFERENCES STUDENTE(Mail) ON DELETE CASCADE
- ) engine=INNODB;
- 
-  create table SKETCH_CODICE(  /* Ha senso differenziarli perché derivano da una generalizzazione Totale di quesito */
-	Progressivo INT,
-    TitoloTest VARCHAR(30),
-    Difficoltà ENUM ('Basso','Medio','Alto'),
-    Descrizione VARCHAR(40),
-    NumRisposte INT,
-    
-    Soluzione VARCHAR(300),  /*La soluzione è la query come richiesta dal docente*/
-    
-    PRIMARY KEY (Progressivo, TitoloTest),
-	FOREIGN KEY (Progressivo) REFERENCES QUESITO(Progressivo) ON DELETE CASCADE,
-    FOREIGN KEY (TitoloTest) REFERENCES QUESITO(TitoloTest) ON DELETE CASCADE
- ) engine=INNODB;
-create table QUESITO_CHIUSO(
-	Progressivo INT,
-    TitoloTest VARCHAR(30),
-    Difficoltà ENUM ('Basso','Medio','Alto'),
-    Descrizione VARCHAR(40),
-    NumRisposte INT,
-    
-    OpzioneGiusta VARCHAR(1), /*L'opzione giusta è l'opzione segnata come esatta dal docente: a, b, c...*/
-    
-	PRIMARY KEY (Progressivo, TitoloTest),
-	FOREIGN KEY (Progressivo) REFERENCES QUESITO(Progressivo) ON DELETE CASCADE,
-    FOREIGN KEY (TitoloTest) REFERENCES QUESITO(TitoloTest) ON DELETE CASCADE
- ) engine=INNODB;
-create table OPZIONE(
-	Numerazione INT,
-	ProgressivoChiuso INT,
-    TitoloTest VARCHAR(30),
-    
-    Testo VARCHAR(40), /* Testo della singola opzione. */
-    
-    PRIMARY KEY (Numerazione, ProgressivoChiuso, TitoloTest),
-    FOREIGN KEY (ProgressivoChiuso) REFERENCES QUESITO_CHIUSO(Progressivo) ON DELETE CASCADE,
-    FOREIGN KEY (TitoloTest) REFERENCES QUESITO_CHIUSO(TitoloTest) ON DELETE CASCADE
-) engine=INNODB;
- 
- /* La tabella dell'esercizio si riferisce: 
-	Al DOCENTE che la crea (una Tabella di Esercizio può essere creata soltanto da un docente).
-    Una Tabella è presenta all'interno di un determinato QUESITO.*/
-/* Ogni quesito fa riferimento ad una o più tabelle di esercizio tra quelle create dal docente*/
- create table TABELLA_ESERCIZIO(
-	Nome VARCHAR(30) PRIMARY KEY,
-    Creazione DATE,
-    NumeroRighe INT,
-    MailDocente VARCHAR(40),
-    
-    FOREIGN KEY (MailDocente) REFERENCES DOCENTE(Mail) ON DELETE CASCADE
-) engine=INNODB;
-create table RIF_TABELLA_QUESITO(
-	Progressivo INT,
-    TitoloTest VARCHAR(30),
-    NomeTabella VARCHAR(30),
-    
-    FOREIGN KEY (Progressivo, TitoloTest) REFERENCES QUESITO(Progressivo, TitoloTest) ON DELETE CASCADE,
-    FOREIGN KEY (NomeTabella) REFERENCES TABELLA_ESERCIZIO(Nome) ON DELETE CASCADE
-)engine=INNODB;
-
- create table ATTRIBUTO( /* Tabella relativa agli Attributi. */
-    NomeTabella VARCHAR(30),
-	Nome VARCHAR(30),
-    Tipo VARCHAR(30),
-    
-	/* Ogni ATTRIBUTO può fare parte della Chiave Primaria della TABELLA_ESERCIZIO. */
-    PossibileChiavePrimaria boolean NOT NULL,
-    
-    PRIMARY KEY (Nome, NomeTabella),
-    FOREIGN KEY (NomeTabella) REFERENCES TABELLA_ESERCIZIO(Nome) ON DELETE CASCADE
-) engine=INNODB;
-create table VINCOLO(
-	NomeAttributoPK VARCHAR(30),
-    NomeTabellaPK VARCHAR(30),
-    NomeAttributoFK VARCHAR(30),
-    NomeTabellaFK VARCHAR(30),
-    
-    PRIMARY KEY (NomeAttributoPK, NomeTabellaPK),
-	FOREIGN KEY (NomeAttributoPK) REFERENCES ATTRIBUTO(Nome) ON DELETE CASCADE,
-    FOREIGN KEY (NomeTabellaPK) REFERENCES ATTRIBUTO(NomeTabella) ON DELETE CASCADE,
-    FOREIGN KEY (NomeAttributoFK) REFERENCES ATTRIBUTO(Nome) ON DELETE CASCADE,
-    FOREIGN KEY (NomeTabellaFK) REFERENCES ATTRIBUTO(NomeTabella) ON DELETE CASCADE
-) engine=INNODB;
- 
- 
-  create table MESSAGGIO(
-	Id INT PRIMARY KEY,
-    Titolo VARCHAR(30), /* Rappresenta l'oggetto della mail ad esempio.*/
-    DataInserimento date,
-    Testo VARCHAR(100),
-	TitoloTest VARCHAR(30),
-    Mittente VARCHAR(40),
-    Destinatario VARCHAR(40),
-    
-    FOREIGN KEY (TitoloTest) REFERENCES TEST(Titolo) ON DELETE CASCADE
- ) engine=INNODB; 
+/* OPERAZIONI SUI DATI */
+use moodle;
 
 /*---------------------------------------------------------------------------------*/
+/*OPERAZIONI che riguardano TUTTI GLI UTENTI:*/
+/* 1) autenticazione sulla piattaforma. */
+/* who è 1 per docente e 2 per studente*/
+DELIMITER $
+CREATE PROCEDURE Autenticazione(IN Mail VARCHAR(30), OUT who INT)
+BEGIN
+    DECLARE countDocenti INT DEFAULT 0;
+    DECLARE countStudenti INT DEFAULT 0;
+    DECLARE who INT DEFAULT 0;
+
+    SELECT COUNT(*) INTO countDocenti FROM DOCENTE WHERE Mail = Mail;
+    SELECT COUNT(*) INTO countStudenti FROM STUDENTE WHERE Mail = Mail;
+
+    IF countDocenti = 1 THEN
+        SET who = 1;
+    ELSEIF countStudenti = 1 THEN
+        SET who = 2;
+    END IF;
+END$
+DELIMITER ;
+
+DELIMITER $  /* 1) registrazione sulla piattaforma*/
+CREATE PROCEDURE RegistrazioneStudente(IN Mail VARCHAR(30), IN Nome VARCHAR(30), IN Cognome VARCHAR(30), IN Telefono BIGINT, IN Matricola INT, IN AnnoImmatricolazione BIGINT )
+BEGIN
+    DECLARE countDocenti INT DEFAULT 0;
+    DECLARE countStudenti INT DEFAULT 0;
+    
+    SET countDocenti = (SELECT COUNT(*) FROM STUDENTE WHERE (Mail = STUDENTE.Mail));
+    SET countStudenti = (SELECT COUNT(*) FROM DOCENTE WHERE (Mail = DOCENTE.Mail));
+    
+    IF(countDocenti = 0) AND (countStudenti = 0) THEN
+		INSERT INTO STUDENTE VALUES (Mail, Nome, Cognome, Telefono, Matricola, AnnoImmatricolazione);
+	END IF;
+END$
+
+DELIMITER $  /* 1) registrazione sulla piattaforma*/
+CREATE PROCEDURE RegistrazioneDocente(IN Mail VARCHAR(30), IN Nome VARCHAR(30), IN Cognome VARCHAR(30), IN Telefono BIGINT, IN Corso VARCHAR(30), IN Dipartimento VARCHAR(30) )
+BEGIN
+    DECLARE countDocenti INT DEFAULT 0;
+    DECLARE countStudenti INT DEFAULT 0;
+    
+    SET countDocenti = (SELECT COUNT(*) FROM STUDENTE WHERE (Mail = STUDENTE.Mail));
+    SET countStudenti = (SELECT COUNT(*) FROM DOCENTE WHERE (Mail = DOCENTE.Mail));
+    
+    IF(countDocenti = 0) AND (countStudenti = 0) THEN
+		INSERT INTO DOCENTE VALUES (Mail, Nome, Cognome, Telefono, Corso, Dipartimento);
+	END IF;
+END$
 
 
-/* STATISTICHE (Visibili da tutti gli Utenti) */
-/* 1) VISUALIZZARE LA CLASSIFICA DEGLI STUDENTI 
-	(SULLA BASE DEL NUMERO DI TEST COMPLETATI). */
-CREATE VIEW ClassificaConcluso(CodiceMatricola, Conteggio) AS (
-	SELECT CodiceMatricola, COUNT(*) AS Conteggio
-	FROM STUDENTE, SVOLGIMENTO
-    WHERE (SVOLGIMENTO.MailStudente = STUDENTE.Mail) AND (SVOLGIMENTO.Stato = 'Concluso')
-    GROUP BY CodiceMatricola
-    ORDER BY Conteggio DESC 
-    /* DESC perché gli studenti vanno ordinati in ordine decrescente rispetto
-		al numero di test che hanno completato (chi ha concluso più test sta in alto, chi meno sta in basso)*/
-);
+DELIMITER $  /* 2) Visualizzazione dei Test Disponibili. */
+CREATE PROCEDURE VisualizzazioneTest()
+BEGIN
+    SELECT * 
+    FROM TEST; 
+END$
 
-/* 2) VISUALIZZARE LA CLASSIFICA DEGLI STUDENTI 
-	(SULLA BASE DEL NUMERO DI RISPOSTE CORRETTE). */
-CREATE VIEW ClassificaCorretto(CodiceMatricola, Percentuale) AS (
-SELECT CodiceMatricola, ((COUNT(CASE WHEN RISPOSTA.Esito = 'true' THEN 1 END)) / COUNT(*)) AS Percentuale
-FROM STUDENTE, RISPOSTA
-WHERE (RISPOSTA.MailStudente = STUDENTE.Mail)
-GROUP BY CodiceMatricola
-ORDER BY Percentuale DESC
-);
+DELIMITER $  /* 3) Visualizzazione dei quesiti presenti all’interno di ciascun test. */
+CREATE PROCEDURE VisualizzazioneQuesiti(IN Titolo VARCHAR(30))
+BEGIN
+    SELECT TitoloTest, Progressivo, Difficoltà, Descrizione 
+    FROM QUESITO
+    WHERE Titolo = TitoloTest;
+END$
 
-/* 3) VISUALIZZARE LA CLASSIFICA DEI QUESITI 
-	(IN BASE AL NUMERO DI RISPOSTE INSERITE). */
-CREATE VIEW ClassificaQuesiti(Descrizione, Conteggio) AS (
-	SELECT Descrizione, SUM(NumRisposte) AS Conteggio
-	FROM QUESITO
-    GROUP BY Descrizione
-    ORDER BY Conteggio DESC
-);
+/*---------------------------------------------------------------------------------*/
+/*OPERAZIONI che riguardano SOLO DOCENTI:*/
+DELIMITER $  /* 1) Inserimento di una nuova tabella di esercizio, con relativi meta-dati. */
+CREATE PROCEDURE InserimentoTabellaEsercizio (
+    IN NomeTabella VARCHAR(30),
+    IN NumeroRighe INT,
+    IN TitoloTest VARCHAR(30),
+    IN MailDocente VARCHAR(40))
+BEGIN
+    INSERT INTO TABELLA_ESERCIZIO(Nome, DataCreazione, NumeroRighe, MailDocente)
+    VALUES (NomeTabella, date, 0, MailDocente);
+END $ DELIMITER ;
+
+DELIMITER $  /* 2) Inserimento di una riga per una tabella di esercizio, definita dal docente. */
+CREATE PROCEDURE InserimentoRigaTabellaEsercizio (
+    IN NomeTabella VARCHAR(30),
+    IN Docente VARCHAR(40))
+BEGIN
+    UPDATE TABELLA_ESERCIZIO
+    SET NumRighe=NumRighe+1
+    WHERE (Nome=NomeTabella) AND (MailDocente=Docente);
+END $ DELIMITER ;
+
+DELIMITER $  /* 3) Creazione di nuovo test. */
+CREATE PROCEDURE CreaTest (
+    IN TitoloTest VARCHAR(30),
+    IN FotoTest BOOLEAN,
+    IN VisualizzaRisposteTest BOOLEAN,
+    IN MailDocente VARCHAR(30)
+)
+BEGIN
+    INSERT INTO TEST (Titolo, DataTest, Foto, VisualizzaRisposte, MailDocente)
+    VALUES (TitoloTest, Data, FotoTest, VisualizzaRisposteTest, MailDocente);
+END $ DELIMITER ;
+
+DELIMITER $  /* 4) Creazione di un nuovo quesito con le relative risposte. */
+CREATE PROCEDURE NewSketchCodice (
+	IN ProgressivoCodice INT,
+    IN TitoloTest VARCHAR(30),
+    IN Difficolta VARCHAR(5),
+    IN DescrizioneQuesito VARCHAR(40),
+    IN NumeroRisposte INT,
+    IN Soluzione VARCHAR(300)
+)
+BEGIN
+    INSERT INTO SKETCH_CODICE (Progressivo, TitoloTest, Difficolta, Descrizione, NumRisposte, Soluzione)
+    VALUES (ProgressivoCodice, TitoloTest, Difficolta, DescrizioneQuesito, 0, Soluzione);
+	INSERT INTO QUESITO (Progressivo, TitoloTest, Difficolta, Descrizione, NumRisposte)
+    VALUES (ProgressivoCodice, TitoloTest, Difficolta, DescrizioneQuesito, 0);
+END $ DELIMITER ;
+DELIMITER $
+CREATE PROCEDURE NewQuesitoChiuso (
+	IN ProgressivoQuesito INT,
+    IN TitoloTest VARCHAR(30),
+    IN Difficolta VARCHAR(5),
+    IN DescrizioneQuesito VARCHAR(40),
+    IN NumeroRisposte INT,
+    IN OpzioneGiusta VARCHAR(1)
+)
+BEGIN
+    INSERT INTO QUESITO_CHIUSO (Progressivo, TitoloTest, Difficolta, Descrizione, NumRisposte, OpzioneGiusta)
+    VALUES (ProgressivoQuesito, TitoloTest, Difficolta, DescrizioneQuesito, 0, OpzioneGiusta);
+	INSERT INTO QUESITO (Progressivo, TitoloTest, Difficolta, Descrizione, NumRisposte)
+    VALUES (ProgressivoCodice, TitoloTest, Difficolta, DescrizioneQuesito, 0);
+END $ DELIMITER ;
+
+/* 5) Abilitare / disabilitare la visualizzazione delle risposte per uno specifico test. */
+DELIMITER $
+CREATE PROCEDURE VisualizzazioneRisposte (
+	IN TitoloTest VARCHAR(30),
+    IN VisualizzaRisposte boolean
+)
+BEGIN
+    UPDATE TEST
+    SET TEST.VisualizzaRisposte = VisualizzaRisposte
+    WHERE (TitoloTest = TEST.Titolo);
+END $ DELIMITER ;
+
+/* 6) Inserimento di un messaggio (da parte del docente). 
+DELIMITER $
+CREATE PROCEDURE InserimentoMessaggioDocente (
+    IN TestoMessaggio VARCHAR(100),
+    IN TitoloMessaggio VARCHAR(30),
+    IN TitoloTest VARCHAR(30),
+    IN MailDocente VARCHAR(40))
+BEGIN
+    -- Inserimento del messaggio nella tabella MESSAGGIO
+    INSERT INTO MESSAGGIO (DataInserimento, Testo, Titolo, TitoloTest, MailStudente, MailDocente)
+    VALUES (CURDATE(), TestoMessaggio, TitoloMessaggio, TitoloTest, NULL, MailDocente);
+
+    SELECT 'Messaggio inserito con successo nella tabella MESSAGGIO';
+END $ DELIMITER ;
+*/
+
+/*---------------------------------------------------------------------------------*/
+/*OPERAZIONI che riguardano SOLO STUDENTI*/
+DELIMITER $  /* 1) Inserimento di una nuova risposta (ad un quesito di codice o un quesito chiuso). */
+CREATE PROCEDURE InserimentoRisposta (IN ProgressivoQuesito INT, IN TitoloTest VARCHAR(30), IN MailStudente VARCHAR(40))
+BEGIN
+ INSERT INTO RISPOSTA(ProgressivoQuesito, TitoloTest, MailStudente)
+    VALUES (ProgressivoQuesito, TitoloTest, MailStudente);
+END $ DELIMITER ;
+
+DELIMITER $  /* 2) Visualizzazione dell'esito di una risposta (ad un quesito di codice o un quesito chiuso). */
+CREATE PROCEDURE VisualizzaEsitoRisposta (IN ProgressivoQuesito INT, IN TitoloTest VARCHAR(30), IN MailStudente VARCHAR(30))
+BEGIN
+	SELECT Esito
+	FROM RISPOSTA
+	WHERE RISPOSTA.ProgressivoQuesito = ProgressivoQuesito 
+			AND RISPOSTA.MailStudente = MailStudente 
+			AND RISPOSTA.TitoloTest = TitoloTest;
+END $ DELIMITER ;
+
+/* 3) Inserimento di un messaggio (da parte dello studente).
+DELIMITER $
+CREATE PROCEDURE InserimentoMessaggioStudente (
+    IN TestoMessaggio VARCHAR(100),
+    IN TitoloMessaggio VARCHAR(30),
+    IN TitoloTest VARCHAR(30),
+    IN MailDocente VARCHAR(40),
+    IN MailStudente VARCHAR(40))
+BEGIN
+    INSERT INTO MESSAGGIO (DataInserimento, Testo, Titolo, TitoloTest, MailStudente, MailDocente)
+    VALUES (CURDATE(), TestoMessaggio, TitoloMessaggio, TitoloTest, MailStudente, MailDocente);
+
+    SELECT 'Messaggio inserito con successo nella tabella MESSAGGIO';
+END $ DELIMITER ;
+*/
+
