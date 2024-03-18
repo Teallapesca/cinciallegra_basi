@@ -72,13 +72,14 @@ END$
 DELIMITER $  /* 1) Inserimento di una nuova tabella di esercizio, con relativi meta-dati. */
 CREATE PROCEDURE InserimentoTabellaEsercizio (
     IN NomeTabella VARCHAR(30),
-    IN NumeroRighe INT,
-    IN TitoloTest VARCHAR(30),
     IN MailDocente VARCHAR(40))
 BEGIN
-    INSERT INTO TABELLA_ESERCIZIO(Nome, DataCreazione, NumeroRighe, MailDocente)
-    VALUES (NomeTabella, date, 0, MailDocente);
+    INSERT INTO TABELLA_ESERCIZIO(Nome, Creazione, NumeroRighe, MailDocente)
+    VALUES (NomeTabella, now(), 0, MailDocente);
 END $ DELIMITER ;
+
+DELIMITER $  /* 2) Inserimento di una riga per una tabella di esercizio, definita dal docente. */
+
 
 DELIMITER $  /* 2) Inserimento di una riga per una tabella di esercizio, definita dal docente. */
 CREATE PROCEDURE InserimentoRigaTabellaEsercizio (
