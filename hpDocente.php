@@ -93,6 +93,8 @@
                 pagina = "CreaTest.html";
             } else if (tipoPagina==="Messaggio") {
                 pagina = "MessaggioDocente.html";
+            } else if (tipoPagina==="PopolaTabelle") {
+                pagina = "PopolaTabella.php";
             } else if (tipoPagina==="VisualizzaTest") {
                 pagina = "VisualizzaTest.html";
             }

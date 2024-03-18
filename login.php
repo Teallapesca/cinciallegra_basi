@@ -43,10 +43,10 @@
 								if($row['Mail']==$_SESSION['mail']){
 									echo "ciao ". $_SESSION['mail'];
 									$trovato=true;
-									/*if($_SESSION['utente']=='docente'){
-										header("Location: hpDocente.html");
+									if($_SESSION['utente']=='docente'){
+										header("Location: hpDocente.php");
 										exit();
-									}else*/ if($_SESSION['utente']=='studente'){
+									}else if($_SESSION['utente']=='studente'){
 										header("Location: hpStudente.php");
 										exit();
 									}
