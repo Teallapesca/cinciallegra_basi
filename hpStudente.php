@@ -5,6 +5,11 @@
 </head>
 <body>
     <?php
+    if (isset($_POST["logout"])) {
+        session_destroy();
+        header('Location: HomePage.html');
+        exit();
+    }
         ini_set('display_errors', 1);
         error_reporting(E_ALL);
         include 'connessione.php';
@@ -15,6 +20,9 @@
 	<div class=principale>
 		<form name="visTest" method="GET" action="hpStudente.php">
             <input type="submit" name="test" value="visualizza test"> <br><br>
+        </form>
+        <form method="POST" action="hpStudente.php">
+            <button type="submit" name="logout">Logout</button>
         </form>
         <?php
             if (isset($_GET["test"])) {
