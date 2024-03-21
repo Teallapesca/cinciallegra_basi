@@ -94,8 +94,8 @@ END $ DELIMITER ;
 DELIMITER $  /* 3) Creazione di nuovo test. */
 CREATE PROCEDURE CreaTest (
     IN TitoloTest VARCHAR(30),
-    IN FotoTest BOOLEAN,
-    IN VisualizzaRisposteTest BOOLEAN,
+    IN FotoTest tinyint,
+    IN VisualizzaRisposteTest tinyint,
     IN MailDocente VARCHAR(30)
 )
 BEGIN
