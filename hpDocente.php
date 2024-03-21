@@ -55,6 +55,10 @@
     <button class="homepage-btn" onclick="openPage('Messaggio')" style="float:center; color: #D40000;">Invia messaggio</button>
     <button class="homepage-btn" onclick="openPage('PopolaTabelle')" style="float:center; color: #D40000;">Popola tabelle</button>
     <button class="homepage-btn" onclick="openPage('VisualizzaTest')" style="float:center; color: #D40000;">Visualizza test</button>
+    <br><br>
+    <form name=logoutf method="GET" action="hpDocente.php">
+        <button class="homepage-btn" type="submit" name="logout" style="float:center; color: #D40000;">Logout</button>
+    </form>
     </div>
 
     <?php
@@ -72,6 +76,11 @@
         
             // chiusura della connessione
             mysqli_close($conn);
+        if (isset($_GET["logout"])) {
+            session_destroy();
+            header('Location: HomePage.html');
+            exit();
+        }
             
             
     ?>
