@@ -56,16 +56,8 @@
     <button class="homepage-btn" onclick="openPage('PopolaTabelle')" style="float:center; color: #D40000;">Popola tabelle</button>
     <button class="homepage-btn" onclick="openPage('VisualizzaTest')" style="float:center; color: #D40000;">Visualizza test</button>
     </div>
-    <form method="POST" action="hpStudente.php">
-            <button type="submit" name="logout">Logout</button>
-        </form>
 
     <?php
-    if (isset($_POST["logout"])) {
-        session_destroy();
-        header('Location: HomePage.html');
-        exit();
-    }
         ini_set('display_errors', 1);
         error_reporting(E_ALL);
         include 'connessione.php';
@@ -98,15 +90,15 @@
             if (tipoPagina==="CreaTabelle") {
                 pagina = "CreaTabelle.php";
             } else if (tipoPagina==="CreaTest") {
-                pagina = "CreaTest.html";
+                pagina = "TestPage.php";
             } else if (tipoPagina==="Messaggio") {
                 pagina = "MessaggioDocente.html";
             } else if (tipoPagina==="PopolaTabelle") {
-                pagina = "PopolaTabella.php";
-            } else if (tipoPagina==="VisualizzaTest") {
-                pagina = "VisualizzaTest.html";
+                pagina = "PopolaTabella.php";}
+            else if (tipoPagina==="VisualizzaTest") {
+                pagina = "VisualizzaTest.php";
             }
             // Reindirizza l'utente alla pagina corrispondente
             window.location.href = pagina;
         }
-    </script>
+</script>
