@@ -76,13 +76,77 @@
                         // esecuzione query
                         $risultato = mysqli_query($conn,$query);
                         if($risultato === false){
-                            echo "errore nella ricerca" . die (mysqli_error($conn));}
-                        else{
-                            echo "tabella inserita";
+                            echo "errore nella ricerca" . die (mysqli_error($conn));
+                        } else{
+                            echo "tabella inserita" . "<br><br>
+                            <form name=nuovaTabella method=GET action=CreaTabelle.php>
+                            Inserisci il numero di colonne della tabella<br><br>
+                            <input type='number' name='numCol' value=''><br><br>
+                            <input type='submit' name='col' value='Seleziona numero colonne'>
+                            </form>";
                         }
                     }
-				}	
-						
+				}
+            
+                if(isset($_GET["col"])){
+                    $_SESSION['numCol'] = $_GET["numCol"];
+                    
+                    if($_SESSION['numCol']!=null){
+                        $colonne = intval($_SESSION['numCol']);
+                        echo "<br><br><form>";
+                        for($i=0; $i<$colonne; $i++){
+                            echo "
+                            <pre>inserisci nome attributo   inserisci tipo          è chiave primaria?</pre>
+                            <pre><input type='text' name='attributo[]' value=''>   <select name='tipo[]'>
+                                                                                        <option value='VARCHAR'>VARCHAR</option>
+                                                                                        <option value='INT' selected>INT</option>
+                                                                                        <option value='BOOLEAN'>BOOLEAN</option>
+                                                                                        <option value='DOUBLE'>DOUBLE</option>
+                                                                                    </select>            <input type='checkbox' name='PK[]'></pre>
+                            ";
+                        }
+                        echo "<input type='submit' name='conf' value='Conferma attributi'> </form>";
+                        
+                    }
+                }
+                if(isset($_GET["conf"])) {
+                    $colonne = intval($_SESSION['numCol']);
+                    $nomeTabella = $_SESSION["nomeTabella"];
+                    // Ciclo attraverso gli attributi inseriti dall'utente
+                    for($i = 0; $i < $colonne; $i++) {
+                        // Ottieni il valore dell'attributo dall'input dell'utente
+                        $attributo = $_GET['attributo'][$i];
+                        $tipo = $_GET['tipo'][$i];
+                        //$PK = intval($_GET['PK'][$i]);
+                        // Verifica se la checkbox è stata selezionata
+                        if(isset($_GET['PK'][$i])){
+                            // La checkbox è stata selezionata
+                            $PK = 1;
+                            //echo"true";
+                        } else {
+                            // La checkbox non è stata selezionata
+                            $PK = 0;
+                            //echo"false";
+                        }
+                        
+                        // Scrivi la query SQL per inserire l'attributo nella tabella "Attributo"
+                        $query = 'INSERT INTO Attributo (NomeTabella, Nome, Tipo, PossibleChiavePrimaria) VALUES ("'.$nomeTabella.'", "'.$attributo.'", "'.$tipo.'", "'.$PK.'");';
+                        // Esegui la query
+                        $result = mysqli_query($conn, $query);
+                        
+                        // Verifica se la query ha avuto successo
+                        if($result) {
+                            echo "'$PK' Attributo '$attributo' inserito correttamente.<br>";
+                        } else {
+                            echo "Errore nell'inserimento dell'attributo '$attributo'.<br>";
+                        }
+                    }
+                }
+            ?>
+
+        </div>
+
+        <?php
                 if (!mysqli_commit($conn)) {
                     mysqli_rollback($conn);
                     echo "Errore durante il commit della transazione.";
@@ -92,7 +156,7 @@
                 mysqli_close($conn);
 					
 			?>
-			
-		</div>
+
 	</body>
 </html>
+
