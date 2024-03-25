@@ -1,3 +1,4 @@
+
 /* OPERAZIONI SUI DATI */
 use moodle;
 
@@ -64,7 +65,7 @@ CREATE PROCEDURE VisualizzazioneQuesiti(IN Titolo VARCHAR(30))
 BEGIN
     SELECT TitoloTest, Progressivo, Difficoltà, Descrizione 
     FROM QUESITO
-    WHERE Titolo = TitoloTest
+    WHERE TitoloTest = Titolo;
 END$
 
 /*---------------------------------------------------------------------------------*/
@@ -77,9 +78,6 @@ BEGIN
     INSERT INTO TABELLA_ESERCIZIO(Nome, Creazione, NumeroRighe, MailDocente)
     VALUES (NomeTabella, now(), 0, MailDocente);
 END $ DELIMITER ;
-
-DELIMITER $  /* 2) Inserimento di una riga per una tabella di esercizio, definita dal docente. */
-
 
 DELIMITER $  /* 2) Inserimento di una riga per una tabella di esercizio, definita dal docente. */
 CREATE PROCEDURE InserimentoRigaTabellaEsercizio (
@@ -100,7 +98,7 @@ CREATE PROCEDURE CreaTest (
 )
 BEGIN
     INSERT INTO TEST (Titolo, DataTest, Foto, VisualizzaRisposte, MailDocente)
-    VALUES (TitoloTest, Data, FotoTest, VisualizzaRisposteTest, MailDocente);
+    VALUES (TitoloTest, NOW(), FotoTest, VisualizzaRisposteTest, MailDocente);
 END $ DELIMITER ;
 
 DELIMITER $  /* 4) Creazione di un nuovo quesito con le relative risposte. */
@@ -196,4 +194,3 @@ BEGIN
     SELECT 'Messaggio inserito con successo nella tabella MESSAGGIO';
 END $ DELIMITER ;
 */
-
