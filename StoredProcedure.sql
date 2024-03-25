@@ -1,4 +1,3 @@
-
 /* OPERAZIONI SUI DATI */
 use moodle;
 
@@ -65,7 +64,7 @@ CREATE PROCEDURE VisualizzazioneQuesiti(IN Titolo VARCHAR(30))
 BEGIN
     SELECT TitoloTest, Progressivo, Difficoltà, Descrizione 
     FROM QUESITO
-    WHERE TitoloTest = Titolo;
+    WHERE Titolo = TitoloTest;
 END$
 
 /*---------------------------------------------------------------------------------*/
@@ -80,6 +79,9 @@ BEGIN
 END $ DELIMITER ;
 
 DELIMITER $  /* 2) Inserimento di una riga per una tabella di esercizio, definita dal docente. */
+
+
+DELIMITER $  /* 2) Inserimento di una riga per una tabella di esercizio, definita dal docente. */
 CREATE PROCEDURE InserimentoRigaTabellaEsercizio (
     IN NomeTabella VARCHAR(30),
     IN Docente VARCHAR(40))
@@ -92,13 +94,13 @@ END $ DELIMITER ;
 DELIMITER $  /* 3) Creazione di nuovo test. */
 CREATE PROCEDURE CreaTest (
     IN TitoloTest VARCHAR(30),
-    IN FotoTest tinyint,
-    IN VisualizzaRisposteTest tinyint,
+    IN FotoTest BOOLEAN,
+    IN VisualizzaRisposteTest BOOLEAN,
     IN MailDocente VARCHAR(30)
 )
 BEGIN
     INSERT INTO TEST (Titolo, DataTest, Foto, VisualizzaRisposte, MailDocente)
-    VALUES (TitoloTest, NOW(), FotoTest, VisualizzaRisposteTest, MailDocente);
+    VALUES (TitoloTest, Data, FotoTest, VisualizzaRisposteTest, MailDocente);
 END $ DELIMITER ;
 
 DELIMITER $  /* 4) Creazione di un nuovo quesito con le relative risposte. */
@@ -107,29 +109,26 @@ CREATE PROCEDURE NewSketchCodice (
     IN TitoloTest VARCHAR(30),
     IN Difficolta VARCHAR(5),
     IN DescrizioneQuesito VARCHAR(40),
-    IN NumeroRisposte INT,
     IN Soluzione VARCHAR(300)
 )
 BEGIN
-    INSERT INTO SKETCH_CODICE (Progressivo, TitoloTest, Difficolta, Descrizione, NumRisposte, Soluzione)
-    VALUES (ProgressivoCodice, TitoloTest, Difficolta, DescrizioneQuesito, 0, Soluzione);
-	INSERT INTO QUESITO (Progressivo, TitoloTest, Difficolta, Descrizione, NumRisposte)
+	INSERT INTO QUESITO (Progressivo, TitoloTest, Difficoltà, Descrizione, NumRisposte)
     VALUES (ProgressivoCodice, TitoloTest, Difficolta, DescrizioneQuesito, 0);
+    INSERT INTO SKETCH_CODICE (Progressivo, TitoloTest, Difficoltà, Descrizione, NumRisposte, Soluzione)
+    VALUES (ProgressivoCodice, TitoloTest, Difficolta, DescrizioneQuesito, 0, Soluzione);
 END $ DELIMITER ;
 DELIMITER $
 CREATE PROCEDURE NewQuesitoChiuso (
 	IN ProgressivoQuesito INT,
     IN TitoloTest VARCHAR(30),
     IN Difficolta VARCHAR(5),
-    IN DescrizioneQuesito VARCHAR(40),
-    IN NumeroRisposte INT,
-    IN OpzioneGiusta VARCHAR(1)
+    IN DescrizioneQuesito VARCHAR(40)
 )
 BEGIN
-    INSERT INTO QUESITO_CHIUSO (Progressivo, TitoloTest, Difficolta, Descrizione, NumRisposte, OpzioneGiusta)
-    VALUES (ProgressivoQuesito, TitoloTest, Difficolta, DescrizioneQuesito, 0, OpzioneGiusta);
-	INSERT INTO QUESITO (Progressivo, TitoloTest, Difficolta, Descrizione, NumRisposte)
+	INSERT INTO QUESITO (Progressivo, TitoloTest, Difficoltà, Descrizione, NumRisposte)
     VALUES (ProgressivoCodice, TitoloTest, Difficolta, DescrizioneQuesito, 0);
+    INSERT INTO QUESITO_CHIUSO (Progressivo, TitoloTest, Difficoltà, Descrizione, NumRisposte)
+    VALUES (ProgressivoQuesito, TitoloTest, Difficolta, DescrizioneQuesito, 0);
 END $ DELIMITER ;
 
 /* 5) Abilitare / disabilitare la visualizzazione delle risposte per uno specifico test. */
@@ -194,3 +193,4 @@ BEGIN
     SELECT 'Messaggio inserito con successo nella tabella MESSAGGIO';
 END $ DELIMITER ;
 */
+
