@@ -8,8 +8,7 @@
 			mysqli_begin_transaction($conn);
 		?>
 		<div class="titolo">
-			<h1> LOGIN  </h1>
-		</div>
+			<h1> ACCEDI</div>
 		<div class="principale">
 			<form name="accesso" method="GET" action="login.php">
 				<input type="radio" name="utente" value="docente"> Docente <br><br>
