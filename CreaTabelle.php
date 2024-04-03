@@ -102,7 +102,10 @@
                                                                                         <option value='INT' selected>INT</option>
                                                                                         <option value='BOOLEAN'>BOOLEAN</option>
                                                                                         <option value='DOUBLE'>DOUBLE</option>
-                                                                                    </select>            <input type='checkbox' name='PK[]'></pre>
+                                                                                    </select>            <select name='PK[]'>
+                                                                                                            <option value='SI'>SI</option>
+                                                                                                            <option value='NO' selected>NO</option>
+                                                                                                        </select>
                             ";
                         }
                         echo "<input type='submit' name='conf' value='Conferma attributi'> </form>";
@@ -119,7 +122,7 @@
                         $tipo = $_GET['tipo'][$i];
                         //$PK = intval($_GET['PK'][$i]);
                         // Verifica se la checkbox è stata selezionata
-                        if(isset($_GET['PK'][$i])){
+                        if($_GET['PK'][$i]== 'SI'){
                             // La checkbox è stata selezionata
                             $PK = 1;
                             //echo"true";
@@ -130,7 +133,7 @@
                         }
                         
                         // Scrivi la query SQL per inserire l'attributo nella tabella "Attributo"
-                        $query = 'INSERT INTO Attributo (NomeTabella, Nome, Tipo, PossibleChiavePrimaria) VALUES ("'.$nomeTabella.'", "'.$attributo.'", "'.$tipo.'", "'.$PK.'");';
+                        $query = 'INSERT INTO Attributo (NomeTabella, Nome, Tipo, PossibileChiavePrimaria) VALUES ("'.$nomeTabella.'", "'.$attributo.'", "'.$tipo.'", "'.$PK.'");';
                         // Esegui la query
                         $result = mysqli_query($conn, $query);
                         
