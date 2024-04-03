@@ -2,64 +2,32 @@
 <html>
 <head>
     <title> Docente </title>
-    <style>
-        .centrato{text-aligne:centre;}
-        body{margin:0;}
-        div.intesta{
-            position:relative;
-            width:100%;
-            height:30%;
-            float:left;
-            overflow:auto;
-            font-style:italic;
-            font-weight:bold;
-            font-size:20px;
-            color:blue;
-            text-align:center;
-            font-family:helvetica, sans-serif;
-            margin-left:20px;}
-        div.sinistra{
-            position:relative;
-            width:40%;
-            height:88%;
-            float:left;
-            overflow:auto;
-            font-weight:bold;
-            font-size:16px;
-            font-family:arial, sans-serif;
-            margin-left:20px;}
-        div.principale{
-            position:relative;
-            width:20%;
-            height:88%;
-            float:left;
-            overflow:auto;
-            font-weight:bold;
-            font-size:16px;
-            font-family:arial, sans-serif;
-            margin-left:100px;}
-        .bordo{border-color:turquoise;
-            border-style:solid;
-            border-width:2px;
-            text-align:center;  
-        }
-        legend{color:darkblue;}
-       
-    </style>
-    
+    <link type="text/css" rel="stylesheet" href="stile.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class=intesta><h1> Funzioni Docente </h1>
-    <br><br><button class="homepage-btn" onclick="openPage('CreaTabelle')" style="float:center; color: #D40000;">Crea tabelle</button>
-    <button class="homepage-btn" onclick="openPage('CreaTest')" style="float:center; color: #D40000;">Crea test</button>
-    <button class="homepage-btn" onclick="openPage('Messaggio')" style="float:center; color: #D40000;">Invia messaggio</button>
-    <button class="homepage-btn" onclick="openPage('PopolaTabelle')" style="float:center; color: #D40000;">Popola tabelle</button>
-    <button class="homepage-btn" onclick="openPage('VisualizzaTest')" style="float:center; color: #D40000;">Visualizza test</button>
-    <br><br>
-    <form name=logoutf method="GET" action="hpDocente.php">
-        <button class="homepage-btn" type="submit" name="logout" style="float:center; color: #D40000;">Logout</button>
-    </form>
+
+    <?php include 'Navbar.php' ?> 
+
+    <div class="hero-image">
+       <h1 style="color: white" class="mb-5 hero-text"> Funzioni Docente </h1>
+    </div>  
+
+    <div class="m-5 d-flex flex-row justify-content-center">
+        <div class="d-flex flex-row align-items-center">
+            <button onclick="openPage('CreaTabelle')" class="btn btn-primary btn-lg m-4">Crea tabelle</button>
+            <button id="button-style" onclick="openPage('CreaTest')" class="btn btn-primary btn-lg m-4">Crea test</button>
+            <button id="button-style" onclick="openPage('Messaggio')" class="btn btn-primary btn-lg m-4">Invia messaggio</button>
+            <button id="button-style" onclick="openPage('PopolaTabelle')"  class="btn btn-primary btn-lg m-4">Popola tabelle</button>
+            <button id="button-style" onclick="openPage('VisualizzaTest')"  class="btn btn-primary btn-lg m-4">Visualizza test</button>
+
+            <form name="logoutf" method="GET" action="hpDocente.php">
+                <button class="btn btn-primary btn-lg m-4" type="submit" name="logout">Logout</button>
+            </form> 
+        </div>
     </div>
+    
 
     <?php
         ini_set('display_errors', 1);
@@ -84,7 +52,11 @@
             
             
     ?>
-	</div>
+
+    
+    
+   
+   
 </body>
 </html>
 
@@ -111,3 +83,4 @@
             window.location.href = pagina;
         }
 </script>
+

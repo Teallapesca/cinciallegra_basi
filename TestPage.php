@@ -3,10 +3,8 @@
 
 <head>
     <title>Creazione Test</title>
+    <link type="text/css" rel="stylesheet" href="stile.css">
     <style>
-        body {
-            background-color: #ffcccc; /* Rosso chiaro chiaro */
-        }
         form {
             margin-bottom: 20px; /* Aggiunge spazio sotto il modulo */
         }
