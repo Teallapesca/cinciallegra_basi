@@ -132,41 +132,49 @@
 
                     //inserimento delle opzioni nella tabella opzione
                     $giusta = 0;
-                    if ($_GET["giusta"]=="opr1") {
-                        $giusta = 1;
-                    }
-                    $query1 = 'insert into opzione(Numerazione, ProgressivoChiuso, TitoloTest, Testo, OpzioneGiusta) values ("' . $numerazione . '"," ' . $progQuesito . '","' . $test . '","' . $opzione1 . '","' . $giusta . '");';
-                    $risult1 = mysqli_query($conn, $query1);
-                    if (!$risult1) {
-                        echo "ricerca fallita: " . die(mysqli_error($conn));
-                    }
+                    if(isset($_GET["giusta"])){
 
-                    //----op2
-                    $numerazione = $numerazione + 1;
-                    $giusta = 0;
-                    if ($_GET["giusta"]=="opr2") {
-                        $giusta = 1;
-                    }
-                    $query2 = 'insert into opzione(Numerazione, ProgressivoChiuso, TitoloTest, Testo, OpzioneGiusta) values ("' . $numerazione . '"," ' . $progQuesito . '","' . $test . '","' . $opzione2 . '","' . $giusta . '");';
-                    $risult2 = mysqli_query($conn, $query2);
-                    if (!$risult2) {
-                        echo "ricerca fallita: " . die(mysqli_error($conn));
-                    }
+                        if ($_GET["giusta"]=="opr1") {
+                            $giusta = 1;
+                        }
+                        $query1 = 'insert into opzione(Numerazione, ProgressivoChiuso, TitoloTest, Testo, OpzioneGiusta) values ("' . $numerazione . '"," ' . $progQuesito . '","' . $test . '","' . $opzione1 . '","' . $giusta . '");';
+                        $risult1 = mysqli_query($conn, $query1);
+                        if (!$risult1) {
+                            echo "ricerca fallita: " . die(mysqli_error($conn));
+                        }
+    
+                        //----op2
+                        $numerazione = $numerazione + 1;
+                        $giusta = 0;
+                        if ($_GET["giusta"]=="opr2") {
+                            $giusta = 1;
+                        }
+                        $query2 = 'insert into opzione(Numerazione, ProgressivoChiuso, TitoloTest, Testo, OpzioneGiusta) values ("' . $numerazione . '"," ' . $progQuesito . '","' . $test . '","' . $opzione2 . '","' . $giusta . '");';
+                        $risult2 = mysqli_query($conn, $query2);
+                        if (!$risult2) {
+                            echo "ricerca fallita: " . die(mysqli_error($conn));
+                        }
+    
+                        //----op3
+                        $giusta = 0;
+                        if ($_GET["giusta"]=="opr3") {
+                            $giusta = 1;
+                        }
+                        $numerazione = $numerazione + 1;
+                        $query3 = 'insert into opzione(Numerazione, ProgressivoChiuso, TitoloTest, Testo, OpzioneGiusta) values ("' . $numerazione . '"," ' . $progQuesito . '","' . $test . '","' . $opzione3 . '","' . $giusta . '");';
+                        $risult3 = mysqli_query($conn, $query3);
+                        if (isset($_GET["opr1"])) {
+                            $_SESSION['giusta'] = $numerazione;
+                        }
+                        if (!$risult3) {
+                            echo "ricerca fallita: " . die(mysqli_error($conn));
+                        }
 
-                    //----op3
-                    $giusta = 0;
-                    if ($_GET["giusta"]=="opr3") {
-                        $giusta = 1;
                     }
-                    $numerazione = $numerazione + 1;
-                    $query3 = 'insert into opzione(Numerazione, ProgressivoChiuso, TitoloTest, Testo, OpzioneGiusta) values ("' . $numerazione . '"," ' . $progQuesito . '","' . $test . '","' . $opzione3 . '","' . $giusta . '");';
-                    $risult3 = mysqli_query($conn, $query3);
-                    if (isset($_GET["opr1"])) {
-                        $_SESSION['giusta'] = $numerazione;
+                    else{
+                        echo"Scegli quale opzione è corretta";
                     }
-                    if (!$risult3) {
-                        echo "ricerca fallita: " . die(mysqli_error($conn));
-                    }
+                    
                 
                 }
                 if ($_GET["tipo"]=="sketch") {
