@@ -32,7 +32,7 @@
         <form name="quesito" method="GET" action="CreaQuesito.php">
             Descrizione quesito<br><br>
             <input type="text" name="descQuesito" value=""><br><br>
-            Difficoltà quesito: <input type=radio name=difficolta value=basso> basso &nbsp &nbsp
+            Difficoltà quesito: <input type=radio name=difficolta value=basso> Basso &nbsp &nbsp
             <input type=radio name=difficolta value=medio> Medio &nbsp &nbsp
             <input type=radio name=difficolta value=alto> Alto <br><br>
             <select name="nt">
@@ -85,7 +85,7 @@
                 $tabella=$_SESSION['tabella'];
 
                 //numerazione del quesito
-                $query = "SELECT * FROM quesito";
+                $query = "SELECT COUNT(*) FROM quesito";
                 $ris = mysqli_query($conn, $query);
                 if (!$ris) {
                     echo "ricerca fallita: " . die(mysqli_error($conn));

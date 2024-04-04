@@ -52,19 +52,27 @@ BEGIN
 END$
 
 
-DELIMITER $  /* 2) Visualizzazione dei Test Disponibili. */
+DELIMITER $  /* 2) Visualizzazione di tutti i test disponibili. (per lo studente) */
 CREATE PROCEDURE VisualizzazioneTest()
 BEGIN
     SELECT * 
     FROM TEST; 
 END$
 
+DELIMITER $  /* 2) Visualizzazione dei test disponibili creati da un determinato docente. */
+CREATE PROCEDURE VisualizzazioneTestDoc(IN Mail VARCHAR(40))
+BEGIN
+    SELECT * 
+    FROM TEST
+    WHERE MailDocente = Mail;
+END$
+
 DELIMITER $  /* 3) Visualizzazione dei quesiti presenti all’interno di ciascun test. */
 CREATE PROCEDURE VisualizzazioneQuesiti(IN Titolo VARCHAR(30))
 BEGIN
-    SELECT TitoloTest, Progressivo, Difficoltà, Descrizione 
+    SELECT TitoloTest, Progressivo, Difficolta, Descrizione 
     FROM QUESITO
-    WHERE Titolo = TitoloTest;
+    WHERE TitoloTest = Titolo;
 END$
 
 /*---------------------------------------------------------------------------------*/
@@ -100,7 +108,7 @@ CREATE PROCEDURE CreaTest (
 )
 BEGIN
     INSERT INTO TEST (Titolo, DataTest, Foto, VisualizzaRisposte, MailDocente)
-    VALUES (TitoloTest, Data, FotoTest, VisualizzaRisposteTest, MailDocente);
+    VALUES (TitoloTest, NOW(), FotoTest, VisualizzaRisposteTest, MailDocente);
 END $ DELIMITER ;
 
 DELIMITER $  /* 4) Creazione di un nuovo quesito con le relative risposte. */
@@ -112,23 +120,23 @@ CREATE PROCEDURE NewSketchCodice (
     IN Soluzione VARCHAR(300)
 )
 BEGIN
-	INSERT INTO QUESITO (Progressivo, TitoloTest, Difficoltà, Descrizione, NumRisposte)
+	INSERT INTO QUESITO (Progressivo, TitoloTest, Difficolta, Descrizione, NumRisposte)
     VALUES (ProgressivoCodice, TitoloTest, Difficolta, DescrizioneQuesito, 0);
-    INSERT INTO SKETCH_CODICE (Progressivo, TitoloTest, Difficoltà, Descrizione, NumRisposte, Soluzione)
+    INSERT INTO SKETCH_CODICE (Progressivo, TitoloTest, Difficolta, Descrizione, NumRisposte, Soluzione)
     VALUES (ProgressivoCodice, TitoloTest, Difficolta, DescrizioneQuesito, 0, Soluzione);
 END $ DELIMITER ;
 DELIMITER $
 CREATE PROCEDURE NewQuesitoChiuso (
-	IN ProgressivoQuesito INT,
+	IN ProgressivoChiuso INT,
     IN TitoloTest VARCHAR(30),
     IN Difficolta VARCHAR(5),
     IN DescrizioneQuesito VARCHAR(40)
 )
 BEGIN
-	INSERT INTO QUESITO (Progressivo, TitoloTest, Difficoltà, Descrizione, NumRisposte)
-    VALUES (ProgressivoCodice, TitoloTest, Difficolta, DescrizioneQuesito, 0);
-    INSERT INTO QUESITO_CHIUSO (Progressivo, TitoloTest, Difficoltà, Descrizione, NumRisposte)
-    VALUES (ProgressivoQuesito, TitoloTest, Difficolta, DescrizioneQuesito, 0);
+	INSERT INTO QUESITO (Progressivo, TitoloTest, Difficolta, Descrizione, NumRisposte)
+    VALUES (ProgressivoChiuso, TitoloTest, Difficolta, DescrizioneQuesito, 0);
+    INSERT INTO QUESITO_CHIUSO (Progressivo, TitoloTest, Difficolta, Descrizione, NumRisposte)
+    VALUES (ProgressivoChiuso, TitoloTest, Difficolta, DescrizioneQuesito, 0);
 END $ DELIMITER ;
 
 /* 5) Abilitare / disabilitare la visualizzazione delle risposte per uno specifico test. */

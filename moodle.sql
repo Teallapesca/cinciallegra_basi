@@ -55,7 +55,7 @@ USE moodle;
  create table QUESITO(
 	Progressivo INT,
     TitoloTest VARCHAR(30),
-    Difficoltà ENUM ('Basso','Medio','Alto'),
+    Difficolta ENUM ('Basso','Medio','Alto'),
     Descrizione VARCHAR(40),
     NumRisposte INT,
     
@@ -65,7 +65,7 @@ USE moodle;
   create table SKETCH_CODICE(  /* Ha senso differenziarli perché derivano da una generalizzazione Totale di quesito. */
 	Progressivo INT,
     TitoloTest VARCHAR(30),
-    Difficoltà ENUM ('Basso','Medio','Alto'),
+    Difficolta ENUM ('Basso','Medio','Alto'),
     Descrizione VARCHAR(40),
     NumRisposte INT,
     
@@ -78,7 +78,7 @@ USE moodle;
 create table QUESITO_CHIUSO(
 	Progressivo INT,
     TitoloTest VARCHAR(30),
-    Difficoltà ENUM ('Basso','Medio','Alto'),
+    Difficolta ENUM ('Basso','Medio','Alto'),
     Descrizione VARCHAR(40),
     NumRisposte INT,
     
