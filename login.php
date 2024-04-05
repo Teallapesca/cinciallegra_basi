@@ -34,8 +34,6 @@
 			</form>
 			</div>
 		</div>
-		
-		<?php include 'footer.php' ?>
 
 			<?php
 			ini_set('display_errors', 1);

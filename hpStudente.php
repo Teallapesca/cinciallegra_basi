@@ -8,10 +8,20 @@
 </head>
 <body>
 
-    <?php include 'Navbar.php' ?> 
+    <?php 
+     if (isset($_POST["logout"])) {
+        session_destroy();
+        header('Location: HomePage.html');
+        exit();
+    }
+        ini_set('display_errors', 1);
+        error_reporting(E_ALL);
+        include 'connessione.php';
+        mysqli_begin_transaction($conn);
+    include 'Navbar.php' ?> 
 
     <div class="student-image">
-       <h1 style="color: white" class="mb-5 hero-text"> Funzioni studente </h1>
+       <h1 style="color: white" class="mb-5 hero-text"> <?php echo "benvenuto " . $_SESSION['mail']; ?> </h1>
     </div>
     
 	<div class="d-flex flex-row  justify-content-center">
@@ -23,21 +33,6 @@
         </form>
     </div>
 
-    
-    
-    <?php
-    if (isset($_POST["logout"])) {
-        session_destroy();
-        header('Location: HomePage.html');
-        exit();
-    }
-        ini_set('display_errors', 1);
-        error_reporting(E_ALL);
-        include 'connessione.php';
-        mysqli_begin_transaction($conn);
-
-        echo "benvenuto " . $_SESSION['mail']."<br><br>";
-    ?>
         <?php
             if (isset($_GET["test"])) {
                 $query="SELECT Titolo, DataTest FROM test;";

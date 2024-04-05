@@ -8,10 +8,15 @@
 </head>
 <body>
 
-    <?php include 'Navbar.php' ?> 
+    <?php 
+      ini_set('display_errors', 1);
+      error_reporting(E_ALL);
+      include 'connessione.php';
+      mysqli_begin_transaction($conn);
+    include 'Navbar.php' ?> 
 
     <div class="hero-image">
-       <h1 style="color: white" class="mb-5 hero-text"> Funzioni Docente </h1>
+       <h1 style="color: white" class="mb-5 hero-text"> <?php echo "benvenuto " . $_SESSION['mail']; ?> </h1>
     </div>  
 
     <div class="m-5 d-flex flex-row justify-content-center">
@@ -30,13 +35,6 @@
     
 
     <?php
-        ini_set('display_errors', 1);
-        error_reporting(E_ALL);
-        include 'connessione.php';
-        mysqli_begin_transaction($conn);
-
-        echo "benvenuto " . $_SESSION['mail'];
-    
             if (!mysqli_commit($conn)) {
                 mysqli_rollback($conn);
                 echo "Errore durante il commit della transazione.";
@@ -48,15 +46,9 @@
             session_destroy();
             header('Location: HomePage.html');
             exit();
-        }
-            
-            
+        }    
     ?>
 
-    
-    
-   
-   
 </body>
 </html>
 

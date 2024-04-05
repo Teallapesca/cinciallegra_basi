@@ -34,7 +34,7 @@
                 ?>
                 
                     <form name=regutente method=GET action=signin.php>
-
+                        <div>
                         <div class="input-group mb-3">  
                         <span class="input-group-text" id="basic-addon1">Mail</span> <input class="form-control" type='text' name='mail' value=''> <br>
                         </div>
@@ -59,6 +59,7 @@
                         <span class="input-group-text" id="basic-addon1">Dipartimento</span> <input class="form-control"  type='text' name='dip' value=''>
                         </div>
                         <input class="btn btn-primary"  type=submit name=reg value=registrati>
+                        </div>
                     </form>
                 
                 <?php
@@ -106,8 +107,6 @@
 
     </div>
     </div>
-   
-    <?php include 'footer.php' ?>
 
 
 </body>
