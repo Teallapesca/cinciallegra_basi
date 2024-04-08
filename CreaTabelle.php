@@ -98,7 +98,7 @@
                     }
                 }
             ?>
-
+        <br> <br> <a href=hpDocente.php> <- </a>
         </div>
 
         <?php
