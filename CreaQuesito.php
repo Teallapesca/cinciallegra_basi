@@ -15,6 +15,24 @@
                 sketchCodice.style.display = "block";
             }
         }
+
+        function validateForm() {
+            // Ottieni i valori dei campi del modulo
+            var descQuesito = document.forms["quesito"]["descQuesito"].value;
+            var nt = document.forms["quesito"]["nt"].value;
+            var tipo = document.querySelector('input[name="tipo"]:checked');
+            var op1 = document.forms["quesito"]["op1"].value;
+            var op2 = document.forms["quesito"]["op2"].value;
+            var op3 = document.forms["quesito"]["op3"].value;
+            var testosketch = document.forms["quesito"]["testosketch"].value;
+
+            // Controlla se tutti i campi richiesti sono stati compilati o selezionati
+            if (descQuesito == "" || nt == "" || !tipo || (tipo.value == "chiuso" && (op1 == "" || op2 == "" || op3 == "")) || (tipo.value == "sketch" && testosketch == "")) {
+                alert("Compila tutti i campi richiesti!");
+                return false; // Impedisci l'invio del modulo
+            }
+            return true; // Consenti l'invio del modulo
+        }
     </script>
 </head>
 
@@ -29,7 +47,7 @@
         <h1>CREA QUESITO</h1>
     </div>
     <div class="principale">
-        <form name="quesito" method="GET" action="CreaQuesito.php">
+        <form name="quesito" method="GET" action="CreaQuesito.php" onsubmit="return validateForm()">
             Descrizione quesito<br><br>
             <input type="text" name="descQuesito" value=""><br><br>
             Difficoltà quesito: <input type=radio name=difficolta value=basso> Basso &nbsp &nbsp
@@ -85,7 +103,7 @@
                 $tabella=$_SESSION['tabella'];
 
                 //numerazione del quesito
-                $query = "SELECT COUNT(*) FROM quesito";
+                $query = "SELECT * FROM quesito";
                 $ris = mysqli_query($conn, $query);
                 if (!$ris) {
                     echo "ricerca fallita: " . die(mysqli_error($conn));
@@ -123,12 +141,7 @@
                     }
 
                     //numerazione della prima opzione
-                    $query = "SELECT * FROM opzione";
-                    $risult = mysqli_query($conn, $query);
-                    if (!$risult) {
-                        echo "ricerca fallita: " . die(mysqli_error($conn));
-                    }
-                    $numerazione = mysqli_num_rows($risult);
+                    $numerazione = 1;
 
                     //inserimento delle opzioni nella tabella opzione
                     $giusta = 0;
