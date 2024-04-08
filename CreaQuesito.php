@@ -144,13 +144,13 @@
                     $numerazione = 1;
 
                     //inserimento delle opzioni nella tabella opzione
-                    $giusta = 0;
+                    $giusta = "";
                     if(isset($_GET["giusta"])){
 
                         if ($_GET["giusta"]=="opr1") {
-                            $giusta = 1;
+                            $giusta = $opzione1;
                         }
-                        $query1 = 'insert into opzione(Numerazione, ProgressivoChiuso, TitoloTest, Testo, OpzioneGiusta) values ("' . $numerazione . '"," ' . $progQuesito . '","' . $test . '","' . $opzione1 . '","' . $giusta . '");';
+                        $query1 = 'insert into opzione(Numerazione, ProgressivoChiuso, TitoloTest, Testo) values ("' . $numerazione . '"," ' . $progQuesito . '","' . $test . '","' . $opzione1 . '");';
                         $risult1 = mysqli_query($conn, $query1);
                         if (!$risult1) {
                             echo "ricerca fallita: " . die(mysqli_error($conn));
@@ -158,28 +158,27 @@
     
                         //----op2
                         $numerazione = $numerazione + 1;
-                        $giusta = 0;
+                        
                         if ($_GET["giusta"]=="opr2") {
-                            $giusta = 1;
+                            $giusta = $opzione2;
                         }
-                        $query2 = 'insert into opzione(Numerazione, ProgressivoChiuso, TitoloTest, Testo, OpzioneGiusta) values ("' . $numerazione . '"," ' . $progQuesito . '","' . $test . '","' . $opzione2 . '","' . $giusta . '");';
+                        $query2 = 'insert into opzione(Numerazione, ProgressivoChiuso, TitoloTest, Testo) values ("' . $numerazione . '"," ' . $progQuesito . '","' . $test . '","' . $opzione2 . '");';
                         $risult2 = mysqli_query($conn, $query2);
                         if (!$risult2) {
                             echo "ricerca fallita: " . die(mysqli_error($conn));
                         }
     
                         //----op3
-                        $giusta = 0;
+                        
                         if ($_GET["giusta"]=="opr3") {
-                            $giusta = 1;
+                            $giusta = $opzione3;
                         }
                         $numerazione = $numerazione + 1;
-                        $query3 = 'insert into opzione(Numerazione, ProgressivoChiuso, TitoloTest, Testo, OpzioneGiusta) values ("' . $numerazione . '"," ' . $progQuesito . '","' . $test . '","' . $opzione3 . '","' . $giusta . '");';
+                        $query3 = 'insert into opzione(Numerazione, ProgressivoChiuso, TitoloTest, Testo) values ("' . $numerazione . '"," ' . $progQuesito . '","' . $test . '","' . $opzione3 . '");';
                         $risult3 = mysqli_query($conn, $query3);
-                        if (isset($_GET["opr1"])) {
-                            $_SESSION['giusta'] = $numerazione;
-                        }
-                        if (!$risult3) {
+                        $queryA = "UPDATE QUESITO_CHIUSO SET OpzioneGiusta = '$numerazione' WHERE Progressivo = '$progQuesito';";
+                        $risultA = mysqli_query($conn, $queryA);
+                        if (!$risultA) {
                             echo "ricerca fallita: " . die(mysqli_error($conn));
                         }
 
