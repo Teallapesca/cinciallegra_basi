@@ -9,12 +9,6 @@
 <body>
 
     <?php 
-     if (isset($_POST["logout"])) {
-        session_destroy();
-        session_unset();
-        header('Location: HomePage.html');
-        exit();
-    }
         ini_set('display_errors', 1);
         error_reporting(E_ALL);
         include 'connessione.php';
@@ -64,6 +58,13 @@
             
             // chiusura della connessione
             mysqli_close($conn);
+
+            if (isset($_POST["logout"])) {
+                session_destroy();
+                session_unset();
+                header('Location: HomePage.html');
+                exit();
+            }
         ?>
 	</div>
 </body>

@@ -15,6 +15,24 @@
                 sketchCodice.style.display = "block";
             }
         }
+
+        function validateForm() {
+            // Ottieni i valori dei campi del modulo
+            var descQuesito = document.forms["quesito"]["descQuesito"].value;
+            var nt = document.forms["quesito"]["nt"].value;
+            var tipo = document.querySelector('input[name="tipo"]:checked');
+            var op1 = document.forms["quesito"]["op1"].value;
+            var op2 = document.forms["quesito"]["op2"].value;
+            var op3 = document.forms["quesito"]["op3"].value;
+            var testosketch = document.forms["quesito"]["testosketch"].value;
+
+            // Controlla se tutti i campi richiesti sono stati compilati o selezionati
+            if (descQuesito == "" || nt == "" || !tipo || (tipo.value == "chiuso" && (op1 == "" || op2 == "" || op3 == "")) || (tipo.value == "sketch" && testosketch == "")) {
+                alert("Compila tutti i campi richiesti!");
+                return false; // Impedisci l'invio del modulo
+            }
+            return true; // Consenti l'invio del modulo
+        }
     </script>
 </head>
 
@@ -29,7 +47,7 @@
         <h1>CREA QUESITO</h1>
     </div>
     <div class="principale">
-        <form name="quesito" method="GET" action="CreaQuesito.php">
+        <form name="quesito" method="GET" action="CreaQuesito.php" onsubmit="return validateForm()">
             Descrizione quesito<br><br>
             <input type="text" name="descQuesito" value=""><br><br>
             Difficoltà quesito: <input type=radio name=difficolta value=basso> Basso &nbsp &nbsp
@@ -68,6 +86,7 @@
                     Opzione 1: &nbsp&nbsp <input type=text name=op1> &nbsp&nbsp <input type=radio name=giusta value=opr1> opzione giusta<br><br>
                     Opzione 2: &nbsp&nbsp <input type=text name=op2> &nbsp&nbsp <input type=radio name=giusta value=opr2> opzione giusta<br><br>
                     Opzione 3: &nbsp&nbsp <input type=text name=op3> &nbsp&nbsp <input type=radio name=giusta value=opr3> opzione giusta<br><br>
+                    <!--<input type=submit name=opzione value=crea>-->
             </div>
 
             <div id="sketchCodice" style="display:none;">
@@ -82,10 +101,9 @@
                 //tabella di riferimento
                 $_SESSION['tabella']=$_GET['nt'];
                 $tabella=$_SESSION['tabella'];
-                $test = $_SESSION['test_title'];
 
                 //numerazione del quesito
-                $query = "SELECT * FROM Quesito WHERE TitoloTest = '$test'";
+                $query = "SELECT * FROM quesito";
                 $ris = mysqli_query($conn, $query);
                 if (!$ris) {
                     echo "ricerca fallita: " . die(mysqli_error($conn));
@@ -107,6 +125,7 @@
 
                 //descrizione
                 $descrizione=$_GET['descQuesito'];
+                $test = $_SESSION['test_title'];
 
                 if ($_GET["tipo"]=="chiuso") {
                     $opzione1 = $_GET['op1'];
@@ -121,14 +140,15 @@
                         echo "inserimento quesito fallito: " . die(mysqli_error($conn));
                     }
 
+                    //numerazione della prima opzione
                     $numerazione = 1;
 
                     //inserimento delle opzioni nella tabella opzione
-                    $giusta = 0;
+                    $giusta = "";
                     if(isset($_GET["giusta"])){
 
                         if ($_GET["giusta"]=="opr1") {
-                            $giusta = $numerazione;
+                            $giusta = $opzione1;
                         }
                         $query1 = 'insert into opzione(Numerazione, ProgressivoChiuso, TitoloTest, Testo) values ("' . $numerazione . '"," ' . $progQuesito . '","' . $test . '","' . $opzione1 . '");';
                         $risult1 = mysqli_query($conn, $query1);
@@ -138,9 +158,9 @@
     
                         //----op2
                         $numerazione = $numerazione + 1;
-                        //$giusta = "";
+                        
                         if ($_GET["giusta"]=="opr2") {
-                            $giusta = $numerazione;
+                            $giusta = $opzione2;
                         }
                         $query2 = 'insert into opzione(Numerazione, ProgressivoChiuso, TitoloTest, Testo) values ("' . $numerazione . '"," ' . $progQuesito . '","' . $test . '","' . $opzione2 . '");';
                         $risult2 = mysqli_query($conn, $query2);
@@ -149,15 +169,14 @@
                         }
     
                         //----op3
-                        //$giusta = "";
+                        
                         if ($_GET["giusta"]=="opr3") {
-                            $giusta = $numerazione;
+                            $giusta = $opzione3;
                         }
                         $numerazione = $numerazione + 1;
                         $query3 = 'insert into opzione(Numerazione, ProgressivoChiuso, TitoloTest, Testo) values ("' . $numerazione . '"," ' . $progQuesito . '","' . $test . '","' . $opzione3 . '");';
                         $risult3 = mysqli_query($conn, $query3);
-                        
-                        $queryA = "UPDATE QUESITO_CHIUSO SET OpzioneGiusta = '$giusta' WHERE Progressivo = '$progQuesito' AND TitoloTest = '$test';";
+                        $queryA = "UPDATE QUESITO_CHIUSO SET OpzioneGiusta = '$numerazione' WHERE Progressivo = '$progQuesito';";
                         $risultA = mysqli_query($conn, $queryA);
                         if (!$risultA) {
                             echo "ricerca fallita: " . die(mysqli_error($conn));

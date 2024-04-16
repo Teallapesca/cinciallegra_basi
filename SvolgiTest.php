@@ -20,6 +20,7 @@
             <?php
             ///////---- mettere sia tabelle per ogni quesito sia il bottone check dopo i codici
                 $test=$_SESSION['titoloTest'];
+                $mail=$_SESSION['mailStudente']; 
                 $_SESSION["quesiti$test"]=[]; ///****credo dia comunque problema, ricontrollare */
                 if (isset($_GET['titolo'])) {
                    $_SESSION['titoloTest']=$_GET['titolo'];
@@ -79,7 +80,7 @@
                                 if(mysqli_num_rows($ris_chiuso) == 0){
                                     // Se non ci sono quesiti chiusi, mostra il campo di testo per la risposta perchè è un codice
                                     $tipo="codice";
-                                     if (isset($_SESSION["risposta$progressivo"])&&($_SESSION["risposta$progressivo"]!="")) {
+                                    if (isset($_SESSION["risposta$progressivo"])&&($_SESSION["risposta$progressivo"]!="")) {
                                         //se la variabile di risposta di questo quesito non è vuoto, vado già ad inserire il suo valore nel value del textbox
                                         $risp=$_SESSION["risposta$progressivo"];
                                         echo "<input type='text' name='risposta$progressivo' value='$risp'><br><br>";
@@ -103,7 +104,7 @@
                                             $testoOp = $rowOP['Testo'];
                                             $numOP=$rowOP['Numerazione'];
                                             //se la variabile risposta è piena 
-                                            if (isset($_SESSION["risposta$progressivo"])&&($_SESSION["risposta$progressivo"]=="$numOP$progressivo")) {
+                                            if (($_SESSION["risposta$progressivo"]=="$numOP$progressivo")) {
                                                 echo "<input type=radio name='risposta$progressivo' value='$numOP$progressivo' checked>$testoOp<br>";
                                             }
                                             else{
@@ -175,7 +176,7 @@
             }
 
             //faccio il controllo se ci sono risposte inserite, se si faccio l'update
-            $controllo="SELECT * FROM risposta WHERE TitoloTest='$titoloTest';";
+            /*$controllo="SELECT * FROM risposta WHERE TitoloTest='$titoloTest';";
             $ris_controllo = mysqli_query($conn, $controllo);
             if (!$ris_controllo) {
                 echo "Errore nell'inserimento in svolgimento1: " . mysqli_error($conn);
@@ -191,7 +192,7 @@
                     }
                 }
                 
-            }
+            }*/
 
             
             if (!mysqli_commit($conn)) {
@@ -206,7 +207,7 @@
             exit();
                 
         }
-        if(isset($_GET['Fine'])){
+        else if(isset($_GET['Fine'])){
 
             foreach ($_SESSION["quesiti$titoloTest"] as $quesito) {
 
@@ -268,19 +269,15 @@
                 exit();
                 
         }
+        else{
+            if (!mysqli_commit($conn)) {
+                mysqli_rollback($conn);
+                echo "Errore durante il commit della transazione.";
+            }
+                // chiusura della connessione
+                mysqli_close($conn);
+        }
     ?>
     </div>
-    
-
-
-    
-    <?php
-    if (!mysqli_commit($conn)) {
-        mysqli_rollback($conn);
-        echo "Errore durante il commit della transazione.";
-    }
-        // chiusura della connessione
-        mysqli_close($conn);
-    ?>
 </body>
 </html>
