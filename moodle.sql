@@ -34,7 +34,7 @@ USE moodle;
  create table TEST(
 	Titolo VARCHAR(30) PRIMARY KEY,
     DataTest datetime,
-    Foto tinyint,  /*la foto è eventuale */
+    Foto VARCHAR(200),  /*la foto è eventuale */
     VisualizzaRisposte tinyint, /* se true gli studenti possono vederle, altrimenti se settato a false non possono.*/
 	MailDocente VARCHAR(40),
      
@@ -168,39 +168,3 @@ create table VINCOLO(
     
     FOREIGN KEY (TitoloTest) REFERENCES TEST(Titolo) ON DELETE CASCADE
  ) engine=INNODB; 
-
-/*---------------------------------------------------------------------------------*/
-
-/* STATISTICHE (Visibili da tutti gli Utenti) */
-/* 1) VISUALIZZARE LA CLASSIFICA DEGLI STUDENTI 
-	(SULLA BASE DEL NUMERO DI TEST COMPLETATI). */
-CREATE VIEW ClassificaConcluso(CodiceMatricola, Conteggio) AS (
-	SELECT CodiceMatricola, COUNT(*) AS Conteggio
-	FROM STUDENTE, SVOLGIMENTO
-    WHERE (SVOLGIMENTO.MailStudente = STUDENTE.Mail) AND (SVOLGIMENTO.Stato = 'Concluso')
-    GROUP BY CodiceMatricola
-    ORDER BY Conteggio DESC 
-    /* DESC perché gli studenti vanno ordinati in ordine decrescente rispetto
-		al numero di test che hanno completato (chi ha concluso più test sta in alto, chi meno sta in basso)*/
-);
-
-/* 2) VISUALIZZARE LA CLASSIFICA DEGLI STUDENTI 
-	(SULLA BASE DEL NUMERO DI RISPOSTE CORRETTE). */
-CREATE VIEW ClassificaCorretto(CodiceMatricola, Percentuale) AS (
-SELECT CodiceMatricola, ((COUNT(CASE WHEN RISPOSTA.Esito = 'true' THEN 1 END)) / COUNT(*)) AS Percentuale
-FROM STUDENTE, RISPOSTA
-WHERE (RISPOSTA.MailStudente = STUDENTE.Mail)
-GROUP BY CodiceMatricola
-ORDER BY Percentuale DESC
-);
-
-/* 3) VISUALIZZARE LA CLASSIFICA DEI QUESITI 
-	(IN BASE AL NUMERO DI RISPOSTE INSERITE). */
-CREATE VIEW ClassificaQuesiti(Descrizione, Conteggio) AS (
-	SELECT Descrizione, SUM(NumRisposte) AS Conteggio
-	FROM QUESITO
-    GROUP BY Descrizione
-    ORDER BY Conteggio DESC
-);
-
-
