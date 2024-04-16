@@ -15,7 +15,7 @@
 		</div>
 		<div class="principale">
             <?php
-                $docente = $_SESSION['mail'];
+                $docente = $_SESSION['mailDocente'];
                 $query="CALL VisualizzazioneTestDoc('$docente')";
                 $risultato=mysqli_query($conn,$query);
 

@@ -16,7 +16,7 @@
     include 'Navbar.php' ?> 
 
     <div class="hero-image">
-       <h1 style="color: white" class="mb-5 hero-text"> <?php echo "benvenuto " . $_SESSION['mail']; ?> </h1>
+       <h1 style="color: white" class="mb-5 hero-text"> <?php echo "benvenuto " . $_SESSION['mailDocente']; ?> </h1>
     </div>  
 
     <div class="m-5 d-flex flex-row justify-content-center">
@@ -44,6 +44,7 @@
             mysqli_close($conn);
         if (isset($_GET["logout"])) {
             session_destroy();
+            session_unset();
             header('Location: HomePage.html');
             exit();
         }    

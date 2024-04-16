@@ -11,6 +11,7 @@
     <?php 
      if (isset($_POST["logout"])) {
         session_destroy();
+        session_unset();
         header('Location: HomePage.html');
         exit();
     }
@@ -22,7 +23,7 @@
     ?> 
 
     <div class="student-image">
-       <h1 style="color: white" class="mb-5 hero-text"> <?php echo "benvenuto " . $_SESSION['mail']; ?> </h1>
+       <h1 style="color: white" class="mb-5 hero-text"> <?php echo "benvenuto " . $_SESSION['mailStudente']; ?> </h1>
     </div>
     
 	<div class="d-flex flex-row  justify-content-center">

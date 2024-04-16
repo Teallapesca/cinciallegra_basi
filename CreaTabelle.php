@@ -18,12 +18,12 @@
 			</form>
 
 			<?php 
-                echo $_SESSION['mail'];
+                //echo $_SESSION['mailDocente'];
 				if(isset($_GET["tab"])){
                     $_SESSION['nomeTabella'] = $_GET["nomeTabella"];
                     if($_SESSION['nomeTabella']!=null){
                         $nomeTabella = $_SESSION['nomeTabella'];
-                        $mail = $_SESSION['mail'];
+                        $mail = $_SESSION['mailDocente'];
                         $query = 'CALL InserimentoTabellaEsercizio("'.$nomeTabella.'", "'.$mail.'");';
                         // esecuzione query
                         $risultato = mysqli_query($conn,$query);

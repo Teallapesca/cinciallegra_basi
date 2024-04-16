@@ -46,12 +46,14 @@
 					if(isset($_GET["utente"])){
 						$_SESSION['utente']=$_GET["utente"];
 						if($_SESSION['utente']=='docente'){
-							$_SESSION['mail']=$_GET["mail"];
-							$query = "SELECT Mail FROM Docente ;";
+							$_SESSION['mailDocente']=$_GET["mail"];
+							$mailDoc=$_SESSION['mailDocente'];
+							$query = "SELECT Mail FROM Docente WHERE Mail='$mailDoc' ;";
 						}
 						else if($_SESSION['utente']=='studente'){
-							$_SESSION['mail']=$_GET["mail"];
-							$query = "SELECT Mail FROM studente ;";
+							$_SESSION['mailStudente']=$_GET["mail"];
+							$mailStud=$_SESSION['mailStudente'];
+							$query = "SELECT Mail FROM studente WHERE Mail='$mailStud';";
 						}
 						
 						// esecuzione query
@@ -60,22 +62,18 @@
 							echo "errore nella ricerca" . die (mysqli_error($conn));
 						}
 						else{
-							$trovato=false;
-							while($row = mysqli_fetch_array($risultato, MYSQLI_ASSOC)){
-								if($row['Mail']==$_SESSION['mail']){
-									echo "ciao ". $_SESSION['mail'];
-									$trovato=true;
-									if($_SESSION['utente']=='docente'){
-										header("Location: hpDocente.php");
-										exit();
-									}else if($_SESSION['utente']=='studente'){
-										header("Location: hpStudente.php");
-										exit();
-									}
-									
+							if(mysqli_num_rows($risultato) != 0){
+								if($_SESSION['utente']=='docente'){
+									echo "ciao ". $_SESSION['mailDocente'];
+									header("Location: hpDocente.php");
+									exit();
+								}else if($_SESSION['utente']=='studente'){
+									echo "ciao ". $_SESSION['mailStudente'];
+									header("Location: hpStudente.php");
+									exit();
 								}
 							}
-							if($trovato==false){
+							else{
 								echo "utente non trovato, 
 								<br><br><a href=registrazione.php>registrati!!!!</a><br><br>";
 							}
@@ -98,5 +96,3 @@
 
 	</body>
 </html>
-
-<!--WHERE Mail=$_SESSION['mail']-->

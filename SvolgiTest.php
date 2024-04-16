@@ -29,7 +29,7 @@
                     //---inserimento in svolgimento 
                     $data=date('Y-m-d H:i:s');
                     $stato="";
-                    $mail=$_SESSION['mail'];
+                    $mail=$_SESSION['mailStudente'];
                     //controlla se il test selezionato è in svolgimento
                     $entrata="SELECT * FROM svolgimento WHERE MailStudente='$mail' AND TitoloTest='$titoloTest';";
                     $ris_entr = mysqli_query($conn, $entrata);
@@ -134,7 +134,7 @@
         <?php
     //controllo se le risposte sono giuste, salvataggio delle risposte anche se non è stato completato il test e inserimento in risposte
         $titoloTest = $_SESSION['titoloTest'];
-        $mail=$_SESSION['mail']; 
+        $mail=$_SESSION['mailStudente']; 
 
         if(isset($_GET['indietro'])){
 

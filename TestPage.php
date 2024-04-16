@@ -34,7 +34,7 @@
     
     
 	if(isset($_GET["crea_test"])) {
-        $mail = $_SESSION['mail'];
+        $mail = $_SESSION['mailDocente'];
         if($_GET['test_title']!=""){
             $_SESSION['test_title']=$_GET['test_title'];
             $test_title=$_SESSION['test_title'];

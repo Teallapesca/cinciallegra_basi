@@ -38,7 +38,7 @@
             <select name="nt">
                 <option> Seleziona La tabella </option>
                 <?php
-                $mail = $_SESSION['mail'];
+                $mail = $_SESSION['mailDocente'];
                 $query = "SELECT Nome FROM tabella_esercizio WHERE MailDocente='$mail' ;";
 
                 $ris = mysqli_query($conn, $query);

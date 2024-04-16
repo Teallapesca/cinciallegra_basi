@@ -18,13 +18,13 @@
                 <select name="nt">
                     <option> --- </option>
                     <?php
-                    $mail=$_SESSION['mail'];
+                    $mail=$_SESSION['mailDocente'];
                     $query="SELECT Nome FROM tabella_esercizio WHERE MailDocente='$mail' ;";
 
                     $ris=mysqli_query($conn,$query);
 
                     if(!$ris){
-                    echo "ricerca fallita: " . die (mysqli_error());
+                    echo "ricerca fallita: " . die (mysqli_error($conn));
                     }
                     if(mysqli_num_rows($ris)==0){
                     echo "non ci sono righe".die();
@@ -57,7 +57,7 @@
                         $risult=mysqli_query($conn,$query);
 
                         if(!$risult){
-                            echo "ricerca fallita: " . die (mysqli_error());
+                            echo "ricerca fallita: " . die (mysqli_error($conn));
                         }
                         if(mysqli_num_rows($risult)==0){
                             echo "non ci sono righe";
