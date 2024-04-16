@@ -18,7 +18,8 @@
         error_reporting(E_ALL);
         include 'connessione.php';
         mysqli_begin_transaction($conn);
-    include 'Navbar.php' ?> 
+        //include 'Navbar.php' 
+    ?> 
 
     <div class="student-image">
        <h1 style="color: white" class="mb-5 hero-text"> <?php echo "benvenuto " . $_SESSION['mail']; ?> </h1>
@@ -35,7 +36,7 @@
 
         <?php
             if (isset($_GET["test"])) {
-                $query="SELECT Titolo, DataTest FROM test;";
+                $query="CALL VisualizzazioneTest();";
 
                 $risult=mysqli_query($conn,$query);
 
@@ -48,18 +49,18 @@
                         echo "non ci sono righe";
                         }
                     else{
-                        while($row = mysqli_fetch_array($risult, MYSQLI_ASSOC))
+                        while($row = mysqli_fetch_array($risult))
                         {
-                            echo $row['Titolo']. "&nbsp;". $row['DataTest'] . "<br>"; 
+                            $titoloTest = $row['Titolo'];
+                            $_SESSION['titoloTest'] = $titoloTest;
+                            echo "
+                            <a href='SvolgiTest.php?titolo=$titoloTest'> {$titoloTest} ({$row['DataTest']}, {$row['MailDocente']})  </a><br><br>
+                        ";
                         }
                     }
                 }
             }
-            if (!mysqli_commit($conn)) {
-                mysqli_rollback($conn);
-                echo "Errore durante il commit della transazione.";
-            }
-        
+            
             // chiusura della connessione
             mysqli_close($conn);
         ?>

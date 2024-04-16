@@ -20,7 +20,7 @@
                 $risultato=mysqli_query($conn,$query);
 
                 if(!$risultato){
-                    echo "ricerca fallita: " . die (mysqli_error());
+                    echo "ricerca fallita: " . die (mysqli_error($conn));
                 }
                 if(mysqli_num_rows($risultato)==0){
                     echo "Non hai ancora creato test";
