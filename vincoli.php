@@ -14,6 +14,9 @@
         <?php
             //select per scegliere la tabella da cui prendere la chiave primaria
             $mail = $_SESSION['mailDocente'];
+            if(isset($_GET['aggiungi'])){
+                $_SESSION['prima']=1;
+            }
             if(isset($_SESSION['prima'])){
                 $query = "SELECT Nome FROM tabella_esercizio WHERE MailDocente='$mail' ;";
 
@@ -135,14 +138,14 @@
                     <select name=fk>
                         <option> --- </option>";
                         while ($row = mysqli_fetch_array($ris_attri)) {
-                            echo "<option value=" . $row['Nome'].$row['NomeTabella'] . ">" . $row['Nome'] ." ".$row['Tipo'] . "</option>";
+                            echo "<option value=" . $row['Nome'] . ">" . $row['Nome'] ." ".$row['Tipo'] . "</option>";
                         }
                     if (!mysqli_commit($conn)) {
                         mysqli_rollback($conn);
                         echo "Errore durante il commit della transazione.";
                     }
                     echo "</select> <br><br>
-                        <input type=submit name=sceltafk value='scegli tabella'><br><br>
+                        <input type=submit name=sceltafk value='scegli attributi'><br><br>
                         </form>";
 
                 }
@@ -158,15 +161,24 @@
                 echo "hai selezionato la chiave " . $primarykey."<br>";
                 echo "hai selezionato come seconda tabella " . $tabella."<br>";
                 echo "hai selezionato la chiave esterna " . $fkey."<br>";
-                $tabella2 = $_SESSION['tabella2'];
+                
+                $query="INSERT INTO vincolo(NomeAttributoPK, NomeTabellaPK, NomeAttributoFK, NomeTabellaFK) VALUES ('$primarykey', '$tabella1', '$fkey', '$tabella');";
+                $inserimento = mysqli_query($conn, $query);
 
-                /*$ris = mysqli_query($conn, $query);
-
-                if (!$ris) {
-                    echo "ricerca fallita: " . die(mysqli_error($conn));
-                }*/
+                if (!$inserimento) {
+                    echo "ricerca fallita: " . mysqli_error($conn);
+                }else{
+                    echo "inserimento vincolo effettuato";
+                }
             }
         ?>
+        <form name=aggiungi method=GET action='vincoli.php'>
+            <input type=submit name=aggiungi value="aggiungi vincolo">
+        </form>
+        <form name=aggiungi method=GET action='tabFisica.php'>
+            <input type=submit name=fine value="fine">
+        </form>
+
         <br> <br> <a href=CreaTabelle.php > <- </a>
     </div>
 
