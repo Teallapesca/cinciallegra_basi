@@ -50,9 +50,9 @@
                     //---visualizzazione quesiti
                     $num=0;
                     //seleziono i quesiti del test aperto
-                    $query = "SELECT TitoloTest, Progressivo, Difficolta, Descrizione 
+                    $query =  "SELECT TitoloTest, Progressivo, Difficolta, Descrizione 
                     FROM QUESITO
-                    WHERE TitoloTest = '$titoloTest';";  //ci sarebbe la procedura che lo fa ma non va :(
+                    WHERE TitoloTest = '$titoloTest';"; //ci sarebbe la procedura che lo fa ma non va :(
                     $risultato = mysqli_query($conn, $query);
                     if (!$risultato) {
                         echo "Errore nella query che seleziona i quesiti: " . mysqli_error($conn);
