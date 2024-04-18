@@ -96,6 +96,10 @@
                             echo "Errore nell'inserimento dell'attributo '$attributo'.<br>";
                         }
                     }
+                    $_SESSION['prima']=1;
+                    echo "<p>
+                                <a href=vincoli.php> <input type=button name=vincoli value='fai vincoli di integrita'></a>
+                            </p>";
                 }
             ?>
         <br> <br> <a href=hpDocente.php> <- </a>
