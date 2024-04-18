@@ -24,10 +24,11 @@
 
                 $query="CALL VisualizzazioneQuesiti('$titoloTest')";
                 $risultato=mysqli_query($conn,$query);
-
+                $num=0;
                 while($row = mysqli_fetch_array($risultato)){
+                    $num=$num+1;
                     echo "
-                        <p>{$row['Progressivo']}) {$row['Descrizione']}<br>
+                        <p>$num) {$row['Descrizione']}<br>
                         Livello: {$row['Difficolta']}
                         </p>
                     ";                        
