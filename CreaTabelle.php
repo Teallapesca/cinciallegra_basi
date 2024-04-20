@@ -17,8 +17,7 @@
 				<input type="submit" name="tab" value="Inserisci nome">
 			</form>
 
-			<?php 
-                $_SESSION["tabelle"]=[];
+			<?php
                 //echo $_SESSION['mailDocente'];
 				if(isset($_GET["tab"])){
                     $_SESSION['nomeTabella'] = $_GET["nomeTabella"];
@@ -31,7 +30,6 @@
                         if($risultato === false){
                             echo "errore nella ricerca" . die (mysqli_error($conn));
                         } else{
-                            $_SESSION["tabelle"][] = $nomeTabella;
                             echo "tabella inserita" . "<br><br>
                             <form name=nuovaTabella method=GET action=CreaTabelle.php>
                             Inserisci il numero di colonne della tabella<br><br>
@@ -40,6 +38,13 @@
                             </form>";
                         }
                     }
+                    if (!mysqli_commit($conn)) {
+                        mysqli_rollback($conn);
+                        echo "Errore durante il commit della transazione.";
+                    }
+                
+                    // chiusura della connessione
+                    mysqli_close($conn);
 				}
             
                 if(isset($_GET["col"])){
@@ -62,6 +67,13 @@
                                                                                                         </select>
                             ";
                         }
+                        if (!mysqli_commit($conn)) {
+                            mysqli_rollback($conn);
+                            echo "Errore durante il commit della transazione.";
+                        }
+                    
+                        // chiusura della connessione
+                        mysqli_close($conn);
                         echo "<input type='submit' name='conf' value='Conferma attributi'> </form>";
                         
                     }
@@ -98,6 +110,16 @@
                             echo "Errore nell'inserimento dell'attributo '$attributo'.<br>";
                         }
                     }
+                    $_SESSION["tabelle"][] = $nomeTabella;
+
+                    if (!mysqli_commit($conn)) {
+                        mysqli_rollback($conn);
+                        echo "Errore durante il commit della transazione.";
+                    }
+                
+                    // chiusura della connessione
+                    mysqli_close($conn);
+
                     $_SESSION['prima']=1; //per mostrare la scelta della prima tabella in vincoli.php
                     echo "<p>
                                 <a href=vincoli.php> <input type=button name=vincoli value='fai vincoli di integrita'></a>
@@ -106,18 +128,6 @@
             ?>
         <br> <br> <a href=hpDocente.php> <- </a>
         </div>
-
-        <?php
-                if (!mysqli_commit($conn)) {
-                    mysqli_rollback($conn);
-                    echo "Errore durante il commit della transazione.";
-                }
-            
-                // chiusura della connessione
-                mysqli_close($conn);
-					
-			?>
-
 	</body>
 </html>
 

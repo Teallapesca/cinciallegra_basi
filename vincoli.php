@@ -14,6 +14,8 @@
         <?php
             //select per scegliere la tabella da cui prendere la chiave primaria
             $mail = $_SESSION['mailDocente'];
+            $tabelle = $_SESSION["tabelle"];
+            var_dump($tabelle);
             if(isset($_GET['aggiungi'])){
                 $_SESSION['prima']=1;
             }
