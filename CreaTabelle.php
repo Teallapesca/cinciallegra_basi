@@ -18,6 +18,7 @@
 			</form>
 
 			<?php 
+                $_SESSION["tabelle"]=[];
                 //echo $_SESSION['mailDocente'];
 				if(isset($_GET["tab"])){
                     $_SESSION['nomeTabella'] = $_GET["nomeTabella"];
@@ -30,6 +31,7 @@
                         if($risultato === false){
                             echo "errore nella ricerca" . die (mysqli_error($conn));
                         } else{
+                            $_SESSION["tabelle"][] = $nomeTabella;
                             echo "tabella inserita" . "<br><br>
                             <form name=nuovaTabella method=GET action=CreaTabelle.php>
                             Inserisci il numero di colonne della tabella<br><br>
@@ -96,7 +98,7 @@
                             echo "Errore nell'inserimento dell'attributo '$attributo'.<br>";
                         }
                     }
-                    $_SESSION['prima']=1;
+                    $_SESSION['prima']=1; //per mostrare la scelta della prima tabella in vincoli.php
                     echo "<p>
                                 <a href=vincoli.php> <input type=button name=vincoli value='fai vincoli di integrita'></a>
                             </p>";
