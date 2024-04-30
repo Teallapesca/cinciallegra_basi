@@ -14,11 +14,9 @@
         <?php
             //select per scegliere la tabella da cui prendere la chiave primaria
             $mail = $_SESSION['mailDocente'];
-            $tabelle = $_SESSION["tabelle"];
-            var_dump($tabelle);
-            if(isset($_GET['aggiungi'])){
-                $_SESSION['prima']=1;
-            }
+           // $tabelle = $_SESSION["tabelle"];
+            //var_dump($tabelle);
+            
             if(isset($_SESSION['prima'])){
                 $query = "SELECT Nome FROM tabella_esercizio WHERE MailDocente='$mail' ;";
 
@@ -121,12 +119,13 @@
                 $primarykey = $_SESSION['primarykey'];
                 $tabella = $_SESSION['tabella2'];
                 $tabella1 = $_SESSION['tabella1'];
+                $tipo1 = $_SESSION['tipo1'];
                 echo "hai selezionato la tabella " . $tabella1."<br>";
                 echo "hai selezionato la chiave " . $primarykey."<br>";
                 echo "hai selezionato come seconda tabella " . $tabella;
                 $query = "SELECT Nome, Tipo, NomeTabella        
                                     FROM attributo
-                                    WHERE NomeTabella='$tabella';";
+                                    WHERE NomeTabella='$tabella' AND Tipo = $tipo1;";
 
                 $ris_attri = mysqli_query($conn, $query);
 
@@ -175,16 +174,46 @@
             }
         ?>
         <form name=aggiungi method=GET action='vincoli.php'>
-            <input type=submit name=aggiungi value="aggiungi vincolo">
+            <input type=submit name=aggiungi value="crea vincolo">
         </form>
-        <form name=aggiungi method=GET action='tabFisica.php'>
-            <input type=submit name=fine value="fine">
-        </form>
+        
 
         <br> <br> <a href=CreaTabelle.php > <- </a>
     </div>
 
     <?php
+
+        if(isset($_GET['aggiungi'])){
+            $_SESSION['prima']=1;
+
+            $fkey = $_SESSION['fkey'];
+            $primarykey = $_SESSION['primarykey'];
+            $tabella = $_SESSION['tabella2'];
+            $tabella1 = $_SESSION['tabella1'];
+
+            //vincoli fisici
+            $vincoli="SELECT * FROM vincolo WHERE NomeTabellaFK = '$tabella' AND NomeTabellaPK=' $tabella1';";
+            $ris_vinc= mysqli_query($conn, $vincoli);
+            if (!$ris_vinc) {
+                echo "chiave esterna fallita: " . mysqli_error($conn);
+            }else{
+                while ($row = mysqli_fetch_array($ris_vinc)) {
+                    $pk=$row['NomeAttributoPK'];
+                    $fk=$row['NomeAttributoFK'];
+                    $tab2=$row['NomeTabellaPK'];
+                    $key="ALTER TABLE `$tabella` 
+                    ADD FOREIGN KEY (`$fk`) REFERENCES `$tab2`(`$pk`);";
+                    $foreign = mysqli_query($conn, $key);
+                    if (!$foreign) {
+                        echo "chiave primaria fallita: " . mysqli_error($conn);
+                    }
+                }
+            }
+        
+
+        }
+
+
     if (!mysqli_commit($conn)) {
         mysqli_rollback($conn);
         echo "Errore durante il commit della transazione.";
@@ -192,6 +221,8 @@
 
     // chiusura della connessione
     mysqli_close($conn);
+
+
 
     ?>
 
