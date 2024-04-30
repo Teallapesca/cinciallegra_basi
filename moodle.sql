@@ -129,6 +129,7 @@ create table RIF_TABELLA_QUESITO(
     TitoloTest VARCHAR(30),
     NomeTabella VARCHAR(30),
     
+    PRIMARY KEY(ProgressivoQuesito, TitoloTest, NomeTabella),
     FOREIGN KEY (ProgressivoQuesito, TitoloTest) REFERENCES QUESITO(Progressivo, TitoloTest) ON DELETE CASCADE,
     FOREIGN KEY (NomeTabella) REFERENCES TABELLA_ESERCIZIO(Nome) ON DELETE CASCADE
 )engine=INNODB;
@@ -160,12 +161,14 @@ create table VINCOLO(
  
   create table MESSAGGIO(
 	Id INT PRIMARY KEY AUTO_INCREMENT,
-    Titolo VARCHAR(30), /* Rappresenta l'oggetto della mail ad esempio.*/
-    DataInserimento date,
+    TitoloMess VARCHAR(30), /* Rappresenta l'oggetto della mail ad esempio.*/
     Testo VARCHAR(100),
+    DataInserimento date,
 	TitoloTest VARCHAR(30),
-    Mittente VARCHAR(40),
-    Destinatario VARCHAR(40),
+    MailDocente VARCHAR(40),
+    MailStudente VARCHAR(40),
     
-    FOREIGN KEY (TitoloTest) REFERENCES TEST(Titolo) ON DELETE CASCADE
+    FOREIGN KEY (TitoloTest) REFERENCES TEST(Titolo) ON DELETE CASCADE,
+    FOREIGN KEY (MailDocente) REFERENCES DOCENTE(Mail) ON DELETE CASCADE,
+    FOREIGN KEY (MailStudente) REFERENCES STUDENTE(Mail) ON DELETE CASCADE
  ) engine=INNODB; 
