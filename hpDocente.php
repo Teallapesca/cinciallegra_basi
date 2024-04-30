@@ -23,7 +23,7 @@
         <div class="d-flex flex-row align-items-center" style="display: block;">
             <button onclick="toggleDropdown('tabelleDropdown')" class="btn btn-primary btn-lg m-4">Tabelle <?php  $_SESSION['prima']=1; //per mostrare la scelta della prima tabella in vincoli.php?></button>
             <button id="button-style" onclick="openPage('CreaTest')" class="btn btn-primary btn-lg m-4">Crea test</button>
-            <button id="button-style" onclick="openPage('Messaggio')" class="btn btn-primary btn-lg m-4">Invia messaggio</button>
+            <button id="button-style" onclick="openPage('classifiche')" class="btn btn-primary btn-lg m-4">Visualizza classifiche</button>
             <button id="button-style" onclick="openPage('VisualizzaTest')"  class="btn btn-primary btn-lg m-4">Visualizza test</button>
 
             <form name="logoutf" method="GET" action="hpDocente.php">
@@ -81,8 +81,8 @@
                 pagina = "CreaTabelle.php";
             } else if (tipoPagina==="CreaTest") {
                 pagina = "TestPage.php";
-            } else if (tipoPagina==="Messaggio") {
-                pagina = "MessaggioDocente.html";
+            } else if (tipoPagina==="classifiche") {
+                pagina = "Classifiche.php";
             } else if (tipoPagina==="PopolaTabelle") {
                 pagina = "PopolaTabella.php";}
             else if (tipoPagina==="VisualizzaTest") {
