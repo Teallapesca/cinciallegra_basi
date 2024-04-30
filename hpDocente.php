@@ -47,7 +47,7 @@
                 mysqli_rollback($conn);
                 echo "Errore durante il commit della transazione.";
             }
-        
+    
             // chiusura della connessione
             mysqli_close($conn);
         if (isset($_GET["logout"])) {
