@@ -17,13 +17,8 @@
     <form action="TestPage.php" method="GET">
         Titolo del Test:<br><br>
         <input type="text" name="test_title">
-        <br><br> <input type=checkbox name=visualizza> Visualizzazione delle risposte <br><br>
         <button type="submit" name="crea_test">Crea Test</button><br><br><br>
     </form>
-        
-  
-
-
 
 <?php
 // Connessione al database
@@ -39,9 +34,6 @@
             $_SESSION['test_title']=$_GET['test_title'];
             $test_title=$_SESSION['test_title'];
             $visualizza=0;
-            if(isset($_GET['visualizza'])){
-                $visualizza=1;
-            }
             $foto=0;
 
             //echo "dati: ".$mail." ".$test_title." ".$visualizza;

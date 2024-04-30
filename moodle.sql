@@ -116,11 +116,12 @@ create table OPZIONE(
  /* La tabella dell'esercizio si riferisce: 
 	Al DOCENTE che la crea (una Tabella di Esercizio può essere creata soltanto da un docente). */
  create table TABELLA_ESERCIZIO(
-	Nome VARCHAR(30) PRIMARY KEY,
+	Nome VARCHAR(30) ,
     Creazione DATE,
     NumeroRighe INT,
     MailDocente VARCHAR(40),
     
+    PRIMARY KEY(Nome, MailDocente),
     FOREIGN KEY (MailDocente) REFERENCES DOCENTE(Mail) ON DELETE CASCADE
 ) engine=INNODB;
 create table RIF_TABELLA_QUESITO(
@@ -149,7 +150,7 @@ create table VINCOLO(
     NomeAttributoFK VARCHAR(30),
     NomeTabellaFK VARCHAR(30),
     
-    PRIMARY KEY (NomeAttributoPK, NomeTabellaPK),
+    PRIMARY KEY (NomeAttributoPK, NomeTabellaPK, NomeAttributoFK, NomeTabellaFK),
 	FOREIGN KEY (NomeAttributoPK) REFERENCES ATTRIBUTO(Nome) ON DELETE CASCADE,
     FOREIGN KEY (NomeTabellaPK) REFERENCES ATTRIBUTO(NomeTabella) ON DELETE CASCADE,
     FOREIGN KEY (NomeAttributoFK) REFERENCES ATTRIBUTO(Nome) ON DELETE CASCADE,
@@ -158,7 +159,7 @@ create table VINCOLO(
  
  
   create table MESSAGGIO(
-	Id INT PRIMARY KEY,
+	Id INT PRIMARY KEY AUTO_INCREMENT,
     Titolo VARCHAR(30), /* Rappresenta l'oggetto della mail ad esempio.*/
     DataInserimento date,
     Testo VARCHAR(100),

@@ -21,7 +21,7 @@
 
     <div class="m-5 d-flex flex-row justify-content-center">
         <div class="d-flex flex-row align-items-center">
-            <button onclick="openPage('CreaTabelle')" class="btn btn-primary btn-lg m-4">Crea tabelle</button>
+            <button onclick="openPage('Tabelle')" class="btn btn-primary btn-lg m-4">Crea tabelle</button>
             <button id="button-style" onclick="openPage('CreaTest')" class="btn btn-primary btn-lg m-4">Crea test</button>
             <button id="button-style" onclick="openPage('Messaggio')" class="btn btn-primary btn-lg m-4">Invia messaggio</button>
             <button id="button-style" onclick="openPage('PopolaTabelle')"  class="btn btn-primary btn-lg m-4">Popola tabelle</button>

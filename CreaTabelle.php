@@ -54,18 +54,33 @@
                         $colonne = intval($_SESSION['numCol']);
                         echo "<br><br><form>";
                         for($i=0; $i<$colonne; $i++){
-                            echo "
-                            <pre>inserisci nome attributo   inserisci tipo          è chiave primaria?</pre>
-                            <pre><input type='text' name='attributo[]' value=''>   <select name='tipo[]'>
-                                                                                        <option value='VARCHAR'>VARCHAR</option>
-                                                                                        <option value='INT' selected>INT</option>
-                                                                                        <option value='BOOLEAN'>BOOLEAN</option>
-                                                                                        <option value='DOUBLE'>DOUBLE</option>
-                                                                                    </select>            <select name='PK[]'>
-                                                                                                            <option value='SI'>SI</option>
-                                                                                                            <option value='NO' selected>NO</option>
-                                                                                                        </select>
-                            ";
+                            if($i==0){
+                                echo "
+                                <pre>inserisci nome attributo   inserisci tipo          è chiave primaria?</pre>
+                                <pre><input type='text' name='attributo[]' value=''>   <select name='tipo[]'>
+                                                                                            <option value='VARCHAR'>VARCHAR</option>
+                                                                                            <option value='INT' selected>INT</option>
+                                                                                            <option value='BOOLEAN'>BOOLEAN</option>
+                                                                                            <option value='DOUBLE'>DOUBLE</option>
+                                                                                        </select>            <select name='PK[]'>
+                                                                                                                <option value='SI'selected>SI</option>
+                                                                                                                <option value='NO'>NO</option>
+                                                                                                            </select>
+                                ";
+                            }else{
+                                echo "
+                                <pre>inserisci nome attributo   inserisci tipo          è chiave primaria?</pre>
+                                <pre><input type='text' name='attributo[]' value=''>   <select name='tipo[]'>
+                                                                                            <option value='VARCHAR'>VARCHAR</option>
+                                                                                            <option value='INT' selected>INT</option>
+                                                                                            <option value='BOOLEAN'>BOOLEAN</option>
+                                                                                            <option value='DOUBLE'>DOUBLE</option>
+                                                                                        </select>            <select name='PK[]'>
+                                                                                                                <option value='SI'>SI</option>
+                                                                                                                <option value='NO' selected>NO</option>
+                                                                                                            </select>
+                                ";
+                            }
                         }
                         if (!mysqli_commit($conn)) {
                             mysqli_rollback($conn);

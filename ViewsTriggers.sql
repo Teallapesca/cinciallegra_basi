@@ -49,7 +49,7 @@ BEGIN
     IF numeroRisposte = 1 THEN
         UPDATE Svolgimento
         SET Stato = 'InCompletamento'
-        WHERE svolgimento.MailStudente = risposta.MailStudente AND svolgimento.TitoloTest = risposta.TitoloTest;
+        WHERE svolgimento.MailStudente = NEW.MailStudente AND svolgimento.TitoloTest = NEW.TitoloTest;
     END IF;
 END;
 $ DELIMITER ;

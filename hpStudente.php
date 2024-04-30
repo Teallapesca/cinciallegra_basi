@@ -27,6 +27,7 @@
         <form method="POST" action="hpStudente.php">
             <button  class="btn btn-primary btn-lg m-4" type="submit" name="logout">Logout</button>
         </form>
+        <a href=sessioni.php>sesssssssiooooneeee </a>
     </div>
 
         <?php

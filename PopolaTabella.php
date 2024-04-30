@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<link type="text/css" rel="stylesheet" href="stile.css">
+        <title>Cinciallegra-Popolamento tabelle</title>
 	</head>
 	<body>
 		<?php
@@ -11,13 +12,14 @@
 			mysqli_begin_transaction($conn);
 		?>
 		<div class="intesta">
-			<h1> LOGIN  </h1>
+			<h1> Popolamento tabelle </h1>
 		</div>
 		<div class="principale">
             <form name=sceltaTabella method=GET action=PopolaTabella.php>
                 <select name="nt">
                     <option> --- </option>
                     <?php
+                    //selezione della tabella da popolare
                     $mail=$_SESSION['mailDocente'];
                     $query="SELECT Nome FROM tabella_esercizio WHERE MailDocente='$mail' ;";
 
@@ -46,30 +48,37 @@
 
             <form name='attributi' method='GET' action='PopolaTabella.php'>
                 <?php
+                //se è stato cliccato "scelta" prendo la tabella selezionata
                     if(isset($_GET["scelta"])){
+                        $_SESSION["chiave"]="";
+                        unset($_SESSION["attributi"]);//svuoto l'array attributi
                         $_SESSION['tabella']=$_GET['nt'];
                         $tabella=$_SESSION['tabella'];
 
                         $query="SELECT Nome, Tipo, PossibileChiavePrimaria
                                 FROM attributo
-                                WHERE NomeTabella='$tabella';";
+                                WHERE NomeTabella='$tabella';";  //seleziono gli attributi della tabella selezionata
 
                         $risult=mysqli_query($conn,$query);
 
                         if(!$risult){
                             echo "ricerca fallita: " . die (mysqli_error($conn));
-                        }
+                        }else
                         if(mysqli_num_rows($risult)==0){
                             echo "non ci sono righe";
                         }
                         else{
                             echo "tabella: " .$tabella ."<br><br>";
                             while($row = mysqli_fetch_array($risult))
-                            {
+                            {//potrei fare un if che se il tipo è varchar mi mette nel value le virgolette
                                 echo "
                                     {$row['Nome']} ({$row['Tipo']}):<br>
                                     <input type='text' name='nome_{$row['Nome']}' value=''><br><br>
                                 ";
+                                if($row['PossibileChiavePrimaria']==1){
+                                    $_SESSION["chiave"]=$row['Nome']; //sarà da sistemare per le chiavi multiple
+                                }
+                                $_SESSION["attributi"][]=Array("nome" => $row['Nome'],"tipo" => $row['Tipo']);
                             }
                             echo "<input type='submit' name=submit value='Invia'>";
                         }
@@ -84,28 +93,67 @@
             </form>
 
             <?php
-                $tabella=$_SESSION['tabella'];
-
-                $query="SELECT Nome, Tipo, PossibileChiavePrimaria
-                        FROM attributo
-                        WHERE NomeTabella='$tabella';";
-                $risult=mysqli_query($conn,$query);
+                
                 if(isset($_GET["submit"])){
-                    while($row = mysqli_fetch_array($risult)){
-                        echo "ok ". $row['Nome']. " val: ".$_GET["nome_{$row['Nome']}"];
-                        //$query2="INSERT INTO $tabella({$row['Nome']}) VALUES ('"._GET["nome_{$row['Nome']}"]."');";
-                    }
-                   /* $risultato = mysqli_query($conn,$query);
-                    if($risultato === false){
-                        echo "errore nella ricerca" . die(mysqli_error($conn));}
-                    else{
-                            echo "inserimento avvenuto con successo";
-                    }
+                    $tabella=$_SESSION['tabella'];
 
-                    if (!mysqli_commit($conn)) {
-                        mysqli_rollback($conn);
-                        echo "Errore durante il commit della transazione.";
-                    }*/
+                    if (isset($_SESSION["attributi"])) {
+                        $valore1=0;
+                        $attr1="";
+                        $chiave=$_SESSION["chiave"];
+                        if(!isset($_SESSION['num'])){
+                            $_SESSION['num']=1;
+                        }else{
+                            $_SESSION['num']=$_SESSION['num']+1;
+                        }
+                        $num=$_SESSION['num'];
+                        //var_dump($_SESSION["attributi"]);
+                        //creazione fisica delle tabelle
+                        foreach($_SESSION["attributi"] as $key => $attributo){
+                            echo "<br>ok ". $attributo["nome"]. " val: ".$_GET["nome_{$attributo["nome"]}"];
+                            $valore=$_GET["nome_{$attributo["nome"]}"];
+                            $attr=$attributo["nome"];
+                            if($key === 0){
+                                $attr1=$attr;
+                                if($attributo["tipo"]=="VARCHAR"){//non mi ricordo cosa cambia fra i due, se funziona uguale lo tolgo
+                                    $query="INSERT INTO $tabella({$chiave},{$attr}) VALUES ('".$num."','".$valore."');";
+                                }
+                                else{
+                                    $query="INSERT INTO $tabella({$chiave},{$attr}) VALUES ('".$num."','".$valore."');";;
+                                }
+                                $risultato = mysqli_query($conn,$query);
+                                if($risultato === false){
+                                    echo "errore nella ricerca " . mysqli_error($conn);}
+                                else{
+                                        echo "inserimento avvenuto con successo";
+                                }
+                            }else{
+
+                                if($attributo["tipo"]=="VARCHAR"){
+                                    $query="UPDATE $tabella SET $attr='$valore' WHERE $chiave='$num';";
+                                }
+                                else{
+                                    $query="UPDATE $tabella SET $attr=$valore WHERE $chiave=$num ;";
+                                }
+                                $risultato = mysqli_query($conn,$query);
+                                if($risultato === false){
+                                    echo "errore nella ricerca " . mysqli_error($conn);}
+                                else{
+                                        echo "inserimento avvenuto con successo";
+                                }
+                                //se l'attributo da aggiornare è la chiave, aggiorno anche il valore da prendere in considerazione
+                                if($attributo['nome']==$chiave){
+                                    $num=$valore;
+                                }
+                                
+                            }
+                            
+                        }
+                        if (!mysqli_commit($conn)) {
+                            mysqli_rollback($conn);
+                            echo "Errore durante il commit della transazione.";
+                        }
+                    }
                 }
             
             ?>

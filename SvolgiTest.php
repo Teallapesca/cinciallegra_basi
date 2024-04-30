@@ -21,7 +21,7 @@
             ///////---- mettere sia tabelle per ogni quesito sia il bottone check dopo i codici
                 $test=$_SESSION['titoloTest'];
                 $mail=$_SESSION['mailStudente']; 
-                $_SESSION["quesiti$test"]=[]; ///****credo dia comunque problema, ricontrollare */
+                $_SESSION["quesiti$test"]=[];
                 if (isset($_GET['titolo'])) {
                    $_SESSION['titoloTest']=$_GET['titolo'];
                     $titoloTest = $_GET['titolo'];
@@ -46,6 +46,55 @@
                             }
                         }
                     }
+
+                       //---visualizza tabelle
+                       $tabelle = [];
+                       // Esegui una singola query per ottenere tutti i dati necessari
+                       $query = "SELECT DISTINCT r.NomeTabella, a.Nome AS NomeAttributo 
+                               FROM rif_tabella_quesito as r
+                               JOIN attributo as a ON r.NomeTabella = a.NomeTabella
+                               WHERE r.TitoloTest='$titoloTest';";
+                       $risultato = mysqli_query($conn, $query);
+                       if (!$risultato) {
+                           echo "Errore nella visualizzazione delle tabelle e degli attributi: " . mysqli_error($conn);
+                       } else {
+                           // Memorizza gli attributi per ciascuna tabella in un array associativo
+                           while ($row = mysqli_fetch_array($risultato, MYSQLI_ASSOC)) { 
+                               $tabella = $row['NomeTabella'];
+                               $attributo = $row['NomeAttributo'];
+                               $tabelle[$tabella][] = $attributo;
+                           }
+   
+                           // Itera sulle tabelle e sugli attributi di ciascuna tabella
+                           foreach ($tabelle as $tabella => $attributi) {
+                               echo "<h4>".$tabella."</h4>";
+                               echo "<table>";
+                               echo "<tr>";
+                               // Stampa gli attributi come intestazioni della tabella
+                               foreach ($attributi as $attributo) {
+                                   echo "<td>".$attributo."</td>";
+                               }
+                               echo "</tr>";
+   
+                               // Popola la tabella con i dati
+                               $popolazione_query = "SELECT * FROM $tabella;";
+                               $popolazione_risultato = mysqli_query($conn, $popolazione_query);
+                               if (!$popolazione_risultato) {
+                                   echo "Errore nella visualizzazione della popolazione: " . mysqli_error($conn);
+                               } else {
+                                   while ($pop = mysqli_fetch_array($popolazione_risultato, MYSQLI_ASSOC)) { 
+                                       echo "<tr>";
+                                       // Stampa i valori degli attributi per ciascuna riga
+                                       foreach ($attributi as $attributo) {
+                                           echo "<td>".$pop[$attributo]."</td>";
+                                       }
+                                       echo "</tr>";
+                                   }
+                               }
+                               echo "</table>";
+                           }
+                       }
+   
 
                     //---visualizzazione quesiti
                     $num=0;
@@ -116,7 +165,7 @@
                                 }
                             }
                             //salvo nell'array i quesiti
-                            $quesito=$_SESSION["quesiti$test"][] = Array("progressivo" => $progressivo,
+                            $quesito=$_SESSION["quesiti$titoloTest"][] = Array("progressivo" => $progressivo,
                             "tipo" => $tipo);
                         }
                     }
@@ -136,29 +185,24 @@
     //controllo se le risposte sono giuste, salvataggio delle risposte anche se non è stato completato il test e inserimento in risposte
         $titoloTest = $_SESSION['titoloTest'];
         $mail=$_SESSION['mailStudente']; 
-
+                echo $titoloTest;
         if(isset($_GET['indietro'])){
 
-            foreach ($_SESSION["quesiti$titoloTest"] as $quesito) {
-
-                $progressivo=$quesito["progressivo"];
-
-                if(isset($_SESSION["risposta$progressivo"])||($_SESSION["risposta$progressivo"]!="")){
-                    $testo=$_GET["risposta$progressivo"]; //potrei creare una procedura da mysql che faccia controllo ed inserimento da solo
+            function risposta($conn, $mail, $titoloTest, $progressivo) {
+                $testo=$_GET["risposta$progressivo"]; //potrei creare una procedura da mysql che faccia controllo ed inserimento da solo
                     $_SESSION["risposta$progressivo"]=$testo;
-
                     //cerco se sono già state date risposte a questo quesito
                     $selezionato="SELECT * FROM risposta WHERE MailStudente='$mail' AND TitoloTest='$titoloTest' AND Progressivo='$progressivo';";
                     $rissel = mysqli_query($conn, $selezionato);
                     if (!$rissel) {
-                        echo "Errore nell'inserimento dela risposta: " . mysqli_error($conn);
+                        echo "Errore nell'inserimento della risposta: " . mysqli_error($conn);
                     }else{
                         if(mysqli_num_rows($rissel) != 0){
                             //aggiorno con la nuova risposta del quesito
                             $inserimento="UPDATE risposta SET Testo='$testo' WHERE MailStudente='$mail' AND TitoloTest='$titoloTest' AND Progressivo='$progressivo';";
-                            $ris_ins = mysqli_query($conn, $inserimento);
-                            if (!$ris_ins) {
-                                echo "Errore nell'inserimento in svolgimento2: " . mysqli_error($conn);
+                            $ris_ins2 = mysqli_query($conn, $inserimento);
+                            if (!$ris_ins2) {
+                                echo "Errore nell'aggiornamento della risposta: " . mysqli_error($conn);
                             }
                         }
                         else{ //in questo caso io sto inserendo la nuova risposta (quesito o codice)
@@ -167,33 +211,28 @@
                                 $risposta="INSERT INTO risposta(Progressivo, TitoloTest, MailStudente, Testo) VALUES ('$progressivo','$titoloTest', '$mail', '$testo' );";
                                 $risris = mysqli_query($conn, $risposta);
                                 if (!$risris) {
-                                    echo "Errore nell'inserimento dela risposta: " . mysqli_error($conn);
+                                    echo "Errore nell'inserimento della risposta2: " . mysqli_error($conn);
                                 }    
                             }
                         }
                     }
-                }
-            }
+              }
 
-            //faccio il controllo se ci sono risposte inserite, se si faccio l'update
-            /*$controllo="SELECT * FROM risposta WHERE TitoloTest='$titoloTest';";
-            $ris_controllo = mysqli_query($conn, $controllo);
-            if (!$ris_controllo) {
-                echo "Errore nell'inserimento in svolgimento1: " . mysqli_error($conn);
-            }
-            else{
-                if(mysqli_num_rows($ris_controllo) != 0){
-                    //update di svolgimento in "incompletamento"
-                    $stato="InCompletamento";
-                    $inserimento="UPDATE svolgimento SET stato='$stato' WHERE MailStudente='$mail' AND TitoloTest='$titoloTest';";
-                    $ris_ins = mysqli_query($conn, $inserimento);
-                    if (!$ris_ins) {
-                        echo "Errore nell'inserimento in svolgimento2: " . mysqli_error($conn);
+            foreach ($_SESSION["quesiti$titoloTest"] as $quesito) {
+
+                $progressivo=$quesito["progressivo"];
+                $tipo=$quesito['tipo'];
+                if($tipo=="codice"){
+                    if($_SESSION["risposta$progressivo"]!=""){
+                        risposta($conn, $mail, $titoloTest, $progressivo);
+                    }
+                }elseif($tipo="chiuso"){
+                    if(isset($_SESSION["risposta$progressivo"])&&($_SESSION["risposta$progressivo"]!="")){
+                        risposta($conn, $mail, $titoloTest, $progressivo);
                     }
                 }
                 
-            }*/
-
+            }
             
             if (!mysqli_commit($conn)) {
                 mysqli_rollback($conn);
@@ -226,8 +265,8 @@
                         if(mysqli_num_rows($rissel) != 0){
                             //aggiorno con la nuova risposta del quesito
                             $inserimento="UPDATE risposta SET Testo='$testo' WHERE MailStudente='$mail' AND TitoloTest='$titoloTest' AND Progressivo='$progressivo';";
-                            $ris_ins = mysqli_query($conn, $inserimento);
-                            if (!$ris_ins) {
+                            $ris_ins3 = mysqli_query($conn, $inserimento);
+                            if (!$ris_ins3) {
                                 echo "Errore nell'inserimento in svolgimento2: " . mysqli_error($conn);
                             }
                         }
@@ -262,11 +301,15 @@
                 echo "Errore durante il commit della transazione.";
             }
     
-                // chiusura della connessione
-                mysqli_close($conn);
+            // chiusura della connessione
+            mysqli_close($conn);
+            foreach ($_SESSION["quesiti$titoloTest"] as $quesito) {
+                $progressivo=$quesito["progressivo"];
                 unset($_SESSION["risposta$progressivo"]);
-                header("Location: hpStudente.php");
-                exit();
+            }
+            unset($_SESSION['titoloTest']);
+            header("Location: hpStudente.php");
+            exit();
                 
         }
         else{

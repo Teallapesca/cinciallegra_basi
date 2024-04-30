@@ -8,11 +8,10 @@
     $mail = $_SESSION['mailDocente'];
     $tabelle = $_SESSION["tabelle"];
     if (isset($_GET['fine'])) {
-        echo "buuuuuu";
-        var_dump($tabelle);
+       // var_dump($tabelle);
         if (isset($_SESSION["tabelle"])) {
-            var_dump($_SESSION["tabelle"]);
-            echo "ok noh";
+           // var_dump($_SESSION["tabelle"]);
+            //creazione fisica delle tabelle
             foreach($_SESSION["tabelle"] as $tabella){
                 echo "tabella: " . $tabella ."<br>";
                 //per ogni tabella nuova creata (quindi presente nell'array), seleziono i suoi attributi
@@ -33,18 +32,20 @@
                         while ($row = mysqli_fetch_array($ris)) {
                             $nome=$row['Nome'];
                             $tipo=$row['Tipo'];
-                            if ($tipo == 'VARCHAR') {
-                                $tipo = "VARCHAR(50)"; // Esempio di lunghezza massima di 255 caratteri
+                            if ($tipo == 'VARCHAR') {//se è un varchar gli specifico una lunghezza di default
+                                $tipo = "VARCHAR(50)";
                             }
                             $chiave=$row['PossibileChiavePrimaria'];
                             echo "attributo: ".$nome. "<br>";
+                            //aggiungo la colonna dell'attributo
                             $add="ALTER TABLE `$tabella`
                                         ADD `$nome` $tipo;";
                             $ris_add = mysqli_query($conn, $add);
                             if (!$ris_add) {
                                 echo "creazione colonna fallita: " . mysqli_error($conn);
                             }else{
-                                if($chiave==1){
+                                if($chiave==1){//se ho un'altra chiave tolgo id e aggiungo la nuova chiave
+                                    //**********non vanno le chiavi multiple */
                                     $drop="ALTER TABLE `$tabella` 
                                             DROP `id`;";
                                     $ris_drop = mysqli_query($conn, $drop);
@@ -62,16 +63,31 @@
                             
         
                         }
-                        /* $sql2="ALTER TABLE `$tabella`
-                                DROP COLUMN id;";
-                        $eliminazione = mysqli_query($conn, $sql2);
-                        if (!$eliminazione) {
-                            echo "creazione tabella fallita: " . mysqli_error($conn);
-                        }//else{}*/
-                        echo " e tutto ok gente!";
                     }
                 }
             }
+
+            //vincoli fisici
+            foreach($_SESSION["tabelle"] as $tabella){
+                $vincoli="SELECT * FROM vincolo WHERE NomeTabellaFK = '$tabella';";
+                $ris_vinc= mysqli_query($conn, $vincoli);
+                if (!$ris_vinc) {
+                    echo "chiave esterna fallita: " . mysqli_error($conn);
+                }else{
+                    while ($row = mysqli_fetch_array($ris_vinc)) {
+                        $pk=$row['NomeAttributoPK'];
+                        $fk=$row['NomeAttributoFK'];
+                        $tab2=$row['NomeTabellaPK'];
+                        $key="ALTER TABLE `$tabella` 
+                        ADD FOREIGN KEY (`$fk`) REFERENCES `$tab2`(`$pk`);";
+                        $foreign = mysqli_query($conn, $key);
+                        if (!$foreign) {
+                            echo "chiave primaria fallita: " . mysqli_error($conn);
+                        }
+                    }
+                }
+            }
+
         }
         else{
             echo "non ci sono righe nell'array tabelle";
@@ -82,8 +98,8 @@
         mysqli_rollback($conn);
         echo "Errore durante il commit della transazione.";
     }
-    unset( $_SESSION["tabelle"]);
+    unset( $_SESSION["tabelle"]);//elimino l'array così che possa essere ricreato da zero con le nuove tabelle
     // chiusura della connessione
     mysqli_close($conn);
-
+    echo "<br> <br> <a href=hpDocente.php> <- </a>";
 ?>
