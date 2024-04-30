@@ -2,6 +2,72 @@
 <html>
 <head>
     <link type="text/css" rel="stylesheet" href="stile.css">
+    <style>
+        .messaggi-dropdown {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+        }
+        .messaggi-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .messaggi-content {
+            display: none;
+            position: absolute;
+            top: 30px;
+            right: 0;
+            width: 200px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 10px;
+            z-index: 1;
+        }
+        .messaggi-scrivi {
+            position: fixed;
+            top: 20px;
+            right: 160px;
+        }
+        .messaggi-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .messaggi-form {
+            display: none;
+            --position: absolute;
+            top: 30px;
+            right: 60;
+            width: 1000px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 10px;
+            z-index: 1;
+        }
+    </style>
+            
+    <script>
+        function leggiMessaggi() {
+            var messaggiContent = document.getElementById("messaggiContent");
+            if (messaggiContent.style.display === "block") {
+                messaggiContent.style.display = "none";
+            } else {
+                messaggiContent.style.display = "block";
+                messaggiForm.style.display = "none";
+            }
+        }
+
+        function scriviMessaggi() {
+            var messaggiForm = document.getElementById("messaggiForm");
+            if (messaggiForm.style.display === "block") {
+                messaggiForm.style.display = "none";
+            } else {
+                messaggiForm.style.display = "block";
+                messaggiContent.style.display = "none";
+            }
+        }
+    </script>
 </head>
 <body>
     <?php
@@ -15,6 +81,72 @@
     <div class="intesta">
         <h1>SVOLGI IL TEST</h1>
     </div>
+
+    <div class="messaggi-dropdown">  
+        <button class="messaggi-icon" onclick="leggiMessaggi()"><u>Messaggi ricevuti</u></button>
+        <div class="messaggi-content" id="messaggiContent">
+            <!-- Contenuto dei messaggi qui -->
+            <?php
+                $titoloTest = $_SESSION['titoloTest'];            
+                $query1 = "SELECT * FROM MESSAGGIODOCENTE WHERE TitoloTest = '$titoloTest'";
+                $result1 = $conn->query($query1);
+        
+                if ($result1->num_rows > 0) {
+                    echo "<ul>";
+                    while ($row = $result1->fetch_assoc()) {
+                        echo "<li><b>{$row['MailDocente']} - {$row['DataInserimento']}</b><br>  {$row['TitoloMess']}<br> {$row['Testo']}</li>";
+                    }
+                    echo "</ul>";
+                } else {
+                    echo "Nessun messaggio trovato per questo test.";
+                }
+
+            ?>
+        </div>
+    </div>
+
+    <div class="messaggi-scrivi">
+        
+        <button class="messaggi-icon" onclick="scriviMessaggi()"><u>Inserisci messaggio</u></button>
+        <div class="messaggi-form" id="messaggiForm">
+            <form name="invio-messaggio" method="GET" action="SvolgiTest.php?titolo=<?php $_SESSION['titoloTest'] ?>">
+                <label>Oggetto del messaggio:<label><br>
+                <input type='text' name='titoloMess' value=''><br>
+                <label>Testo del messaggio:<label><br>
+                <input type='text' name='testoMess' value='' style='height: 100px'><br><br>
+                <input type='submit' name='invio' value='Invia messaggio'>
+            </form>
+            
+            <!-- Contenuto dei messaggi qui -->
+            <?php
+                if (isset($_GET['invio'])) {
+                    $titoloMess = $_GET['titoloMess'];
+                    $testoMess = $_GET['testoMess'];
+                    $titoloTest = $_SESSION['titoloTest'];
+                    $mailDocente = $_SESSION['mailDocente'];
+                    $mailStudente = $_SESSION['mailStudente'];
+            
+                    $query2 = 'CALL InserimentoMessaggioStudente("'.$titoloMess.'", "'.$testoMess.'", "'.$titoloTest.'", "'.$mailStudente.'", "'.$mailDocente.'")';
+                    $result2 = mysqli_query($conn, $query2);
+            
+                    if (!$result2) {
+                        echo "errore nella ricerca" . die (mysqli_error($conn));
+                    }
+                    else {
+                        echo "<label>Messaggio inviato</label>";
+                    }
+
+                    if (!mysqli_commit($conn)) {
+                        mysqli_rollback($conn);
+                        echo "Errore durante il commit della transazione.";
+                    }
+                }
+
+            ?>
+            
+        </div>
+    </div>
+
     <div class="principale">
         <form name="test" method="GET" action="SvolgiTest.php?titolo=<?php $_SESSION['titoloTest'] ?>">
             <?php
@@ -25,6 +157,9 @@
                 if (isset($_GET['titolo'])) {
                    $_SESSION['titoloTest']=$_GET['titolo'];
                     $titoloTest = $_GET['titolo'];
+                }else {
+                        $titoloTest=$_SESSION['titoloTest'];
+                }
                     echo "<h1>".$_SESSION['titoloTest']."</h1>";
 
                     //---inserimento in svolgimento 
@@ -169,9 +304,6 @@
                             "tipo" => $tipo);
                         }
                     }
-                } else {
-                    echo "Nessun titolo test specificato nella query string.";
-                }
             ?>
             <br> ---------------------------------------- <br>
             <br>
