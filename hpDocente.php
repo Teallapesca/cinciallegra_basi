@@ -19,19 +19,27 @@
        <h1 style="color: white" class="mb-5 hero-text"> <?php echo "benvenuto " . $_SESSION['mailDocente']; ?> </h1>
     </div>  
 
-    <div class="m-5 d-flex flex-row justify-content-center">
-        <div class="d-flex flex-row align-items-center">
-            <button onclick="openPage('Tabelle')" class="btn btn-primary btn-lg m-4">Crea tabelle</button>
+    <div class="m-5 d-flex flex-column justify-content-center align-items-center">
+        <div class="d-flex flex-row align-items-center" style="display: block;">
+            <button onclick="toggleDropdown('tabelleDropdown')" class="btn btn-primary btn-lg m-4">Tabelle <?php  $_SESSION['prima']=1; //per mostrare la scelta della prima tabella in vincoli.php?></button>
             <button id="button-style" onclick="openPage('CreaTest')" class="btn btn-primary btn-lg m-4">Crea test</button>
             <button id="button-style" onclick="openPage('Messaggio')" class="btn btn-primary btn-lg m-4">Invia messaggio</button>
-            <button id="button-style" onclick="openPage('PopolaTabelle')"  class="btn btn-primary btn-lg m-4">Popola tabelle</button>
             <button id="button-style" onclick="openPage('VisualizzaTest')"  class="btn btn-primary btn-lg m-4">Visualizza test</button>
 
             <form name="logoutf" method="GET" action="hpDocente.php">
                 <button class="btn btn-primary btn-lg m-4" type="submit" name="logout">Logout</button>
             </form> 
         </div>
+        <!-- Dropdown Menu -->
+        <div id="tabelleDropdown" style="display: none;">
+            <button onclick="openPage('CreaTabelle')" class="dropdown-btn btn btn-primary btn-lg m-4">Crea un nuova tabella</button>
+            <button onclick="openPage('PopolaTabelle')" class="dropdown-btn btn btn-primary btn-lg m-4">Popola una tabella</button>
+            <button onclick="openPage('Vincoli')" class="dropdown-btn btn btn-primary btn-lg m-4">Crea vincoli di integrità</button>
+        </div> 
+        <!-- Fine Dropdown Menu -->
     </div>
+
+
     
 
     <?php
@@ -54,6 +62,14 @@
 </html>
 
 <script>
+    function toggleDropdown(id) {
+        var dropdown = document.getElementById(id);
+        if (dropdown.style.display === "none") {
+            dropdown.style.display = "block";
+        } else {
+            dropdown.style.display = "none";
+        }
+    }
     function openPage(page) {
             //var tipoUtente = document.querySelector('input[name="utente"]:checked').value;
             var tipoPagina = page;
@@ -71,7 +87,10 @@
                 pagina = "PopolaTabella.php";}
             else if (tipoPagina==="VisualizzaTest") {
                 pagina = "VisualizzaTest.php";
+            }else if (tipoPagina==="Vincoli") {
+                pagina = "vincoli.php";
             }
+            
             // Reindirizza l'utente alla pagina corrispondente
             window.location.href = pagina;
         }
