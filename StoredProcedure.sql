@@ -102,7 +102,7 @@ END $ DELIMITER ;
 DELIMITER $  /* 3) Creazione di nuovo test. */
 CREATE PROCEDURE CreaTest (
     IN TitoloTest VARCHAR(30),
-    IN FotoTest BOOLEAN,
+    IN FotoTest VARCHAR(200),
     IN VisualizzaRisposteTest BOOLEAN,
     IN MailDocente VARCHAR(30)
 )
@@ -151,21 +151,18 @@ BEGIN
     WHERE (TitoloTest = TEST.Titolo);
 END $ DELIMITER ;
 
-/* 6) Inserimento di un messaggio (da parte del docente). 
+/* 6) Inserimento di un messaggio (da parte del docente). */
 DELIMITER $
 CREATE PROCEDURE InserimentoMessaggioDocente (
-    IN TestoMessaggio VARCHAR(100),
-    IN TitoloMessaggio VARCHAR(30),
+	IN TitoloMessaggio VARCHAR(30),
+    IN TestoMessaggio VARCHAR(100),    
     IN TitoloTest VARCHAR(30),
     IN MailDocente VARCHAR(40))
 BEGIN
     -- Inserimento del messaggio nella tabella MESSAGGIO
-    INSERT INTO MESSAGGIO (DataInserimento, Testo, Titolo, TitoloTest, MailStudente, MailDocente)
-    VALUES (CURDATE(), TestoMessaggio, TitoloMessaggio, TitoloTest, NULL, MailDocente);
-
-    SELECT 'Messaggio inserito con successo nella tabella MESSAGGIO';
+    INSERT INTO MESSAGGIO (TitoloMess, Testo, DataInserimento, TitoloTest,  MailDocente, MailStudente)
+    VALUES (TitoloMessaggio, TestoMessaggio, NOW(), TitoloTest, MailDocente, NULL);
 END $ DELIMITER ;
-*/
 
 /*---------------------------------------------------------------------------------*/
 /*OPERAZIONI che riguardano SOLO STUDENTI*/
@@ -186,19 +183,17 @@ BEGIN
 			AND RISPOSTA.TitoloTest = TitoloTest;
 END $ DELIMITER ;
 
-/* 3) Inserimento di un messaggio (da parte dello studente).
+/* 3) Inserimento di un messaggio (da parte dello studente).*/
 DELIMITER $
 CREATE PROCEDURE InserimentoMessaggioStudente (
-    IN TestoMessaggio VARCHAR(100),
     IN TitoloMessaggio VARCHAR(30),
+    IN TestoMessaggio VARCHAR(100),    
     IN TitoloTest VARCHAR(30),
     IN MailDocente VARCHAR(40),
     IN MailStudente VARCHAR(40))
 BEGIN
-    INSERT INTO MESSAGGIO (DataInserimento, Testo, Titolo, TitoloTest, MailStudente, MailDocente)
-    VALUES (CURDATE(), TestoMessaggio, TitoloMessaggio, TitoloTest, MailStudente, MailDocente);
-
-    SELECT 'Messaggio inserito con successo nella tabella MESSAGGIO';
+    -- Inserimento del messaggio nella tabella MESSAGGIO
+    INSERT INTO MESSAGGIO (TitoloMess, Testo, DataInserimento, TitoloTest,  MailDocente, MailStudente)
+    VALUES (TitoloMessaggio, TestoMessaggio, NOW(), TitoloTest, MailDocente, MailStudente);
 END $ DELIMITER ;
-*/
 
