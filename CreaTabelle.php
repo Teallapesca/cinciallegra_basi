@@ -135,12 +135,15 @@
                     // chiusura della connessione
                     mysqli_close($conn);
 
-                    $_SESSION['prima']=1; //per mostrare la scelta della prima tabella in vincoli.php
-                    echo "<p>
+                   //
+                    /*echo "<p>
                                 <a href=vincoli.php> <input type=button name=vincoli value='fai vincoli di integrita'></a>
-                            </p>";
+                            </p>";*/
                 }
             ?>
+            <form name=crea method=GET action='tabFisica.php'>
+                <input type=submit name=fine value="fine">
+            </form>
         <br> <br> <a href=hpDocente.php> <- </a>
         </div>
 	</body>
