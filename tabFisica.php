@@ -66,28 +66,6 @@
                     }
                 }
             }
-
-            //vincoli fisici
-            foreach($_SESSION["tabelle"] as $tabella){
-                $vincoli="SELECT * FROM vincolo WHERE NomeTabellaFK = '$tabella';";
-                $ris_vinc= mysqli_query($conn, $vincoli);
-                if (!$ris_vinc) {
-                    echo "chiave esterna fallita: " . mysqli_error($conn);
-                }else{
-                    while ($row = mysqli_fetch_array($ris_vinc)) {
-                        $pk=$row['NomeAttributoPK'];
-                        $fk=$row['NomeAttributoFK'];
-                        $tab2=$row['NomeTabellaPK'];
-                        $key="ALTER TABLE `$tabella` 
-                        ADD FOREIGN KEY (`$fk`) REFERENCES `$tab2`(`$pk`);";
-                        $foreign = mysqli_query($conn, $key);
-                        if (!$foreign) {
-                            echo "chiave primaria fallita: " . mysqli_error($conn);
-                        }
-                    }
-                }
-            }
-
         }
         else{
             echo "non ci sono righe nell'array tabelle";
