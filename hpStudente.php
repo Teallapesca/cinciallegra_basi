@@ -27,7 +27,6 @@
         <form method="POST" action="hpStudente.php">
             <button  class="btn btn-primary btn-lg m-4" type="submit" name="logout">Logout</button>
         </form>
-        <a href=sessioni.php>sesssssssiooooneeee </a>
     </div>
 
         <?php
@@ -51,7 +50,8 @@
                             $_SESSION['titoloTest'] = $titoloTest;
                             echo "
                             <a href='SvolgiTest.php?titolo=$titoloTest'> {$titoloTest} ({$row['DataTest']}, {$row['MailDocente']})  </a><br><br>
-                        ";
+                            ";
+                            $_SESSION['mailDocente'] = $row['MailDocente'];
                         }
                     }
                 }

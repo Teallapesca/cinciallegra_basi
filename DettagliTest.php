@@ -18,6 +18,7 @@
                     position: absolute;
                     top: 30px;
                     right: 0;
+                    width: 200px;
                     background-color: #f9f9f9;
                     border: 1px solid #ddd;
                     padding: 10px;
@@ -130,7 +131,7 @@
                             echo "errore nella ricerca" . die (mysqli_error($conn));
                         }
                         else {
-                            echo "<label>Messaggio inviato<br>$titoloMess, $testoMess, $titoloTest, $mailDocente</label>";
+                            echo "<label>Messaggio inviato</label>";
                         }
 
                         if (!mysqli_commit($conn)) {
