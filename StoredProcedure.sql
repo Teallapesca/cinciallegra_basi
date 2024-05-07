@@ -159,9 +159,8 @@ CREATE PROCEDURE InserimentoMessaggioDocente (
     IN TitoloTest VARCHAR(30),
     IN MailDocente VARCHAR(40))
 BEGIN
-    -- Inserimento del messaggio nella tabella MESSAGGIO
-    INSERT INTO MESSAGGIO (TitoloMess, Testo, DataInserimento, TitoloTest,  MailDocente, MailStudente)
-    VALUES (TitoloMessaggio, TestoMessaggio, NOW(), TitoloTest, MailDocente, NULL);
+    INSERT INTO MESSAGGIODOCENTE (TitoloMess, Testo, DataInserimento, TitoloTest,  MailDocente)
+    VALUES (TitoloMessaggio, TestoMessaggio, NOW(), TitoloTest, MailDocente);
 END $ DELIMITER ;
 
 /*---------------------------------------------------------------------------------*/
@@ -189,12 +188,12 @@ CREATE PROCEDURE InserimentoMessaggioStudente (
     IN TitoloMessaggio VARCHAR(30),
     IN TestoMessaggio VARCHAR(100),    
     IN TitoloTest VARCHAR(30),
-    IN MailDocente VARCHAR(40),
-    IN MailStudente VARCHAR(40))
+    IN MailStudente VARCHAR(40),
+    IN MailDocente VARCHAR(40))
 BEGIN
     -- Inserimento del messaggio nella tabella MESSAGGIO
-    INSERT INTO MESSAGGIO (TitoloMess, Testo, DataInserimento, TitoloTest,  MailDocente, MailStudente)
-    VALUES (TitoloMessaggio, TestoMessaggio, NOW(), TitoloTest, MailDocente, MailStudente);
+    INSERT INTO MESSAGGIOSTUDENTE (TitoloMess, Testo, DataInserimento, TitoloTest, MailStudente,  MailDocente)
+    VALUES (TitoloMessaggio, TestoMessaggio, NOW(), TitoloTest, MailStudente, MailDocente);
 END $ DELIMITER ;
 
 /*procedure nuove (non richieste da traccia)*/
