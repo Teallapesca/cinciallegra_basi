@@ -18,13 +18,12 @@
 	<body class="d-flex flex-column align-items-center justify-content-center page-size">
 
 	
-		<?php include 'navbar.php' ?>	
 
 		<div class="card" >
 			<div class="card-body">
 			<form name="accesso" method="GET" action="login.php">
-				<input class="form-check-input" type="radio" name="utente" value="docente"> Docente <br><br>
-				<input class="form-check-input" type="radio" name="utente" value="studente"> Studente <br><br>
+				<!--<input class="form-check-input" type="radio" name="utente" value="docente"> Docente <br><br>
+				<input class="form-check-input" type="radio" name="utente" value="studente"> Studente <br><br>-->
 
 				<div class="input-group mb-3">  
 					<span class="input-group-text" id="basic-addon1">Mail</span> <input class="form-control" type='text' name='mail' value=''> <br>
@@ -43,52 +42,38 @@
 			?>
 			<?php
 				if(isset($_GET["log"])){
-					if(isset($_GET["utente"])){
-						$_SESSION['utente']=$_GET["utente"];
-						if($_SESSION['utente']=='docente'){
-							$_SESSION['mailDocente']=$_GET["mail"];
-							$mailDoc=$_SESSION['mailDocente'];
-							$query = "SELECT Mail FROM Docente WHERE Mail='$mailDoc' ;";
-						}
-						else if($_SESSION['utente']=='studente'){
-							$_SESSION['mailStudente']=$_GET["mail"];
-							$mailStud=$_SESSION['mailStudente'];
-							$query = "SELECT Mail FROM studente WHERE Mail='$mailStud';";
-						}
-						
-						// esecuzione query
-						$risultato = mysqli_query($conn,$query);
-						if(!$risultato){
-							echo "errore nella ricerca" . die (mysqli_error($conn));
-						}
-						else{
-							if(mysqli_num_rows($risultato) != 0){
-								if($_SESSION['utente']=='docente'){
-									echo "ciao ". $_SESSION['mailDocente'];
-									header("Location: hpDocente.php");
-									exit();
-								}else if($_SESSION['utente']=='studente'){
-									echo "ciao ". $_SESSION['mailStudente'];
-									header("Location: hpStudente.php");
-									exit();
-								}
-							}
-							else{
-								echo "utente non trovato, 
-								<br><br><a href=registrazione.php>registrati!!!!</a><br><br>";
-							}
-							
-							
-						}
 
-						if (!mysqli_commit($conn)) {
-							mysqli_rollback($conn);
-							echo "Errore durante il commit della transazione.";
-						}
-					
-						// chiusura della connessione
-						mysqli_close($conn);
+					$mail=$_GET["mail"];
+					$who=0;
+					$query ="CALL Autenticazione('$mail', @who);";
+					$risultato = mysqli_query($conn,$query);
+					if(!$risultato){
+						echo "errore nella ricerca" . die (mysqli_error($conn));
 					}
+					else{
+						$result = mysqli_query($conn, "SELECT @who");
+						$row = mysqli_fetch_array($result);
+						$who = $row[0];
+						if($who==1){
+							$_SESSION['mailDocente']=$mail;
+							header("Location: hpDocente.php");
+							exit();
+						}elseif($who==2){
+							$_SESSION['mailStudente']=$mail;
+							header("Location: hpStudente.php");
+							exit();
+						}else{
+							echo "Utente non trovato, 
+							<br><br><a href=registrazione.php>Registrati!!!!</a><br><br>";
+						}
+					}
+					if (!mysqli_commit($conn)) {
+						mysqli_rollback($conn);
+						echo "Errore durante il commit della transazione.";
+					}
+				
+					// chiusura della connessione
+					mysqli_close($conn);
 				}
 			?>
 

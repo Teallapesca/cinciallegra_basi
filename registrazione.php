@@ -12,29 +12,62 @@
         width: 100%;
         background-color: rgb(241, 246, 249);
     }
-    </style>
+    </style> 
+    <script>
+        //********da sistemare il js */
+        function mostraTesto(tipo) {
+            var doc = document.getElementById("DIVdocente");
+            var stu = document.getElementById("DIVstudente");
+            var campi = document.getElementById("campi");
+
+            campi.style.display = "block";
+            <?php
+            session_start();
+            ?>
+            if (tipo === "docente") {
+              
+                stu.style.display = "none";
+                doc.style.display = "block";
+             
+            } else if (tipo === "studente") {
+                
+                doc.style.display = "none";
+                stu.style.display = "block";
+            }
+        }
+        function validateForm() {
+            // Ottieni i valori dei campi del modulo
+            var email = document.forms["regutente"]["mail"].value;
+            var nome = document.forms["regutente"]["nome"].value;
+            var cognome = document.forms["regutente"]["cognome"].value;
+            var telefono = document.forms["regutente"]["telefono"].value;
+            var dip = document.forms["regutente"]["corso"].value;
+            var corso = document.forms["regutente"]["dip"].value;
+            var anno = document.forms["regutente"]["anno"].value;
+            var matr = document.forms["regutente"]["matricola"].value;
+
+            // Controlla se tutti i campi richiesti sono stati compilati o selezionati
+            if (email == "" || nome == "" || cognome == "" || !telefono || ((dip=="" || corso=="")&&(anno =="" || matr==""))) {
+                alert("Compila tutti i campi richiesti!");
+                return false; // Impedisci l'invio del modulo
+            }
+            return true; // Consenti l'invio del modulo
+        }
+    </script>
 </head>
 <body class="d-flex flex-column align-items-center justify-content-center page-size">
-    
-    <?php include 'Navbar.php' ?>
-   
     <div class="card">
-    <div class="card-body">
+        <div class="card-body">
+            <div>
+                <form name="registrazione"class="d-flex flex-row mb-4">
+                    <input class="btn btn-primary btn-lg" type="button" name="docente" value="docente" onClick="mostraTesto('docente')"> <br><br>
+                    <input class="btn btn-primary btn-lg" style="margin-left:20px;" type="button" name="studente" value="studente" onClick="mostraTesto('studente')"> <br><br>
+                </form>
+            </div>  
+            <div>
+                <form name=regutente method=GET action=signin.php onsubmit="return validateForm()">
 
-    <div >
-        <form name="registrazione" method="GET" action="registrazione.php" class="d-flex flex-row mb-4">
-            <input class="btn btn-primary btn-lg" type="submit" name="docente" value="docente"> <br><br>
-            <input class="btn btn-primary btn-lg" style="margin-left:20px;" type="submit" name="studente" value="studente"> <br><br>
-        </form>
-        <?php
-            session_start();
-            if (isset($_GET["docente"])) {
-                $_SESSION['utente']  = "docente";
-                 
-                ?>
-                
-                    <form name=regutente method=GET action=signin.php>
-                        <div>
+                    <div id="campi" style="display:none;">
                         <div class="input-group mb-3">  
                         <span class="input-group-text" id="basic-addon1">Mail</span> <input class="form-control" type='text' name='mail' value=''> <br>
                         </div>
@@ -50,7 +83,9 @@
                         <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">Telefono</span> <input class="form-control"  type='number' name='telefono' > <br>
                         </div>
+                    </div>
 
+                    <div id="DIVdocente" style="display:none;">
                         <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">Corso</span> <input class="form-control"  type='text' name='corso' value=''> <br>
                         </div>
@@ -58,54 +93,25 @@
                         <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">Dipartimento</span> <input class="form-control"  type='text' name='dip' value=''>
                         </div>
-                        <input class="btn btn-primary"  type=submit name=reg value=registrati>
+
+                        <input class="btn btn-primary"  type=submit name=regDoc value=registrati  >
+
+                    </div>
+                    <div id="DIVstudente" style="display:none;">
+                        <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">Matricola</span> <input class="form-control" type='text' name='matricola' value=''> <br><br>
                         </div>
-                    </form>
-                
-                <?php
+                        
+                        <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">Anno di immatricolazione</span> <input class="form-control" type='number' name='anno'>
+                        </div>
 
-            } else if (isset($_GET["studente"])) {
-                $_SESSION['utente'] = "studente";
-                ?>
-               
-                    <form name=regutente method=GET action=signin.php>
-
-                    <div class="input-group mb-3"> 
-                    <span class="input-group-text" id="basic-addon1">Mail</span> <input class="form-control" type='text' name='mail' value=''> <br>
+                        <input class="btn btn-primary"  type=submit name=regStu value=registrati  >
                     </div>
-
-                    <div class="input-group mb-3">
-                    <span class="input-group-text" id="basic-addon1">Nome</span> <input class="form-control" type='text' name='nome' value=''> <br>
-                    </div>
-
-                    <div class="input-group mb-3">
-                    <span class="input-group-text" id="basic-addon1">Cognome</span> <input class="form-control"  type='text' name='cognome' value=''> <br>
-                    </div>
-
-                    <div class="input-group mb-3">
-                    <span class="input-group-text" id="basic-addon1">Telefono</span> <input class="form-control"  type='number' name='telefono' > <br>
-                    </div>
-
-                    <div class="input-group mb-3">
-                    <span class="input-group-text" id="basic-addon1">Matricola</span> <input class="form-control" type='text' name='matricola' value=''> <br><br>
-                    </div>
-
-                    <div class="input-group mb-3">
-                    <span class="input-group-text" id="basic-addon1">Anno di immatricolazione</span> <input class="form-control" type='number' name='anno'>
-                    </div>
-
-                    <input class="btn btn-primary"  type=submit name=reg value=registrati>
-                    </form>
-               
-                <?php
-                
-            }
-        ?>
-        
-    </div>
-
-
-    </div>
+                    
+                </form>
+            </div>
+        </div>
     </div>
 
 

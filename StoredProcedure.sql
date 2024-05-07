@@ -6,14 +6,14 @@ use moodle;
 /* 1) autenticazione sulla piattaforma. */
 /* who è 1 per docente e 2 per studente*/
 DELIMITER $
-CREATE PROCEDURE Autenticazione(IN Mail VARCHAR(30), OUT who INT)
+CREATE PROCEDURE Autenticazione(IN InputMail VARCHAR(30), OUT who INT)
 BEGIN
     DECLARE countDocenti INT DEFAULT 0;
     DECLARE countStudenti INT DEFAULT 0;
-    DECLARE who INT DEFAULT 0;
+   
 
-    SELECT COUNT(*) INTO countDocenti FROM DOCENTE WHERE Mail = Mail;
-    SELECT COUNT(*) INTO countStudenti FROM STUDENTE WHERE Mail = Mail;
+    SELECT COUNT(*) INTO countDocenti FROM DOCENTE WHERE docente.Mail = InputMail;
+    SELECT COUNT(*) INTO countStudenti FROM STUDENTE WHERE studente.Mail = InputMail;
 
     IF countDocenti = 1 THEN
         SET who = 1;
@@ -24,7 +24,7 @@ END$
 DELIMITER ;
 
 DELIMITER $  /* 1) registrazione sulla piattaforma*/
-CREATE PROCEDURE RegistrazioneStudente(IN Mail VARCHAR(30), IN Nome VARCHAR(30), IN Cognome VARCHAR(30), IN Telefono BIGINT, IN Matricola INT, IN AnnoImmatricolazione BIGINT )
+CREATE PROCEDURE RegistrazioneStudente(IN Mail VARCHAR(30), IN Nome VARCHAR(30), IN Cognome VARCHAR(30), IN Telefono BIGINT, IN Matricola VARCHAR(16), IN AnnoImmatricolazione BIGINT )
 BEGIN
     DECLARE countDocenti INT DEFAULT 0;
     DECLARE countStudenti INT DEFAULT 0;
@@ -33,7 +33,7 @@ BEGIN
     SET countStudenti = (SELECT COUNT(*) FROM DOCENTE WHERE (Mail = DOCENTE.Mail));
     
     IF(countDocenti = 0) AND (countStudenti = 0) THEN
-		INSERT INTO STUDENTE VALUES (Mail, Nome, Cognome, Telefono, Matricola, AnnoImmatricolazione);
+		INSERT INTO STUDENTE VALUES (Mail, Nome, Cognome, Telefono, AnnoImmatricolazione, Matricola);
 	END IF;
 END$
 
@@ -70,7 +70,7 @@ END$
 DELIMITER $  /* 3) Visualizzazione dei quesiti presenti all’interno di ciascun test. */
 CREATE PROCEDURE VisualizzazioneQuesiti(IN Titolo VARCHAR(30))
 BEGIN
-    SELECT TitoloTest, Progressivo, Difficolta, Descrizione 
+    SELECT *
     FROM QUESITO
     WHERE TitoloTest = Titolo;
 END$
@@ -95,7 +95,7 @@ CREATE PROCEDURE InserimentoRigaTabellaEsercizio (
     IN Docente VARCHAR(40))
 BEGIN
     UPDATE TABELLA_ESERCIZIO
-    SET NumRighe=NumRighe+1
+    SET NumeroRighe=NumeroRighe+1
     WHERE (Nome=NomeTabella) AND (MailDocente=Docente);
 END $ DELIMITER ;
 
@@ -167,10 +167,10 @@ END $ DELIMITER ;
 /*---------------------------------------------------------------------------------*/
 /*OPERAZIONI che riguardano SOLO STUDENTI*/
 DELIMITER $  /* 1) Inserimento di una nuova risposta (ad un quesito di codice o un quesito chiuso). */
-CREATE PROCEDURE InserimentoRisposta (IN ProgressivoQuesito INT, IN TitoloTest VARCHAR(30), IN MailStudente VARCHAR(40))
+CREATE PROCEDURE InserimentoRisposta (IN ProgressivoQuesito INT, IN TitoloTest VARCHAR(30), IN MailStudente VARCHAR(40), IN Esito TINYINT, IN Testo VARCHAR(300))
 BEGIN
- INSERT INTO RISPOSTA(ProgressivoQuesito, TitoloTest, MailStudente)
-    VALUES (ProgressivoQuesito, TitoloTest, MailStudente);
+ INSERT INTO risposta(ProgressivoQuesito, TitoloTest, MailStudente, Esito, Testo)
+    VALUES (ProgressivoQuesito, TitoloTest, MailStudente, Esito, Testo);
 END $ DELIMITER ;
 
 DELIMITER $  /* 2) Visualizzazione dell'esito di una risposta (ad un quesito di codice o un quesito chiuso). */
@@ -197,3 +197,21 @@ BEGIN
     VALUES (TitoloMessaggio, TestoMessaggio, NOW(), TitoloTest, MailDocente, MailStudente);
 END $ DELIMITER ;
 
+/*procedure nuove (non richieste da traccia)*/
+-- aggiornamento della risposta se lo studente la cambia
+DELIMITER $
+CREATE PROCEDURE AggiornaRisposta(IN NuovoTesto VARCHAR(300), IN NuovoEsito TINYINT, IN Test VARCHAR(30), IN Mail VARCHAR(40), IN NuovoProgressivo INT)
+BEGIN
+	UPDATE risposta SET Testo=NuovoTesto, Esito=NuovoEsito WHERE MailStudente=mail AND TitoloTest=Test AND ProgressivoQuesito=NuovoProgressivo;
+END$
+DELIMITER ;
+
+-- visualizzazione della tabella fisica dento il test per lo studente
+DELIMITER $
+CREATE PROCEDURE VisualizzaTabella (IN Test VARCHAR(30))
+BEGIN
+	SELECT DISTINCT r.NomeTabella, a.Nome AS NomeAttributo 
+	FROM rif_tabella_quesito as r, attributo as a
+	WHERE r.NomeTabella = a.NomeTabella AND r.TitoloTest=Test;
+END$
+DELIMITER ;

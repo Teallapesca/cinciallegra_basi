@@ -107,19 +107,20 @@
                             $_SESSION['num']=$_SESSION['num']+1;
                         }
                         $num=$_SESSION['num'];
+                        echo "chiave: " . $chiave . " num=".$num;
                         //var_dump($_SESSION["attributi"]);
                         //creazione fisica delle tabelle
                         foreach($_SESSION["attributi"] as $key => $attributo){
                             echo "<br>ok ". $attributo["nome"]. " val: ".$_GET["nome_{$attributo["nome"]}"];
-                            $valore=$_GET["nome_{$attributo["nome"]}"];
-                            $attr=$attributo["nome"];
-                            if($key === 0){
+                            $valore=$_GET["nome_{$attributo["nome"]}"]; // in valore salvo il valore messo nel campo testo dell'attributo che sto prendendo in considerazione
+                            $attr=$attributo["nome"]; // in attr c'è l'attributo che sto prendendo in considerazione
+                            if($key === 0 && ($attr!=$chiave)){
                                 $attr1=$attr;
                                 if($attributo["tipo"]=="VARCHAR"){//non mi ricordo cosa cambia fra i due, se funziona uguale lo tolgo
-                                    $query="INSERT INTO $tabella({$chiave},{$attr}) VALUES ('".$num."','".$valore."');";
+                                    $query="INSERT INTO $tabella({$attr},{$chiave}) VALUES ('".$valore."','".$num."');";
                                 }
                                 else{
-                                    $query="INSERT INTO $tabella({$chiave},{$attr}) VALUES ('".$num."','".$valore."');";;
+                                    $query="INSERT INTO $tabella({$attr},{$chiave}) VALUES ('".$valore."','".$num."');";;
                                 }
                                 $risultato = mysqli_query($conn,$query);
                                 if($risultato === false){
@@ -127,8 +128,23 @@
                                 else{
                                         echo "inserimento avvenuto con successo";
                                 }
-                            }else{
-
+                            }elseif($key === 0 && ($attr==$chiave)){
+                                $attr1=$attr;
+                                if($attributo["tipo"]=="VARCHAR"){//non mi ricordo cosa cambia fra i due, se funziona uguale lo tolgo
+                                    $query="INSERT INTO $tabella({$attr}) VALUES ('".$valore."');";
+                                }
+                                else{
+                                    $query="INSERT INTO $tabella({$attr}) VALUES ('".$valore."');";;
+                                }
+                                $num=$valore; //assegno a num il valore di valore così nel prossimo if non devo fare un controllo se la pk è già stata settata oppure no
+                                $risultato = mysqli_query($conn,$query);
+                                if($risultato === false){
+                                    echo "errore nella ricerca " . mysqli_error($conn);}
+                                else{
+                                        echo "inserimento avvenuto con successo";
+                                }
+                            }
+                            else{
                                 if($attributo["tipo"]=="VARCHAR"){
                                     $query="UPDATE $tabella SET $attr='$valore' WHERE $chiave='$num';";
                                 }
@@ -149,11 +165,22 @@
                             }
                             
                         }
-                        if (!mysqli_commit($conn)) {
+                        /*if (!mysqli_commit($conn)) {
                             mysqli_rollback($conn);
                             echo "Errore durante il commit della transazione.";
-                        }
+                        }*/
                     }
+
+                    $numrighe="CALL InserimentoRigaTabellaEsercizio('$tabella', '$mail');";
+                    $risultato = mysqli_query($conn,$numrighe);
+                    if($risultato === false){
+                        echo "errore nella ricerca " . mysqli_error($conn);
+                    }
+                    if (!mysqli_commit($conn)) {
+                        mysqli_rollback($conn);
+                        echo "Errore durante il commit della transazione.";
+                    }
+                               
                 }
             
             ?>

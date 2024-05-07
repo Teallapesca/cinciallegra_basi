@@ -39,9 +39,6 @@
         <!-- Fine Dropdown Menu -->
     </div>
 
-
-    
-
     <?php
             if (!mysqli_commit($conn)) {
                 mysqli_rollback($conn);

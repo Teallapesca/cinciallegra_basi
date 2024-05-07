@@ -53,3 +53,61 @@ BEGIN
     END IF;
 END;
 $ DELIMITER ;
+
+
+-- concluso
+use moodle;
+DELIMITER $
+CREATE TRIGGER Concluso
+AFTER INSERT ON Risposta
+FOR EACH ROW
+BEGIN
+    DECLARE numeroRisposte INT;
+    DECLARE numeroQuesiti INT;
+    
+    -- Conta quante risposte corrette sono state date dallo studente al test
+    SELECT COUNT(*) INTO numeroRisposte
+    FROM Risposta
+    WHERE MailStudente = NEW.MailStudente AND TitoloTest = NEW.TitoloTest AND Esito=1;
+    
+    -- Conta i quesiti totali del test
+    SELECT COUNT(*) INTO numeroQuesiti
+    FROM quesito
+    WHERE TitoloTest = NEW.TitoloTest;
+    
+    -- Se è la prima risposta, aggiorna lo stato del test a "InCompletamento"
+    IF numeroRisposte = numeroQuesiti THEN
+        UPDATE Svolgimento
+        SET Stato = 'Concluso'
+        WHERE svolgimento.MailStudente = NEW.MailStudente AND svolgimento.TitoloTest = NEW.TitoloTest;
+    END IF;
+END;
+$ DELIMITER ;
+
+-- SE SI FA UN AGGIORNAMENTO IN RISPOSTA
+DELIMITER $
+CREATE TRIGGER Concluso2
+AFTER UPDATE ON Risposta
+FOR EACH ROW
+BEGIN
+    DECLARE numeroRisposte INT;
+    DECLARE numeroQuesiti INT;
+    
+    -- Conta quante risposte corrette sono state date dallo studente al test
+    SELECT COUNT(*) INTO numeroRisposte
+    FROM Risposta
+    WHERE MailStudente = NEW.MailStudente AND TitoloTest = NEW.TitoloTest AND Esito=1;
+    
+    -- Conta i quesiti totali del test
+    SELECT COUNT(*) INTO numeroQuesiti
+    FROM quesito
+    WHERE TitoloTest = NEW.TitoloTest;
+    
+    -- Se è la prima risposta, aggiorna lo stato del test a "InCompletamento"
+    IF numeroRisposte = numeroQuesiti THEN
+        UPDATE Svolgimento
+        SET Stato = 'Concluso'
+        WHERE svolgimento.MailStudente = NEW.MailStudente AND svolgimento.TitoloTest = NEW.TitoloTest;
+    END IF;
+END;
+$ DELIMITER ;

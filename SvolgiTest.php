@@ -2,6 +2,28 @@
 <html>
 <head>
     <link type="text/css" rel="stylesheet" href="stile.css">
+    <meta charset="UTF-8">
+    <title>Svolgimento test</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <style>
+    .fixed-left {
+      position: fixed;
+      top: 20%;
+      bottom: 0;
+      left: 0;
+      width: 400px; /* Larghezza del div sinistro */
+      height:80%;
+      background-color: #ffffff; /* Colore di sfondo del div sinistro */
+      overflow: bottom;
+    }
+    .scroll-right {
+      position: relative;
+      margin-left: 200px; /* Larghezza del div sinistro */
+      margin-right: -20px; /* Margine sinistro negativo */
+      /* padding-bottom: 100px; */ /* Imposta lo spazio sotto il div destro */
+    }
+  </style>
 </head>
 <body>
     <?php
@@ -9,24 +31,24 @@
         error_reporting(E_ALL);
         include 'connessione.php';
         mysqli_begin_transaction($conn);
-        //$_SESSION['quesiti']=[];  // da ovviamente problema il fatto che essendo un session ed essendocene uno unico per tutti i test, 
-        //salva tutti i quesiti di tutti i test che si aprono, dovrei farne uno personalizzato per ogni test
+        include 'controllo.php';
     ?>
     <div class="intesta">
         <h1>SVOLGI IL TEST</h1>
     </div>
-    <div class="principale">
-        <form name="test" method="GET" action="SvolgiTest.php?titolo=<?php $_SESSION['titoloTest'] ?>">
+    <div class="principale container-fluid">
+        <div class="container text-center">
             <?php
-            ///////---- mettere sia tabelle per ogni quesito sia il bottone check dopo i codici
-                $test=$_SESSION['titoloTest'];
-                $mail=$_SESSION['mailStudente']; 
-                $_SESSION["quesiti$test"]=[];
-                if (isset($_GET['titolo'])) {
-                   $_SESSION['titoloTest']=$_GET['titolo'];
-                    $titoloTest = $_GET['titolo'];
-                    echo "<h1>".$_SESSION['titoloTest']."</h1>";
 
+                $test=$_SESSION['titoloTest'];//non dovrebbe servire, ma per ora teniamolo
+                $mail=$_SESSION['mailStudente']; 
+                $_SESSION["quesiti$test"]=[];//creo l'array che conterrà i miei quesiti
+               
+                if (isset($_GET['titolo'])) {//eseguirò tutto questo codice se non c'è stato alcun probelma di settaggio del test scelto
+                    $_SESSION['titoloTest']=$_GET['titolo'];
+                    $titoloTest = $_GET['titolo'];
+                    echo "<h1 class='ml-3'>".$_SESSION['titoloTest']."</h1>";
+                   
                     //---inserimento in svolgimento 
                     $data=date('Y-m-d H:i:s');
                     $stato="";
@@ -38,215 +60,274 @@
                         echo "Errore nella query: " . mysqli_error($conn);
                     } else {
                         if(mysqli_num_rows($ris_entr) == 0){//se non c'è lo inserisce con stato aperto (che è di default)
-                            //$stato="Aperto";
+                            $stato="Aperto";
                             $inserimento="INSERT INTO svolgimento(MailStudente, TitoloTest, DataInizio) VALUES ('$mail', '$titoloTest', '$data');";
                             $ris_ins = mysqli_query($conn, $inserimento);
                             if (!$ris_ins) {
                                 echo "Errore nell'inserimento in svolgimento: " . mysqli_error($conn);
                             }
+                            if (!mysqli_commit($conn)) {
+                                mysqli_rollback($conn);
+                                echo "Errore durante il commit della transazione. boo";
+                            }
                         }
                     }
+            ?>
+        </div>
+        <div class="row">
+        <div class="d-none d-sm-block  col fixed-left">
+            <?php
+                    //---visualizza tabelle
+                    $tabelle = [];
+                    // Esegui una singola query per ottenere tutti i dati necessari
+                    $query = "CALL VisualizzaTabella(?)";
+                    $stmt = $conn->prepare($query);
+                    $stmt->bind_param("s", $titoloTest);
+                    $stmt->execute();
+                    $risultato = $stmt->get_result();
+                    //$risultato = mysqli_query($conn, $query);
+                    if (!$risultato) {
+                        echo "Errore nella visualizzazione delle tabelle e degli attributi: " . mysqli_error($conn);
+                    } else {
+                        // Memorizza gli attributi per ciascuna tabella in un array associativo
+                        while ($row = mysqli_fetch_array($risultato, MYSQLI_ASSOC)) { 
+                            $tabella = $row['NomeTabella'];
+                            $attributo = $row['NomeAttributo'];
+                            $tabelle[$tabella][] = $attributo;
+                    }
+                    $stmt->close();
+                    // Itera sulle tabelle e sugli attributi di ciascuna tabella
+                    foreach ($tabelle as $tabella => $attributi) {
+                        echo "<h4 class='text-xxl-start'>".$tabella."</h4>";
+                        echo "<table  class='table table-bordered table-sm w-25 p-3'>";
+                        echo "<tr>";
+                        // Stampa gli attributi come intestazioni della tabella
+                        foreach ($attributi as $attributo) {
+                            echo "<th scope='col' class='table-primary' >".$attributo."</th>";
+                        }
+                        echo "</tr>";
 
-                       //---visualizza tabelle
-                       $tabelle = [];
-                       // Esegui una singola query per ottenere tutti i dati necessari
-                       $query = "SELECT DISTINCT r.NomeTabella, a.Nome AS NomeAttributo 
-                               FROM rif_tabella_quesito as r
-                               JOIN attributo as a ON r.NomeTabella = a.NomeTabella
-                               WHERE r.TitoloTest='$titoloTest';";
-                       $risultato = mysqli_query($conn, $query);
-                       if (!$risultato) {
-                           echo "Errore nella visualizzazione delle tabelle e degli attributi: " . mysqli_error($conn);
-                       } else {
-                           // Memorizza gli attributi per ciascuna tabella in un array associativo
-                           while ($row = mysqli_fetch_array($risultato, MYSQLI_ASSOC)) { 
-                               $tabella = $row['NomeTabella'];
-                               $attributo = $row['NomeAttributo'];
-                               $tabelle[$tabella][] = $attributo;
-                           }
-   
-                           // Itera sulle tabelle e sugli attributi di ciascuna tabella
-                           foreach ($tabelle as $tabella => $attributi) {
-                               echo "<h4>".$tabella."</h4>";
-                               echo "<table>";
-                               echo "<tr>";
-                               // Stampa gli attributi come intestazioni della tabella
-                               foreach ($attributi as $attributo) {
-                                   echo "<td>".$attributo."</td>";
-                               }
-                               echo "</tr>";
-   
-                               // Popola la tabella con i dati
-                               $popolazione_query = "SELECT * FROM $tabella;";
-                               $popolazione_risultato = mysqli_query($conn, $popolazione_query);
-                               if (!$popolazione_risultato) {
-                                   echo "Errore nella visualizzazione della popolazione: " . mysqli_error($conn);
-                               } else {
-                                   while ($pop = mysqli_fetch_array($popolazione_risultato, MYSQLI_ASSOC)) { 
-                                       echo "<tr>";
-                                       // Stampa i valori degli attributi per ciascuna riga
-                                       foreach ($attributi as $attributo) {
-                                           echo "<td>".$pop[$attributo]."</td>";
-                                       }
-                                       echo "</tr>";
-                                   }
-                               }
-                               echo "</table>";
-                           }
-                       }
-   
-
+                        // Popola la tabella con i dati
+                        $popolazione_query = "SELECT * FROM $tabella;";
+                        $popolazione_risultato = mysqli_query($conn, $popolazione_query);
+                        if (!$popolazione_risultato) {
+                            echo "Errore nella visualizzazione della popolazione: " . mysqli_error($conn);
+                        } else {
+                                while ($pop = mysqli_fetch_array($popolazione_risultato, MYSQLI_ASSOC)) { 
+                                    echo "<tr>";
+                                    // Stampa i valori degli attributi per ciascuna riga
+                                    foreach ($attributi as $attributo) {
+                                        echo "<td class='table-secondary'>".$pop[$attributo]."</td>";
+                                    }
+                                    echo "</tr>";
+                                }
+                            }
+                            echo "</table>";
+                        }
+                    }
+            ?>
+        </div>
+        <div class="container text-center col scroll-right"">
+        <form name="test" method="GET" action="SvolgiTest.php?titolo=<?php $_SESSION['titoloTest'] ?>">
+            <?php
                     //---visualizzazione quesiti
                     $num=0;
                     //seleziono i quesiti del test aperto
-                    $query =  "SELECT TitoloTest, Progressivo, Difficolta, Descrizione 
-                    FROM QUESITO
-                    WHERE TitoloTest = '$titoloTest';"; //ci sarebbe la procedura che lo fa ma non va :(
-                    $risultato = mysqli_query($conn, $query);
+                    //$query =  "SELECT TitoloTest, Progressivo, Difficolta, Descrizione FROM QUESITO WHERE TitoloTest = '$titoloTest';"; 
+                    
+                    $query="CALL VisualizzazioneQuesiti(?);";
+                    //$risultato = mysqli_query($conn, $query);
+
+                    $stmt = $conn->prepare($query);
+                    $stmt->bind_param("s", $titoloTest);
+                    $stmt->execute();
+                    $risultato = $stmt->get_result();
+
                     if (!$risultato) {
                         echo "Errore nella query che seleziona i quesiti: " . mysqli_error($conn);
                     } else {
-                        //vado a controllare per ogni riga se è un quesito chiuso oppure no
                         $_SESSION['numQuesiti']=mysqli_num_rows($risultato);
                         while ($row = mysqli_fetch_array($risultato, MYSQLI_ASSOC)) { 
                             $descrizione = $row['Descrizione'];
                             $progressivo = $row['Progressivo'];
-                            if(!isset($_SESSION["risposta$progressivo"])){
+                            if(!(isset($_SESSION["risposta$progressivo"]))){
                                 $_SESSION["risposta$progressivo"]="";
-                            }
-                            //composizione dei quesiti
-                            $num=$num+1;
-                            echo "<br> ---------------------------------------- <br>";
-                            echo "<br>".$num . "<br>";
-                            echo "<h3>$descrizione</h3><br> Inserisci la tua risposta:<br>";
-
-                            //query per vedere se è un quesito chiuso
-                            $chiuso_query = "SELECT * FROM quesito_chiuso WHERE Progressivo='$progressivo' AND TitoloTest='$titoloTest'";
-                            $ris_chiuso = mysqli_query($conn, $chiuso_query);
-                            if (!$ris_chiuso) {
-                                echo "Errore nella query 2: " . mysqli_error($conn);
-                            } else {
-                                if(mysqli_num_rows($ris_chiuso) == 0){
-                                    // Se non ci sono quesiti chiusi, mostra il campo di testo per la risposta perchè è un codice
-                                    $tipo="codice";
-                                    if (isset($_SESSION["risposta$progressivo"])&&($_SESSION["risposta$progressivo"]!="")) {
-                                        //se la variabile di risposta di questo quesito non è vuoto, vado già ad inserire il suo valore nel value del textbox
-                                        $risp=$_SESSION["risposta$progressivo"];
-                                        echo "<input type='text' name='risposta$progressivo' value='$risp'><br><br>";
-                                    }else{
-                                        //altrimenti faccio un textbox vuoto
-                                        echo "<input type=text name='risposta$progressivo' value=''><br><br>";
-                                        
-                                    }
-                                } else {
-                                    // Altrimenti, se ci sono quesiti chiusi, mostra le opzioni
-                                    //prendo le opzioni del quesito corrente del test selezionato
-                                    $opzioni = "SELECT * 
-                                                FROM opzione
-                                                WHERE TitoloTest = '$titoloTest' AND ProgressivoChiuso='$progressivo';";
-                                    $ris_opzioni = mysqli_query($conn, $opzioni);
-                                    if (!$ris_opzioni) {
-                                        echo "Errore nella query delle opzioni: " . mysqli_error($conn);
-                                    } else {
-                                        $tipo="chiuso";
-                                        while($rowOP = mysqli_fetch_array($ris_opzioni, MYSQLI_ASSOC)){
-                                            $testoOp = $rowOP['Testo'];
-                                            $numOP=$rowOP['Numerazione'];
-                                            //se la variabile risposta è piena 
-                                            if (($_SESSION["risposta$progressivo"]=="$numOP$progressivo")) {
-                                                echo "<input type=radio name='risposta$progressivo' value='$numOP$progressivo' checked>$testoOp<br>";
-                                            }
-                                            else{
-                                                echo "<input type=radio name='risposta$progressivo' value='$numOP$progressivo'>$testoOp<br>";
-
-                                            }
-                                        }
-                                    }
-                                }
                             }
                             //salvo nell'array i quesiti
                             $quesito=$_SESSION["quesiti$titoloTest"][] = Array("progressivo" => $progressivo,
-                            "tipo" => $tipo);
+                            "descrizione" => $descrizione);
                         }
+                        //var_dump($_SESSION["quesiti$titoloTest"]);
                     }
+
+                    $stmt->close();
+                    foreach($_SESSION["quesiti$titoloTest"] as $key => $quesito){
+
+                        $progressivo=$quesito["progressivo"];
+                        $descrizione=$quesito["descrizione"];
+                        riempimento($titoloTest, $mail, $conn, $progressivo);
+                        $tipo="";
+                        //composizione dei quesiti
+                        $num=$num+1;
+                        echo "<br> ---------------------------------------- <br>";
+                        //echo "<hr class='border border-danger border-2 opacity-50'>";
+                        echo "<br> <span class='badge text-bg-info-emphasis'>".$num . "</span><br>";
+                        echo "<h3> ". $descrizione." </h3><br> Inserisci la tua risposta:<br>";
+                        //vado a controllare per ogni riga se è un quesito chiuso oppure no
+                        //query per vedere se è un quesito chiuso
+                        
+                        $chiuso_query = "SELECT * FROM quesito_chiuso as c, opzione as o WHERE c.Progressivo=o.ProgressivoChiuso AND c.Progressivo='$progressivo' AND c.TitoloTest='$titoloTest'";
+                        $ris_chiuso = mysqli_query($conn, $chiuso_query);
+                        if (!$ris_chiuso) {
+                            echo "Errore nella query 2: " . mysqli_error($conn);
+                        }else {
+                            mysqli_num_rows($ris_chiuso);
+                            $giusto=controlloRisposta($mail, $conn, $progressivo);
+                            if(mysqli_num_rows($ris_chiuso)==0){
+                                $tipo="codice";
+                               if($giusto==false){
+                                    if (($_SESSION["risposta$progressivo"]!="")) {
+                                        //se la variabile di risposta di questo quesito non è vuoto, vado già ad inserire il suo valore nel value del textbox
+                                        $risp=$_SESSION["risposta$progressivo"];
+                                        echo "<input type='text' name='risposta$progressivo' value='$risp'><br><br>";
+                                        
+                                    }else{
+                                        //altrimenti faccio un textbox vuoto
+                                        echo "<input type=text name='risposta$progressivo' value=''><br><br>";
+                                    }
+                                }else{
+                                    if (($_SESSION["risposta$progressivo"]!="")) {
+                                        //se la variabile di risposta di questo quesito non è vuoto, vado già ad inserire il suo valore nel value del textbox
+                                        $risp=$_SESSION["risposta$progressivo"];
+                                        echo "<input type='text' name='risposta$progressivo' value='$risp' readonly><br><br>";
+                                    }
+                                    echo "<br><span style='color: #198754;'>Risposta corretta</span><br>";
+                                }
+                            }
+                            else{
+                                $tipo="chiuso";
+                                
+                                if($giusto==true){
+                                    while($rowOP = mysqli_fetch_array($ris_chiuso, MYSQLI_ASSOC)){
+                                        $testoOp = $rowOP['Testo'];
+                                        $numOP=$rowOP['Numerazione'];
+                                        //se la variabile risposta è piena 
+                                        if (($_SESSION["risposta$progressivo"]=="$numOP")) {//se la session è uguale al valore dell'opzione la restituisco già checkata
+                                            echo "<input type=radio name='risposta$progressivo' value='$numOP' checked >$testoOp<br>";
+                                        }
+                                        else{
+                                            echo "<input type=radio name='risposta$progressivo' value='$numOP' disabled>$testoOp<br>";
+        
+                                        }
+                                    }
+                                    echo "<span style='color: #198754;'>Risposta corretta</span><br>";
+                                }else{
+                                    while($rowOP = mysqli_fetch_array($ris_chiuso, MYSQLI_ASSOC)){
+                                        $testoOp = $rowOP['Testo'];
+                                        $numOP=$rowOP['Numerazione'];
+                                        //se la variabile risposta è piena 
+                                        if (($_SESSION["risposta$progressivo"]=="$numOP")) {//se la session è uguale al valore dell'opzione la restituisco già checkata
+                                            echo "<input type=radio name='risposta$progressivo' value='$numOP' checked>$testoOp<br>";
+                                        }
+                                        else{
+                                            echo "<input type=radio name='risposta$progressivo' value='$numOP'>$testoOp<br>";
+        
+                                        }
+                                    }
+                                }
+                                
+                            }
+                            
+                            mysqli_free_result($ris_chiuso);
+                        }
+                        $_SESSION["quesiti$titoloTest"][$key]["tipo"]=$tipo;
+                    }
+                    //var_dump($_SESSION["quesiti$titoloTest"]);
                 } else {
                     echo "Nessun titolo test specificato nella query string.";
                 }
             ?>
             <br> ---------------------------------------- <br>
             <br>
-            <input type="hidden" name="titolo" value="<?php echo $_SESSION['titoloTest']; ?>">
-            <input type="submit" name="Fine" value="Fine">
-            <br><br>
-            <input type="submit" name="indietro" value="indietro">
+            <input type="hidden" name="titolo" value="<?php echo $_SESSION['titoloTest']; ?>">            
+            <input type="submit" name="esci" value="Esci" Class="btn btn-primary">
         </form>
-
+        </div>
+            </div>
         <?php
     //controllo se le risposte sono giuste, salvataggio delle risposte anche se non è stato completato il test e inserimento in risposte
         $titoloTest = $_SESSION['titoloTest'];
         $mail=$_SESSION['mailStudente']; 
-                echo $titoloTest;
-        if(isset($_GET['indietro'])){
-
-            function risposta($conn, $mail, $titoloTest, $progressivo) {
-                $testo=$_GET["risposta$progressivo"]; //potrei creare una procedura da mysql che faccia controllo ed inserimento da solo
-                    $_SESSION["risposta$progressivo"]=$testo;
-                    //cerco se sono già state date risposte a questo quesito
-                    $selezionato="SELECT * FROM risposta WHERE MailStudente='$mail' AND TitoloTest='$titoloTest' AND Progressivo='$progressivo';";
-                    $rissel = mysqli_query($conn, $selezionato);
-                    if (!$rissel) {
-                        echo "Errore nell'inserimento della risposta: " . mysqli_error($conn);
-                    }else{
-                        if(mysqli_num_rows($rissel) != 0){
-                            //aggiorno con la nuova risposta del quesito
-                            $inserimento="UPDATE risposta SET Testo='$testo' WHERE MailStudente='$mail' AND TitoloTest='$titoloTest' AND Progressivo='$progressivo';";
-                            $ris_ins2 = mysqli_query($conn, $inserimento);
-                            if (!$ris_ins2) {
-                                echo "Errore nell'aggiornamento della risposta: " . mysqli_error($conn);
-                            }
-                        }
-                        else{ //in questo caso io sto inserendo la nuova risposta (quesito o codice)
-                            if(isset($_GET["risposta$progressivo"])){/***dovrei fare il controllo che se questa risposta è già stata inserita fa l'update***/
-                                //se è stato premuto un radio inserisco la risposta
-                                $risposta="INSERT INTO risposta(Progressivo, TitoloTest, MailStudente, Testo) VALUES ('$progressivo','$titoloTest', '$mail', '$testo' );";
-                                $risris = mysqli_query($conn, $risposta);
-                                if (!$risris) {
-                                    echo "Errore nell'inserimento della risposta2: " . mysqli_error($conn);
-                                }    
-                            }
-                        }
-                    }
-              }
+      
+        if(isset($_GET["esci"])){
 
             foreach ($_SESSION["quesiti$titoloTest"] as $quesito) {
 
                 $progressivo=$quesito["progressivo"];
-                $tipo=$quesito['tipo'];
+                $tipo=$quesito["tipo"];
+
+                $testo=$_GET["risposta$progressivo"];
+                $_SESSION["risposta$progressivo"]=$testo;
+
                 if($tipo=="codice"){
-                    if($_SESSION["risposta$progressivo"]!=""){
-                        risposta($conn, $mail, $titoloTest, $progressivo);
+
+                    // controllo l'esito
+                    $esitorisp=0;
+                    $esito=controlloCodice($conn, $progressivo, $testo);
+                    $query_esito="SELECT * FROM sketch_codice WHERE Progressivo=$progressivo AND Soluzione='$testo';";
+                    $risultesito = mysqli_query($conn, $query_esito);
+                    if (!$risultesito) {
+                        echo "Errore nel controllo delle risposte: " . mysqli_error($conn);
+                    }else{
+                        if( mysqli_num_rows($risultesito) != 0 || $esito==1){
+                            $esitorisp=1;
+                            echo "inserito esito corretto";
+                        }
                     }
-                }elseif($tipo="chiuso"){
+
+                    if($_SESSION["risposta$progressivo"]!=""){
+                        risposta($conn, $mail, $titoloTest, $progressivo, $testo, $esitorisp);
+                    }
+                    
+                }elseif($tipo=="chiuso"){
+
+                    // controllo l'esito
+                    $esitorisp=0;
+                    $query_esito="SELECT * FROM quesito_chiuso WHERE Progressivo=$progressivo AND OpzioneGiusta=$testo;";
+                    $risultesito = mysqli_query($conn, $query_esito);
+                    if (!$risultesito) {
+                        echo "Errore nel controllo delle risposte: " . mysqli_error($conn);
+                    }else{
+                        if( mysqli_num_rows($risultesito) != 0){
+                            $esitorisp=1;
+                        }
+                    }
+
                     if(isset($_SESSION["risposta$progressivo"])&&($_SESSION["risposta$progressivo"]!="")){
-                        risposta($conn, $mail, $titoloTest, $progressivo);
+                        risposta($conn, $mail, $titoloTest, $progressivo, $testo, $esitorisp);
                     }
                 }
                 
             }
-            
-            if (!mysqli_commit($conn)) {
-                mysqli_rollback($conn);
-                echo "Errore durante il commit della transazione.";
-            }
 
             // chiusura della connessione
             mysqli_close($conn);
+            unset($_SESSION["quesiti$titoloTest"]);
             //torno alla pagina precedente
             header("Location: hpStudente.php");
             exit();
                 
         }
-        else if(isset($_GET['Fine'])){
+        //se tutti i quesiti hanno ricevuto una risposta e questa è corretta si può concludere il test
+        
+        /*$num_righe=controlloTotale($titoloTest, $mail, $conn);
+        if($_SESSION['numQuesiti']==$num_righe){
+            
+
+
+        }*/
+    
+        /*else if(isset($_GET['Fine'])){
 
             foreach ($_SESSION["quesiti$titoloTest"] as $quesito) {
 
@@ -271,15 +352,14 @@
                             }
                         }
                         else{ //in questo caso io sto inserendo la nuova risposta (quesito o codice)
-                            if(isset($_GET["risposta$progressivo"])){/***dovrei fare il controllo che se questa risposta è già stata inserita fa l'update***/
-                                    //se è stato premuto un radio inserisco la risposta
-                                    $risposta="INSERT INTO risposta(Progressivo, TitoloTest, MailStudente, Testo) VALUES ('$progressivo','$titoloTest', '$mail', '$testo' );";
-                                    $risris = mysqli_query($conn, $risposta);
-                                    if (!$risris) {
-                                        echo "Errore nell'inserimento dela risposta: " . mysqli_error($conn);
-                                    }
-                                    
+                            if(isset($_GET["risposta$progressivo"])){
+                                //se è stato premuto un radio inserisco la risposta
+                                $risposta="INSERT INTO risposta(Progressivo, TitoloTest, MailStudente, Testo) VALUES ('$progressivo','$titoloTest', '$mail', '$testo' );";
+                                $risris = mysqli_query($conn, $risposta);
+                                if (!$risris) {
+                                    echo "Errore nell'inserimento dela risposta: " . mysqli_error($conn);
                                 }
+                            }
 
                         }
                     }
@@ -292,13 +372,11 @@
             $ris_ins = mysqli_query($conn, $inserimento);
             if (!$ris_ins) {
                 echo "Errore nell'inserimento in svolgimento2: " . mysqli_error($conn);
-            }
-
-            
+            }//fare update anche della data di fine
 
             if (!mysqli_commit($conn)) {
                 mysqli_rollback($conn);
-                echo "Errore durante il commit della transazione.";
+                echo "Errore durante il commit della transazione. boo";
             }
     
             // chiusura della connessione
@@ -311,16 +389,11 @@
             header("Location: hpStudente.php");
             exit();
                 
-        }
-        else{
-            if (!mysqli_commit($conn)) {
-                mysqli_rollback($conn);
-                echo "Errore durante il commit della transazione.";
-            }
-                // chiusura della connessione
-                mysqli_close($conn);
-        }
+        }*/
+       
     ?>
     </div>
+    <script src="path/to/bootstrap/js/bootstrap.min.js"></script>
+
 </body>
 </html>

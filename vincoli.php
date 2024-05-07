@@ -16,6 +16,9 @@
             $mail = $_SESSION['mailDocente'];
            // $tabelle = $_SESSION["tabelle"];
             //var_dump($tabelle);
+            if(isset($_GET['aggiungi'])){
+                $_SESSION['prima']=1;
+            }
             
             if(isset($_SESSION['prima'])){
                 $query = "SELECT Nome FROM tabella_esercizio WHERE MailDocente='$mail' ;";
@@ -68,7 +71,8 @@
                         <select name='pks'>
                         <option> --- </option>";
                         while ($row = mysqli_fetch_array($risult)) {
-                            echo "<option value=" . $row['Nome'] . ">" . $row['Nome']." ".$row['Tipo'] . "</option>";
+                            $valore= $row['Nome']."-".$row['Tipo'];
+                            echo "<option value=" .$valore. ">" . $row['Nome']." ".$row['Tipo'] . "</option>";
                         }
                     if (!mysqli_commit($conn)) {
                         mysqli_rollback($conn);
@@ -83,6 +87,8 @@
             if (isset($_GET["pkb"])) {
                 $_SESSION['primarykey'] = $_GET['pks'];
                 $primarykey = $_SESSION['primarykey'];
+                $valoriSeparati = explode("-", $primarykey);
+                $nomepk = $valoriSeparati[0];
                 $tabella = $_SESSION['tabella1'];
                 echo "hai selezionato la tabella " . $tabella."<br>";
                 echo "hai selezionato la chiave " . $primarykey;
@@ -117,15 +123,18 @@
                 //mostro gli attributi della tabella
                 $_SESSION['tabella2'] = $_GET['nt2'];
                 $primarykey = $_SESSION['primarykey'];
+                $valoriSeparati = explode("-", $primarykey);
+                $nomepk = $valoriSeparati[0];
+                $tipopk = $valoriSeparati[1];
                 $tabella = $_SESSION['tabella2'];
                 $tabella1 = $_SESSION['tabella1'];
-                $tipo1 = $_SESSION['tipo1'];
                 echo "hai selezionato la tabella " . $tabella1."<br>";
-                echo "hai selezionato la chiave " . $primarykey."<br>";
+                echo "hai selezionato la chiave " . $nomepk."<br>";
                 echo "hai selezionato come seconda tabella " . $tabella;
+
                 $query = "SELECT Nome, Tipo, NomeTabella        
                                     FROM attributo
-                                    WHERE NomeTabella='$tabella' AND Tipo = $tipo1;";
+                                    WHERE NomeTabella='$tabella' AND Tipo='$tipopk'";
 
                 $ris_attri = mysqli_query($conn, $query);
 
@@ -156,21 +165,37 @@
                 $_SESSION['fkey'] = $_GET['fk'];
                 $fkey = $_SESSION['fkey'];
                 $primarykey = $_SESSION['primarykey'];
+                $valoriSeparati = explode("-", $primarykey);
+                $nomepk = $valoriSeparati[0];
+                $tipopk = $valoriSeparati[1];
                 $tabella = $_SESSION['tabella2'];
                 $tabella1 = $_SESSION['tabella1'];
                 echo "hai selezionato la tabella " . $tabella1 ."<br>";
-                echo "hai selezionato la chiave " . $primarykey."<br>";
+                echo "hai selezionato la chiave " . $nomepk."<br>";
                 echo "hai selezionato come seconda tabella " . $tabella."<br>";
                 echo "hai selezionato la chiave esterna " . $fkey."<br>";
                 
-                $query="INSERT INTO vincolo(NomeAttributoPK, NomeTabellaPK, NomeAttributoFK, NomeTabellaFK) VALUES ('$primarykey', '$tabella1', '$fkey', '$tabella');";
+                $query="INSERT INTO vincolo(NomeAttributoPK, NomeTabellaPK, NomeAttributoFK, NomeTabellaFK) VALUES ('$nomepk', '$tabella1', '$fkey', '$tabella');";
                 $inserimento = mysqli_query($conn, $query);
 
                 if (!$inserimento) {
-                    echo "ricerca fallita: " . mysqli_error($conn);
+                    echo "ricerca fallita insert vincolo: " . mysqli_error($conn);
                 }else{
                     echo "inserimento vincolo effettuato";
+
+                    $key="ALTER TABLE `$tabella` 
+                            ADD FOREIGN KEY (`$fkey`) REFERENCES `$tabella1`(`$nomepk`);";
+                    $foreign = mysqli_query($conn, $key);
+                    if (!$foreign) {
+                        echo "chiave primaria fallita: " . mysqli_error($conn);
+                    }
+                    else{ echo "creazione vincolo fisico effettuato";}
                 }
+            }
+        
+            if (!mysqli_commit($conn)) {
+                mysqli_rollback($conn);
+                echo "Errore durante il commit della transazione.";
             }
         ?>
         <form name=aggiungi method=GET action='vincoli.php'>
@@ -178,52 +203,15 @@
         </form>
         
 
-        <br> <br> <a href=CreaTabelle.php > <- </a>
+        <br> <br> <a href=hpDocente.php > <- </a>
     </div>
 
     <?php
 
-        if(isset($_GET['aggiungi'])){
-            $_SESSION['prima']=1;
-
-            $fkey = $_SESSION['fkey'];
-            $primarykey = $_SESSION['primarykey'];
-            $tabella = $_SESSION['tabella2'];
-            $tabella1 = $_SESSION['tabella1'];
-
-            //vincoli fisici
-            $vincoli="SELECT * FROM vincolo WHERE NomeTabellaFK = '$tabella' AND NomeTabellaPK=' $tabella1';";
-            $ris_vinc= mysqli_query($conn, $vincoli);
-            if (!$ris_vinc) {
-                echo "chiave esterna fallita: " . mysqli_error($conn);
-            }else{
-                while ($row = mysqli_fetch_array($ris_vinc)) {
-                    $pk=$row['NomeAttributoPK'];
-                    $fk=$row['NomeAttributoFK'];
-                    $tab2=$row['NomeTabellaPK'];
-                    $key="ALTER TABLE `$tabella` 
-                    ADD FOREIGN KEY (`$fk`) REFERENCES `$tab2`(`$pk`);";
-                    $foreign = mysqli_query($conn, $key);
-                    if (!$foreign) {
-                        echo "chiave primaria fallita: " . mysqli_error($conn);
-                    }
-                }
-            }
-        
-
-        }
-
-
-    if (!mysqli_commit($conn)) {
-        mysqli_rollback($conn);
-        echo "Errore durante il commit della transazione.";
-    }
+    
 
     // chiusura della connessione
     mysqli_close($conn);
-
-
-
     ?>
 
 </body>

@@ -135,15 +135,10 @@
                     // chiusura della connessione
                     mysqli_close($conn);
 
-                   //
-                    /*echo "<p>
-                                <a href=vincoli.php> <input type=button name=vincoli value='fai vincoli di integrita'></a>
-                            </p>";*/
+                    header('Location: tabFisica.php');
+                    //exit();
                 }
             ?>
-            <form name=crea method=GET action='tabFisica.php'>
-                <input type=submit name=fine value="fine">
-            </form>
         <br> <br> <a href=hpDocente.php> <- </a>
         </div>
 	</body>

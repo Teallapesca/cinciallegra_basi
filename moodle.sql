@@ -100,15 +100,15 @@ create table OPZIONE(
     FOREIGN KEY (TitoloTest) REFERENCES QUESITO_CHIUSO(TitoloTest) ON DELETE CASCADE
 ) engine=INNODB;
  create table RISPOSTA(
-    Progressivo INT,
+    ProgressivoQuesito INT,
     TitoloTest VARCHAR(30),
     MailStudente VARCHAR(40),
     
     Esito boolean, /* Campi di Risposta. */
-    Testo VARCHAR(60),
+    Testo VARCHAR(300),
     
-    PRIMARY KEY(Progressivo, TitoloTest, MailStudente),
-    FOREIGN KEY (Progressivo) REFERENCES QUESITO(Progressivo) ON DELETE CASCADE,
+    PRIMARY KEY(ProgressivoQuesito, TitoloTest, MailStudente),
+    FOREIGN KEY (ProgressivoQuesito) REFERENCES QUESITO(Progressivo) ON DELETE CASCADE,
 	FOREIGN KEY (TitoloTest) REFERENCES QUESITO(TitoloTest) ON DELETE CASCADE,
     FOREIGN KEY (MailStudente) REFERENCES STUDENTE(Mail) ON DELETE CASCADE
  ) engine=INNODB;

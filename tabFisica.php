@@ -7,7 +7,7 @@
     //select per scegliere la tabella da cui prendere la chiave primaria
     $mail = $_SESSION['mailDocente'];
     $tabelle = $_SESSION["tabelle"];
-    if (isset($_GET['fine'])) {
+    //if (isset($_GET['fine'])) {
        // var_dump($tabelle);
         if (isset($_SESSION["tabelle"])) {
            // var_dump($_SESSION["tabelle"]);
@@ -70,7 +70,7 @@
         else{
             echo "non ci sono righe nell'array tabelle";
         }
-    }
+    //}
 
     if (!mysqli_commit($conn)) {
         mysqli_rollback($conn);
@@ -79,5 +79,7 @@
     unset( $_SESSION["tabelle"]);//elimino l'array così che possa essere ricreato da zero con le nuove tabelle
     // chiusura della connessione
     mysqli_close($conn);
+    header('Location: CreaTabelle.php');
+    exit();
     echo "<br> <br> <a href=hpDocente.php> <- </a>";
 ?>
