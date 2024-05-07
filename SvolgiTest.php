@@ -105,11 +105,11 @@
         <div class="messaggi-content" id="messaggiContent">
             <!-- Contenuto dei messaggi qui -->
             <?php
-                $titoloTest = $_SESSION['titoloTest'];            
+              /*  $titoloTest = $_SESSION['titoloTest'];            
                 $query1 = "SELECT * FROM MESSAGGIODOCENTE WHERE TitoloTest = '$titoloTest'";
                 $result1 = $conn->query($query1);
         
-                if ($result1->num_rows > 0) {
+                if (mysqli_num_rows($result1) > 0) {
                     echo "<ul>";
                     while ($row = $result1->fetch_assoc()) {
                         echo "<li><b>{$row['MailDocente']} - {$row['DataInserimento']}</b><br>  {$row['TitoloMess']}<br> {$row['Testo']}</li>";
@@ -117,7 +117,7 @@
                     echo "</ul>";
                 } else {
                     echo "Nessun messaggio trovato per questo test.";
-                }
+                }*/
 
             ?>
         </div>
@@ -137,7 +137,7 @@
             
             <!-- Contenuto dei messaggi qui -->
             <?php
-                if (isset($_GET['invio'])) {
+               /* if (isset($_GET['invio'])) {
                     $titoloMess = $_GET['titoloMess'];
                     $testoMess = $_GET['testoMess'];
                     $titoloTest = $_SESSION['titoloTest'];
@@ -158,7 +158,7 @@
                         mysqli_rollback($conn);
                         echo "Errore durante il commit della transazione.";
                     }
-                }
+                }*/
 
             ?>
             
