@@ -159,14 +159,26 @@ create table VINCOLO(
 ) engine=INNODB;
  
  
-  create table MESSAGGIO(
+create table MESSAGGIODOCENTE(
 	Id INT PRIMARY KEY AUTO_INCREMENT,
     TitoloMess VARCHAR(30), /* Rappresenta l'oggetto della mail ad esempio.*/
     Testo VARCHAR(100),
     DataInserimento date,
 	TitoloTest VARCHAR(30),
     MailDocente VARCHAR(40),
+    
+    FOREIGN KEY (TitoloTest) REFERENCES TEST(Titolo) ON DELETE CASCADE,
+    FOREIGN KEY (MailDocente) REFERENCES DOCENTE(Mail) ON DELETE CASCADE
+ ) engine=INNODB; 
+ 
+create table MESSAGGIOSTUDENTE(
+	Id INT PRIMARY KEY AUTO_INCREMENT,
+    TitoloMess VARCHAR(30), /* Rappresenta l'oggetto della mail ad esempio.*/
+    Testo VARCHAR(100),
+    DataInserimento date,
+	TitoloTest VARCHAR(30),
     MailStudente VARCHAR(40),
+    MailDocente VARCHAR(40),
     
     FOREIGN KEY (TitoloTest) REFERENCES TEST(Titolo) ON DELETE CASCADE,
     FOREIGN KEY (MailDocente) REFERENCES DOCENTE(Mail) ON DELETE CASCADE,
