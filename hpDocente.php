@@ -9,15 +9,12 @@
 <body>
 
     <?php 
-      ini_set('display_errors', 1);
-      error_reporting(E_ALL);
-      include 'connessione.php';
-      mysqli_begin_transaction($conn);
-    include 'Navbar.php' ?> 
-
-    <div class="hero-image">
-       <h1 style="color: white" class="mb-5 hero-text"> <?php echo "benvenuto " . $_SESSION['mailDocente']; ?> </h1>
-    </div>  
+        ini_set('display_errors', 1);
+        error_reporting(E_ALL);
+        include 'connessione.php';
+        mysqli_begin_transaction($conn);
+        include 'Navbar.php' 
+    ?> 
 
     <div class="m-5 d-flex flex-column justify-content-center align-items-center">
         <div class="d-flex flex-row align-items-center" style="display: block;">

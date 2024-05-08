@@ -19,7 +19,7 @@ div.intesta {
 
 
 .hero-image {
-  background-image: url("img/blackboard.jpg");
+  /*background-image: url("img/blackboard.jpg");*/
   height: 500px;
   background-position: bottom;
   background-repeat: no-repeat;
@@ -28,7 +28,7 @@ div.intesta {
 }
 
 .student-image {
-  background-image: url("img/studente.jpg");
+  /*background-image: url("img/studente.jpg");*/
   height: 500px;
   background-position: bottom;
   background-repeat: no-repeat;

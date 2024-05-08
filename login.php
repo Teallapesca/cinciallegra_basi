@@ -56,6 +56,7 @@
 						$result = mysqli_query($conn, "SELECT @who");
 						$row = mysqli_fetch_array($result);
 						$who = $row[0];
+						$_SESSION['aut']=$who;
 						if($who==1){
 							$_SESSION['mailDocente']=$mail;
 							header("Location: hpDocente.php");

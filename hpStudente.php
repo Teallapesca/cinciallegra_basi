@@ -7,20 +7,20 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
 <body>
-
+    <div>
     <?php 
         ini_set('display_errors', 1);
         error_reporting(E_ALL);
         include 'connessione.php';
         mysqli_begin_transaction($conn);
-        //include 'Navbar.php' 
+        include 'Navbar.php' 
     ?> 
 
-    <div class="student-image">
+    <!--<div class="student-image">
        <h1 style="color: white" class="mb-5 hero-text"> <?php echo "benvenuto " . $_SESSION['mailStudente']; ?> </h1>
-    </div>
+    </div>-->
     
-	<div class="d-flex flex-row  justify-content-center">
+	<div class="d-flex flex-row  justify-content-center mt-5">
 		<form name="visTest" method="GET" action="hpStudente.php">
             <input  class="btn btn-primary btn-lg m-4" type="submit" name="test" value="visualizza test">
         </form>
