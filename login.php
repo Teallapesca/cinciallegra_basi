@@ -17,20 +17,22 @@
 </head>
 	<body class="d-flex flex-column align-items-center justify-content-center page-size">
 
-	
-
-		<div class="card" >
+		<div class="card mt-5" style="width: 20%; padding: 2px;">
 			<div class="card-body">
 			<form name="accesso" method="GET" action="login.php">
-				<!--<input class="form-check-input" type="radio" name="utente" value="docente"> Docente <br><br>
-				<input class="form-check-input" type="radio" name="utente" value="studente"> Studente <br><br>-->
 
-				<div class="input-group mb-3">  
-					<span class="input-group-text" id="basic-addon1">Mail</span> <input class="form-control" type='text' name='mail' value=''> <br>
+				<div class="form-floating mb-3">  
+					<!--<input class="form-control" type="email" name='mail' value='' id="floatingInput" placeholder="name@example.com">-->
+					<input type="text" class="form-control" id="floatingInput" placeholder="name@example.com" name='mail'>
+					<label for="floatingInput">Email address</label>
 				</div>
-
-				<input class="btn btn-primary" type="submit" name="log" value="accedi">
+				<div class="form-floating">
+					<input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+					<label for="floatingPassword">Password</label>
+				</div>
+				<input class="btn btn-primary mt-3" type="submit" name="log" value="accedi">
 			</form>
+			
 			</div>
 		</div>
 
@@ -63,8 +65,11 @@
 							header("Location: hpStudente.php");
 							exit();
 						}else{
-							echo "Utente non trovato, 
-							<br><br><a href=registrazione.php>Registrati!!!!</a><br><br>";
+							echo "
+								<label class='mb-5 text-danger-emphasis bg-danger-subtle border border-danger-subtle rounde' data-bs-container=body data-bs-toggle=popover data-bs-placement=bottom data-bs-content=Bottom popover> Utente non trovato, <br> 
+								<a href=registrazione.php class='link-danger'>Registrati!!!!</a> </label>
+								<br><br><br><br>
+							";
 						}
 					}
 					if (!mysqli_commit($conn)) {
@@ -76,8 +81,7 @@
 					mysqli_close($conn);
 				}
 			?>
-
-	
+			
 
 	</body>
 </html>

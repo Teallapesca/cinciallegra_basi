@@ -303,8 +303,7 @@
                         echo "<br> <span class='badge text-bg-info-emphasis'>".$num . "</span><br>";
                         echo "<h3> ". $descrizione." </h3><br> Inserisci la tua risposta:<br>";
                         //vado a controllare per ogni riga se è un quesito chiuso oppure no
-                        //query per vedere se è un quesito chiuso
-                        
+                        //query per vedere se è un quesito chiuso e le sue opzioni
                         $chiuso_query = "SELECT * FROM quesito_chiuso as c, opzione as o WHERE c.Progressivo=o.ProgressivoChiuso AND c.Progressivo='$progressivo' AND c.TitoloTest='$titoloTest'";
                         $ris_chiuso = mysqli_query($conn, $chiuso_query);
                         if (!$ris_chiuso) {

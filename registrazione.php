@@ -55,11 +55,11 @@
         }
     </script>
 </head>
-<body class="d-flex flex-column align-items-center justify-content-center page-size">
-    <div class="card">
+<body class="d-flex flex-column align-items-center justify-content-start page-size">
+    <div class="card mt-5">
         <div class="card-body">
             <div>
-                <form name="registrazione"class="d-flex flex-row mb-4">
+                <form name="registrazione"class="d-flex flex-row mb-3">
                     <input class="btn btn-primary btn-lg" type="button" name="docente" value="docente" onClick="mostraTesto('docente')"> <br><br>
                     <input class="btn btn-primary btn-lg" style="margin-left:20px;" type="button" name="studente" value="studente" onClick="mostraTesto('studente')"> <br><br>
                 </form>

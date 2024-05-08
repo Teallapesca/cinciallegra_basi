@@ -1,5 +1,17 @@
 <!doctype html>
 <html>
+    <head>
+        <script>
+            function validateNome() {
+                var nomeTabella = document.forms["regutente"]["nomeTabella"].value;
+                if (nomeTabella == "" ) {
+                    alert("Inserisci il nome della tabella!");
+                    return false; // Impedisci l'invio del modulo
+                }
+                return true; // Consenti l'invio del modulo
+            }
+        </script>
+    </head>
 	<body>
 		<?php
 			ini_set('display_errors', 1);
@@ -11,7 +23,7 @@
 			<h1>CREA TABELLE</h1>
 		</div>
 		<div class="principale">
-			<form name="nuovaTabella" method="GET" action="CreaTabelle.php">
+			<form name="nuovaTabella" method="GET" action="CreaTabelle.php" onsubmit="return validateNome()">
 				Inserisci il nome della tabella<br><br>
 				<input type="text" name="nomeTabella" value=""><br><br>
 				<input type="submit" name="tab" value="Inserisci nome">
@@ -24,19 +36,14 @@
                     if($_SESSION['nomeTabella']!=null){
                         $nomeTabella = $_SESSION['nomeTabella'];
                         $mail = $_SESSION['mailDocente'];
-                        $query = 'CALL InserimentoTabellaEsercizio("'.$nomeTabella.'", "'.$mail.'");';
-                        // esecuzione query
-                        $risultato = mysqli_query($conn,$query);
-                        if($risultato === false){
-                            echo "errore nella ricerca" . die (mysqli_error($conn));
-                        } else{
-                            echo "tabella inserita" . "<br><br>
-                            <form name=nuovaTabella method=GET action=CreaTabelle.php>
+                        echo"
+                            <form name=nuovaTabella method=GET action=CreaTabelle.php onsubmit=return validateForm()>
                             Inserisci il numero di colonne della tabella<br><br>
                             <input type='number' name='numCol' value=''><br><br>
                             <input type='submit' name='col' value='Seleziona numero colonne'>
-                            </form>";
-                        }
+                            </form>
+                        ";
+                        
                     }
                     if (!mysqli_commit($conn)) {
                         mysqli_rollback($conn);
@@ -52,7 +59,7 @@
                     
                     if($_SESSION['numCol']!=null){
                         $colonne = intval($_SESSION['numCol']);
-                        echo "<br><br><form>";
+                        echo "<br><br> <form>";
                         for($i=0; $i<$colonne; $i++){
                             if($i==0){
                                 echo "
@@ -111,6 +118,14 @@
                             // La checkbox non è stata selezionata
                             $PK = 0;
                             //echo"false";
+                        }
+                        $query = 'CALL InserimentoTabellaEsercizio("'.$nomeTabella.'", "'.$mail.'");';
+                        // esecuzione query
+                        $risultato = mysqli_query($conn,$query);
+                        if($risultato === false){
+                            echo "errore nella ricerca" . die (mysqli_error($conn));
+                        } else{
+                            echo "tabella inserita";
                         }
                         
                         // Scrivi la query SQL per inserire l'attributo nella tabella "Attributo"
