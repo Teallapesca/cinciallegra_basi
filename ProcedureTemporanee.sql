@@ -1,5 +1,8 @@
 use moodle;
 DELIMITER $
-CREATE PROCEDURE InserimentoAttributo (IN Tabella VARCHAR(30), IN NomeAT VARCHAR(30), IN Tipo VARCHAR(30), IN PossibileChiavePrimaria TINYINT)
+CREATE PROCEDURE VisualizzaAttributi (IN Tabella VARCHAR(30))
 BEGIN
+SELECT Nome, Tipo, PossibileChiavePrimaria
+                                FROM attributo
+                                WHERE NomeTabella=Tabella;
 END $ DELIMITER ;

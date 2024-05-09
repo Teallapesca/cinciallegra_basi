@@ -159,14 +159,12 @@ CREATE PROCEDURE InserimentoMessaggioDocente (
     IN TitoloTest VARCHAR(30),
     IN MailDocente VARCHAR(40))
 BEGIN
-<<<<<<< HEAD
     -- Inserimento del messaggio nella tabella MESSAGGIO
     INSERT INTO MESSAGGIODOCENTE (TitoloMess, Testo, DataInserimento, TitoloTest,  MailDocente, MailStudente)
     VALUES (TitoloMessaggio, TestoMessaggio, NOW(), TitoloTest, MailDocente, NULL);
-=======
+
     INSERT INTO MESSAGGIODOCENTE (TitoloMess, Testo, DataInserimento, TitoloTest,  MailDocente)
     VALUES (TitoloMessaggio, TestoMessaggio, NOW(), TitoloTest, MailDocente);
->>>>>>> a8c0309e2efb2e406a161ac7162843cc22f6ec86
 END $ DELIMITER ;
 
 /*---------------------------------------------------------------------------------*/
@@ -198,13 +196,12 @@ CREATE PROCEDURE InserimentoMessaggioStudente (
     IN MailDocente VARCHAR(40))
 BEGIN
     -- Inserimento del messaggio nella tabella MESSAGGIO
-<<<<<<< HEAD
     INSERT INTO MESSAGGIOSTUDENTE (TitoloMess, Testo, DataInserimento, TitoloTest,  MailDocente, MailStudente)
     VALUES (TitoloMessaggio, TestoMessaggio, NOW(), TitoloTest, MailDocente, MailStudente);
-=======
+
     INSERT INTO MESSAGGIOSTUDENTE (TitoloMess, Testo, DataInserimento, TitoloTest, MailStudente,  MailDocente)
     VALUES (TitoloMessaggio, TestoMessaggio, NOW(), TitoloTest, MailStudente, MailDocente);
->>>>>>> a8c0309e2efb2e406a161ac7162843cc22f6ec86
+
 END $ DELIMITER ;
 
 /*procedure nuove (non richieste da traccia)*/
@@ -225,3 +222,19 @@ BEGIN
 	WHERE r.NomeTabella = a.NomeTabella AND r.TitoloTest=Test;
 END$
 DELIMITER ;
+
+-- inserimento dell'attributo nelle tabelle esercizio fisiche
+DELIMITER $
+CREATE PROCEDURE InserimentoAttributo (IN Tabella VARCHAR(30), IN NomeAT VARCHAR(30), IN Tipo VARCHAR(30), IN PossibileChiavePrimaria TINYINT)
+BEGIN
+INSERT INTO Attributo (NomeTabella, Nome, Tipo, PossibileChiavePrimaria) VALUES (Tabella, NomeAT, Tipo, PossibileChiavePrimaria);
+END $ DELIMITER ;
+
+-- visualizzare gli attributi delle tabelle create dal docente
+DELIMITER $
+CREATE PROCEDURE VisualizzaAttributi (IN Tabella VARCHAR(30))
+BEGIN
+SELECT Nome, Tipo, PossibileChiavePrimaria
+                                FROM attributo
+                                WHERE NomeTabella=Tabella;
+END $ DELIMITER ;

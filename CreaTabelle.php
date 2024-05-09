@@ -30,12 +30,13 @@
 			</form>
 
 			<?php
+                $mail = $_SESSION['mailDocente'];
                 //echo $_SESSION['mailDocente'];
 				if(isset($_GET["tab"])){
                     $_SESSION['nomeTabella'] = $_GET["nomeTabella"];
                     if($_SESSION['nomeTabella']!=null){
                         $nomeTabella = $_SESSION['nomeTabella'];
-                        $mail = $_SESSION['mailDocente'];
+                        //$mail = $_SESSION['mailDocente'];
                         echo"
                             <form name=nuovaTabella method=GET action=CreaTabelle.php onsubmit=return validateForm()>
                             Inserisci il numero di colonne della tabella<br><br>
@@ -104,32 +105,31 @@
                     $colonne = intval($_SESSION['numCol']);
                     $nomeTabella = $_SESSION["nomeTabella"];
                     // Ciclo attraverso gli attributi inseriti dall'utente
+                    $query = 'CALL InserimentoTabellaEsercizio("'.$nomeTabella.'", "'.$mail.'");';
+                        // esecuzione query
+                    $risultato = mysqli_query($conn,$query);
+                    if($risultato === false){
+                        echo "errore nella ricerca" . die (mysqli_error($conn));
+                    } else{
+                        echo "tabella inserita";
+                    }
                     for($i = 0; $i < $colonne; $i++) {
                         // Ottieni il valore dell'attributo dall'input dell'utente
                         $attributo = $_GET['attributo'][$i];
                         $tipo = $_GET['tipo'][$i];
-                        //$PK = intval($_GET['PK'][$i]);
                         // Verifica se la checkbox è stata selezionata
                         if($_GET['PK'][$i]== 'SI'){
                             // La checkbox è stata selezionata
                             $PK = 1;
-                            //echo"true";
                         } else {
                             // La checkbox non è stata selezionata
                             $PK = 0;
-                            //echo"false";
                         }
-                        $query = 'CALL InserimentoTabellaEsercizio("'.$nomeTabella.'", "'.$mail.'");';
-                        // esecuzione query
-                        $risultato = mysqli_query($conn,$query);
-                        if($risultato === false){
-                            echo "errore nella ricerca" . die (mysqli_error($conn));
-                        } else{
-                            echo "tabella inserita";
-                        }
+                        
                         
                         // Scrivi la query SQL per inserire l'attributo nella tabella "Attributo"
                         $query = 'INSERT INTO Attributo (NomeTabella, Nome, Tipo, PossibileChiavePrimaria) VALUES ("'.$nomeTabella.'", "'.$attributo.'", "'.$tipo.'", "'.$PK.'");';
+                        //$query ="CALL InserimentoAttributo("'.$nomeTabella.'", "'.$attributo.'", "'.$tipo.'", "'.$PK.'");"; devo ancora caricarla su php my admin ma c'è sul file sql 
                         // Esegui la query
                         $result = mysqli_query($conn, $query);
                         
@@ -141,7 +141,7 @@
                         }
                     }
                     $_SESSION["tabelle"][] = $nomeTabella;
-
+                    
                     if (!mysqli_commit($conn)) {
                         mysqli_rollback($conn);
                         echo "Errore durante il commit della transazione.";

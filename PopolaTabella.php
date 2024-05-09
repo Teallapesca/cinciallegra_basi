@@ -58,7 +58,7 @@
                         $query="SELECT Nome, Tipo, PossibileChiavePrimaria
                                 FROM attributo
                                 WHERE NomeTabella='$tabella';";  //seleziono gli attributi della tabella selezionata
-
+                        //$query="CALL VisualizzaQuesiti('$tabella');"; //è commentata perchè non lo ancora caricata su phpmyadmin ma sul file sql c'è
                         $risult=mysqli_query($conn,$query);
 
                         if(!$risult){

@@ -148,7 +148,7 @@
                     if(isset($_GET["giusta"])){
 
                         if ($_GET["giusta"]=="opr1") {
-                            $giusta = $opzione1;
+                            $giusta = 1;
                         }
                         $query1 = 'insert into opzione(Numerazione, ProgressivoChiuso, TitoloTest, Testo) values ("' . $numerazione . '"," ' . $progQuesito . '","' . $test . '","' . $opzione1 . '");';
                         $risult1 = mysqli_query($conn, $query1);
@@ -160,7 +160,7 @@
                         $numerazione = $numerazione + 1;
                         
                         if ($_GET["giusta"]=="opr2") {
-                            $giusta = $opzione2;
+                            $giusta = 2;
                         }
                         $query2 = 'insert into opzione(Numerazione, ProgressivoChiuso, TitoloTest, Testo) values ("' . $numerazione . '"," ' . $progQuesito . '","' . $test . '","' . $opzione2 . '");';
                         $risult2 = mysqli_query($conn, $query2);
@@ -171,12 +171,12 @@
                         //----op3
                         
                         if ($_GET["giusta"]=="opr3") {
-                            $giusta = $opzione3;
+                            $giusta = 3;
                         }
                         $numerazione = $numerazione + 1;
                         $query3 = 'insert into opzione(Numerazione, ProgressivoChiuso, TitoloTest, Testo) values ("' . $numerazione . '"," ' . $progQuesito . '","' . $test . '","' . $opzione3 . '");';
                         $risult3 = mysqli_query($conn, $query3);
-                        $queryA = "UPDATE QUESITO_CHIUSO SET OpzioneGiusta = '$numerazione' WHERE Progressivo = '$progQuesito';";
+                        $queryA = "UPDATE QUESITO_CHIUSO SET OpzioneGiusta = '$giusta' WHERE Progressivo = '$progQuesito';";
                         $risultA = mysqli_query($conn, $queryA);
                         if (!$risultA) {
                             echo "ricerca fallita: " . die(mysqli_error($conn));

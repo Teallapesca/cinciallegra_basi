@@ -47,7 +47,7 @@
 
 					$mail=$_GET["mail"];
 					$who=0;
-					$query ="CALL Autenticazione('$mail', @who);";
+					$query="CALL Autenticazione('$mail', @who);";
 					$risultato = mysqli_query($conn,$query);
 					if(!$risultato){
 						echo "errore nella ricerca" . die (mysqli_error($conn));

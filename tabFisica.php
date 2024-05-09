@@ -65,6 +65,12 @@
                         }
                     }
                 }
+                $trigger="Create trigger num_righe AFTER INSERT ON $tabella
+                    FOR EACH ROW
+                    UPDATE TABELLA_ESERCIZIO
+                    SET NumeroRighe=NumeroRighe+1
+                    WHERE (Nome=$tabella) AND (MailDocente=$mail);
+                    ;";
             }
         }
         else{
