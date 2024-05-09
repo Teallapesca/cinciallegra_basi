@@ -88,17 +88,6 @@ END $ DELIMITER ;
 
 DELIMITER $  /* 2) Inserimento di una riga per una tabella di esercizio, definita dal docente. */
 
-
-DELIMITER $  /* 2) Inserimento di una riga per una tabella di esercizio, definita dal docente. */
-CREATE PROCEDURE InserimentoRigaTabellaEsercizio (
-    IN NomeTabella VARCHAR(30),
-    IN Docente VARCHAR(40))
-BEGIN
-    UPDATE TABELLA_ESERCIZIO
-    SET NumeroRighe=NumeroRighe+1
-    WHERE (Nome=NomeTabella) AND (MailDocente=Docente);
-END $ DELIMITER ;
-
 DELIMITER $  /* 3) Creazione di nuovo test. */
 CREATE PROCEDURE CreaTest (
     IN TitoloTest VARCHAR(30),

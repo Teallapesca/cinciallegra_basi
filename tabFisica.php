@@ -65,12 +65,34 @@
                         }
                     }
                 }
-                $trigger="Create trigger num_righe AFTER INSERT ON $tabella
-                    FOR EACH ROW
-                    UPDATE TABELLA_ESERCIZIO
-                    SET NumeroRighe=NumeroRighe+1
-                    WHERE (Nome=$tabella) AND (MailDocente=$mail);
-                    ;";
+                // Esegui il comando DELIMITER
+               // mysqli_query($conn, 'DELIMITER $');
+
+// Definisci il trigger
+$trigger = "
+CREATE TRIGGER num_righe AFTER INSERT ON $tabella
+FOR EACH ROW
+BEGIN
+    UPDATE TABELLA_ESERCIZIO
+    SET NumeroRighe = NumeroRighe + 1
+    WHERE Nome = '$tabella' AND MailDocente = '$mail';
+END;
+";
+
+// Esegui la query
+$risTRIGGER = mysqli_query($conn, $trigger);
+
+// Ripristina il delimitatore predefinito
+//mysqli_query($conn, 'DELIMITER ;');
+
+                if (!$risTRIGGER) {
+                    echo "trigger fallito: " . mysqli_error($conn);
+                }
+                
+            }
+            if (!mysqli_commit($conn)) {
+                mysqli_rollback($conn);
+                echo "Errore durante il commit della transazione.";
             }
         }
         else{
@@ -85,7 +107,7 @@
     unset( $_SESSION["tabelle"]);//elimino l'array così che possa essere ricreato da zero con le nuove tabelle
     // chiusura della connessione
     mysqli_close($conn);
-    header('Location: CreaTabelle.php');
-    exit();
+    /*header('Location: CreaTabelle.php');
+    exit();*/
     echo "<br> <br> <a href=hpDocente.php> <- </a>";
 ?>

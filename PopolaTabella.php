@@ -124,7 +124,7 @@
                                 }
                                 $risultato = mysqli_query($conn,$query);
                                 if($risultato === false){
-                                    echo "errore nella ricerca " . mysqli_error($conn);}
+                                    echo "errore nella ricerca 3" . mysqli_error($conn);}
                                 else{
                                         echo "inserimento avvenuto con successo";
                                 }
@@ -139,21 +139,24 @@
                                 $num=$valore; //assegno a num il valore di valore così nel prossimo if non devo fare un controllo se la pk è già stata settata oppure no
                                 $risultato = mysqli_query($conn,$query);
                                 if($risultato === false){
-                                    echo "errore nella ricerca " . mysqli_error($conn);}
+                                    echo "errore nella ricerca 1" . mysqli_error($conn);}
                                 else{
                                         echo "inserimento avvenuto con successo";
                                 }
                             }
                             else{
+                                if($attr==$chiave){
+                                    $num=$valore;
+                                }
                                 if($attributo["tipo"]=="VARCHAR"){
-                                    $query="UPDATE $tabella SET $attr='$valore' WHERE $chiave='$num';";
+                                    $query="UPDATE $tabella SET $attr='$valore' WHERE $chiave=$num;";
                                 }
                                 else{
                                     $query="UPDATE $tabella SET $attr=$valore WHERE $chiave=$num ;";
                                 }
                                 $risultato = mysqli_query($conn,$query);
                                 if($risultato === false){
-                                    echo "errore nella ricerca " . mysqli_error($conn);}
+                                    echo "errore nella ricerca 2" . mysqli_error($conn);}
                                 else{
                                         echo "inserimento avvenuto con successo";
                                 }
@@ -171,11 +174,11 @@
                         }*/
                     }
 
-                    $numrighe="CALL InserimentoRigaTabellaEsercizio('$tabella', '$mail');";
+                    /*$numrighe="CALL InserimentoRigaTabellaEsercizio('$tabella', '$mail');";
                     $risultato = mysqli_query($conn,$numrighe);
                     if($risultato === false){
                         echo "errore nella ricerca " . mysqli_error($conn);
-                    }
+                    }*/
                     if (!mysqli_commit($conn)) {
                         mysqli_rollback($conn);
                         echo "Errore durante il commit della transazione.";
