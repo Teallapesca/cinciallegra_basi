@@ -66,7 +66,9 @@
                                 echo "
                                 <pre>inserisci nome attributo   inserisci tipo          è chiave primaria?</pre>
                                 <pre><input type='text' name='attributo[]' value=''>   <select name='tipo[]'>
-                                                                                            <option value='VARCHAR'>VARCHAR</option>
+                                                                                            <option value='VARCHAR(10)'>VARCHAR(10)</option>
+                                                                                            <option value='VARCHAR(50)'>VARCHAR(50)</option>
+                                                                                            <option value='VARCHAR(100)'>VARCHAR(100)</option>
                                                                                             <option value='INT' selected>INT</option>
                                                                                             <option value='BOOLEAN'>BOOLEAN</option>
                                                                                             <option value='DOUBLE'>DOUBLE</option>
@@ -79,7 +81,9 @@
                                 echo "
                                 <pre>inserisci nome attributo   inserisci tipo          è chiave primaria?</pre>
                                 <pre><input type='text' name='attributo[]' value=''>   <select name='tipo[]'>
-                                                                                            <option value='VARCHAR'>VARCHAR</option>
+                                                                                            <option value='VARCHAR(10)'>VARCHAR(10)</option>
+                                                                                            <option value='VARCHAR(50)'>VARCHAR(50)</option>
+                                                                                            <option value='VARCHAR(100)'>VARCHAR(100)</option>
                                                                                             <option value='INT' selected>INT</option>
                                                                                             <option value='BOOLEAN'>BOOLEAN</option>
                                                                                             <option value='DOUBLE'>DOUBLE</option>
@@ -128,8 +132,8 @@
                         
                         
                         // Scrivi la query SQL per inserire l'attributo nella tabella "Attributo"
-                        $query = 'INSERT INTO Attributo (NomeTabella, Nome, Tipo, PossibileChiavePrimaria) VALUES ("'.$nomeTabella.'", "'.$attributo.'", "'.$tipo.'", "'.$PK.'");';
-                        //$query ="CALL InserimentoAttributo("'.$nomeTabella.'", "'.$attributo.'", "'.$tipo.'", "'.$PK.'");"; devo ancora caricarla su php my admin ma c'è sul file sql 
+                        //$query = 'INSERT INTO Attributo (NomeTabella, Nome, Tipo, PossibileChiavePrimaria) VALUES ("'.$nomeTabella.'", "'.$attributo.'", "'.$tipo.'", "'.$PK.'");';
+                        $query ="CALL InserimentoAttributo('$nomeTabella', '$attributo', '$tipo', '$PK');"; //devo ancora caricarla su php my admin ma c'è sul file sql 
                         // Esegui la query
                         $result = mysqli_query($conn, $query);
                         

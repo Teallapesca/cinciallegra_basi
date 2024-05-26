@@ -7,105 +7,54 @@
     //select per scegliere la tabella da cui prendere la chiave primaria
     $mail = $_SESSION['mailDocente'];
     $tabelle = $_SESSION["tabelle"];
-    //if (isset($_GET['fine'])) {
-       // var_dump($tabelle);
-        if (isset($_SESSION["tabelle"])) {
-           // var_dump($_SESSION["tabelle"]);
-            //creazione fisica delle tabelle
-            foreach($_SESSION["tabelle"] as $tabella){
-                echo "tabella: " . $tabella ."<br>";
-                //per ogni tabella nuova creata (quindi presente nell'array), seleziono i suoi attributi
-                $query="SELECT * FROM attributo WHERE NomeTabella='$tabella';";
-                $ris = mysqli_query($conn, $query);
-                if (!$ris) {
-                    echo "ricerca fallita: " . mysqli_error($conn);
-                }
-                else{
-                    //creo la tabella nuova vuota
-                    $sql="CREATE TABLE IF NOT EXISTS `$tabella`(id INT AUTO_INCREMENT PRIMARY KEY);";
-                    $creazione = mysqli_query($conn, $sql);
-                    if (!$creazione) {
-                        echo "creazione tabella fallita: " . mysqli_error($conn);
-                    }else{
-                        echo "tabella creata <br>";
-                        //per ogni attributo faccio l'aggiornamento della tabella con la nuova colonna
-                        while ($row = mysqli_fetch_array($ris)) {
-                            $nome=$row['Nome'];
-                            $tipo=$row['Tipo'];
-                            if ($tipo == 'VARCHAR') {//se è un varchar gli specifico una lunghezza di default
-                                $tipo = "VARCHAR(50)";
-                            }
-                            $chiave=$row['PossibileChiavePrimaria'];
-                            echo "attributo: ".$nome. "<br>";
-                            //aggiungo la colonna dell'attributo
-                            $add="ALTER TABLE `$tabella`
-                                        ADD `$nome` $tipo;";
-                            $ris_add = mysqli_query($conn, $add);
-                            if (!$ris_add) {
-                                echo "creazione colonna fallita: " . mysqli_error($conn);
-                            }else{
-                                if($chiave==1){//se ho un'altra chiave tolgo id e aggiungo la nuova chiave
-                                    //**********non vanno le chiavi multiple */
-                                    $drop="ALTER TABLE `$tabella` 
-                                            DROP `id`;";
-                                    $ris_drop = mysqli_query($conn, $drop);
-                                    if (!$ris_drop) {
-                                        echo "eliminazione fallita: " . mysqli_error($conn);
-                                    }
-                                    $key="ALTER TABLE `$tabella` 
-                                            ADD PRIMARY KEY (`$nome`);";
-                                    $ris_key = mysqli_query($conn, $key);
-                                    if (!$ris_key) {
-                                        echo "chiave primaria fallita: " . mysqli_error($conn);
-                                    }
-                                }
-                            }
-                            
-        
-                        }
-                    }
-                }
-                // Esegui il comando DELIMITER
-               // mysqli_query($conn, 'DELIMITER $');
-
-// Definisci il trigger
-$trigger = "
-CREATE TRIGGER num_righe AFTER INSERT ON $tabella
-FOR EACH ROW
-BEGIN
-    UPDATE TABELLA_ESERCIZIO
-    SET NumeroRighe = NumeroRighe + 1
-    WHERE Nome = '$tabella' AND MailDocente = '$mail';
-END;
-";
-
-// Esegui la query
-$risTRIGGER = mysqli_query($conn, $trigger);
-
-// Ripristina il delimitatore predefinito
-//mysqli_query($conn, 'DELIMITER ;');
-
-                if (!$risTRIGGER) {
-                    echo "trigger fallito: " . mysqli_error($conn);
-                }
-                
+    $chiavi_primarie=array();
+    $attributi=array();
+    var_dump($tabelle);
+    if (isset($tabelle) && !empty($tabelle)) {
+        foreach($tabelle as $tabella) {
+            echo "Tabella: $tabella <br>";
+            $sql =" CALL TabellaFisica('$mail', '$tabella');";
+            
+            $creazione_tabella = mysqli_query($conn, $sql);
+            if (!$creazione_tabella) {
+                echo "Creazione tabella fallita: " . mysqli_error($conn);
+                continue; // Passa alla prossima tabella
+            } else {
+                echo "Tabella creata <br>";
             }
-            if (!mysqli_commit($conn)) {
-                mysqli_rollback($conn);
-                echo "Errore durante il commit della transazione.";
+    
+    
+            // Trigger num_righe
+            $trigger = "CREATE TRIGGER num_righe$tabella AFTER INSERT ON $tabella
+                        FOR EACH ROW
+                        BEGIN
+                            UPDATE TABELLA_ESERCIZIO
+                            SET NumeroRighe = NumeroRighe + 1
+                            WHERE Nome = '$tabella' AND MailDocente = '$mail';
+                        END;
+                        ";
+    
+            $risTRIGGER = mysqli_query($conn, $trigger);
+    
+            if (!$risTRIGGER) {
+                echo "Trigger fallito: " . mysqli_error($conn);
             }
         }
-        else{
-            echo "non ci sono righe nell'array tabelle";
+    
+        if (!mysqli_commit($conn)) {
+            mysqli_rollback($conn);
+            echo "Errore durante il commit della transazione.";
         }
-    //}
+    } else {
+        echo "Non ci sono righe nell'array tabelle";
+    }
 
     if (!mysqli_commit($conn)) {
         mysqli_rollback($conn);
         echo "Errore durante il commit della transazione.";
     }
     unset( $_SESSION["tabelle"]);//elimino l'array così che possa essere ricreato da zero con le nuove tabelle
-    // chiusura della connessione
+
     mysqli_close($conn);
     /*header('Location: CreaTabelle.php');
     exit();*/

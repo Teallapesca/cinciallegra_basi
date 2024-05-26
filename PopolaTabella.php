@@ -57,7 +57,7 @@
 
                         $query="SELECT Nome, Tipo, PossibileChiavePrimaria
                                 FROM attributo
-                                WHERE NomeTabella='$tabella';";  //seleziono gli attributi della tabella selezionata
+                                WHERE NomeTabella='$tabella' ORDER BY attributo.PossibileChiavePrimaria DESC;";  //seleziono gli attributi della tabella selezionata
                         //$query="CALL VisualizzaQuesiti('$tabella');"; //è commentata perchè non lo ancora caricata su phpmyadmin ma sul file sql c'è
                         $risult=mysqli_query($conn,$query);
 
@@ -75,7 +75,7 @@
                                     {$row['Nome']} ({$row['Tipo']}):<br>
                                     <input type='text' name='nome_{$row['Nome']}' value=''><br><br>
                                 ";
-                                if($row['PossibileChiavePrimaria']==1){
+                                if($row['PossibileChiavePrimaria']==1 && !isset($_SESSION["chiave"])){
                                     $_SESSION["chiave"]=$row['Nome']; //sarà da sistemare per le chiavi multiple
                                 }
                                 $_SESSION["attributi"][]=Array("nome" => $row['Nome'],"tipo" => $row['Tipo']);
@@ -101,84 +101,36 @@
                         $valore1=0;
                         $attr1="";
                         $chiave=$_SESSION["chiave"];
-                        if(!isset($_SESSION['num'])){
-                            $_SESSION['num']=1;
-                        }else{
-                            $_SESSION['num']=$_SESSION['num']+1;
-                        }
-                        $num=$_SESSION['num'];
-                        echo "chiave: " . $chiave . " num=".$num;
+                        $valori="";
                         //var_dump($_SESSION["attributi"]);
-                        //creazione fisica delle tabelle
+                        
                         foreach($_SESSION["attributi"] as $key => $attributo){
-                            echo "<br>ok ". $attributo["nome"]. " val: ".$_GET["nome_{$attributo["nome"]}"];
-                            $valore=$_GET["nome_{$attributo["nome"]}"]; // in valore salvo il valore messo nel campo testo dell'attributo che sto prendendo in considerazione
-                            $attr=$attributo["nome"]; // in attr c'è l'attributo che sto prendendo in considerazione
-                            if($key === 0 && ($attr!=$chiave)){
-                                $attr1=$attr;
-                                if($attributo["tipo"]=="VARCHAR"){//non mi ricordo cosa cambia fra i due, se funziona uguale lo tolgo
-                                    $query="INSERT INTO $tabella({$attr},{$chiave}) VALUES ('".$valore."','".$num."');";
-                                }
-                                else{
-                                    $query="INSERT INTO $tabella({$attr},{$chiave}) VALUES ('".$valore."','".$num."');";;
-                                }
-                                $risultato = mysqli_query($conn,$query);
-                                if($risultato === false){
-                                    echo "errore nella ricerca 3" . mysqli_error($conn);}
-                                else{
-                                        echo "inserimento avvenuto con successo";
-                                }
-                            }elseif($key === 0 && ($attr==$chiave)){
-                                $attr1=$attr;
-                                if($attributo["tipo"]=="VARCHAR"){//non mi ricordo cosa cambia fra i due, se funziona uguale lo tolgo
-                                    $query="INSERT INTO $tabella({$attr}) VALUES ('".$valore."');";
-                                }
-                                else{
-                                    $query="INSERT INTO $tabella({$attr}) VALUES ('".$valore."');";;
-                                }
-                                $num=$valore; //assegno a num il valore di valore così nel prossimo if non devo fare un controllo se la pk è già stata settata oppure no
-                                $risultato = mysqli_query($conn,$query);
-                                if($risultato === false){
-                                    echo "errore nella ricerca 1" . mysqli_error($conn);}
-                                else{
-                                        echo "inserimento avvenuto con successo";
-                                }
-                            }
-                            else{
-                                if($attr==$chiave){
-                                    $num=$valore;
-                                }
-                                if($attributo["tipo"]=="VARCHAR"){
-                                    $query="UPDATE $tabella SET $attr='$valore' WHERE $chiave=$num;";
-                                }
-                                else{
-                                    $query="UPDATE $tabella SET $attr=$valore WHERE $chiave=$num ;";
-                                }
-                                $risultato = mysqli_query($conn,$query);
-                                if($risultato === false){
-                                    echo "errore nella ricerca 2" . mysqli_error($conn);}
-                                else{
-                                        echo "inserimento avvenuto con successo";
-                                }
-                                //se l'attributo da aggiornare è la chiave, aggiorno anche il valore da prendere in considerazione
-                                if($attributo['nome']==$chiave){
-                                    $num=$valore;
-                                }
-                                
-                            }
-                            
+                            $valore = $_GET["nome_{$attributo["nome"]}"];
+        
+                            // Escapa il valore
+                            $valore_esc = mysqli_real_escape_string($conn, $valore);
+
+                            // Verifica il tipo di dato e aggiungi apici singoli per le stringhe
+                            if (strpos($attributo["tipo"], "VARCHAR") !== false || strpos($attributo["tipo"], "CHAR") !== false) {
+                                $valori .= "'" . $valore_esc . "', ";
+                            } else {
+                                $valori .= $valore_esc . ", ";
+                            }                         
                         }
-                        /*if (!mysqli_commit($conn)) {
-                            mysqli_rollback($conn);
-                            echo "Errore durante il commit della transazione.";
-                        }*/
+                        $valori=rtrim($valori, ', ');
+                        //echo $valori;
+                        $query='CALL PopolaTabella("'.$tabella.'", "'.$valori.'");';      
+                        $risultato = mysqli_query($conn,$query);
+                        //echo "<br><br><pre>Query: $query</pre>";
+
+                        if($risultato === false){
+                            echo "errore nell popolamento della tabella" . mysqli_error($conn);}
+                        else{
+                                echo "inserimento avvenuto con successo";
+                        }
+
                     }
 
-                    /*$numrighe="CALL InserimentoRigaTabellaEsercizio('$tabella', '$mail');";
-                    $risultato = mysqli_query($conn,$numrighe);
-                    if($risultato === false){
-                        echo "errore nella ricerca " . mysqli_error($conn);
-                    }*/
                     if (!mysqli_commit($conn)) {
                         mysqli_rollback($conn);
                         echo "Errore durante il commit della transazione.";

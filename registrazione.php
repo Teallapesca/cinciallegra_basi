@@ -69,7 +69,7 @@
 
                     <div id="campi" style="display:none;">
                         <div class="input-group mb-3">  
-                        <span class="input-group-text" id="basic-addon1">Mail</span> <input class="form-control" type='text' name='mail' value=''> <br>
+                        <span class="input-group-text" id="basic-addon1">Mail</span> <input class="form-control" type='email' name='mail' value=''> <br>
                         </div>
 
                         <div class="input-group mb-3">

@@ -227,3 +227,97 @@ SELECT Nome, Tipo, PossibileChiavePrimaria
                                 FROM attributo
                                 WHERE NomeTabella=Tabella;
 END $ DELIMITER ;
+
+-- procedura per creare la tabella fisica
+USE moodle;
+DELIMITER $
+CREATE PROCEDURE TabellaFisica (IN mail VARCHAR(30), IN Tabella VARCHAR(30))
+BEGIN
+    DECLARE fine BOOLEAN DEFAULT FALSE;
+    DECLARE NomeAttributo VARCHAR(20);
+    DECLARE tipoAttributo VARCHAR(50);
+    DECLARE chiaveP BOOLEAN;
+    DECLARE chiaviprimarie TEXT DEFAULT '';
+    
+    DECLARE cursore CURSOR FOR SELECT Nome, Tipo, PossibileChiavePrimaria FROM Attributo WHERE Attributo.NomeTabella = Tabella ORDER BY attributo.PossibileChiavePrimaria DESC;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET fine = TRUE;
+    
+    SET @sql = CONCAT('CREATE TABLE ', Tabella, ' (');
+    
+    OPEN cursore;
+    read_loop: LOOP
+        FETCH cursore INTO NomeAttributo, tipoAttributo, chiaveP;
+        IF fine THEN
+            LEAVE read_loop;
+        END IF;
+        SET @sql = CONCAT(@sql, NomeAttributo, ' ', tipoAttributo, ', ');
+        IF chiaveP THEN
+            SET chiaviprimarie = CONCAT(chiaviprimarie, NomeAttributo, ', ' );
+        END IF;
+    END LOOP;
+    CLOSE cursore;
+    
+    SET chiaviprimarie = SUBSTRING(chiaviprimarie, 1, LENGTH(chiaviprimarie) - 2);
+    SET @sql = CONCAT(@sql, 'PRIMARY KEY (', chiaviprimarie, '));');
+    
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END $ 
+DELIMITER ;
+
+-- procedura per fare i vincoli di integrità fra tabelle
+
+DELIMITER $
+CREATE PROCEDURE Vincoli ( IN tabella2 VARCHAR(30),IN tabella1 VARCHAR(30), IN attributo1 VARCHAR(30),IN attributo2 VARCHAR(30))
+BEGIN
+
+    SET @sql = CONCAT('ALTER TABLE ', tabella2, ' ADD ');
+    
+	SET @sql = CONCAT(@sql, 'FOREIGN KEY (', attributo2, ') REFERENCES ', tabella1, '(', attributo1, ') ON DELETE CASCADE');
+    SET @sql = CONCAT(@sql, ';');
+    
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END $ 
+DELIMITER ;
+
+-- procedura per popolare la tabella
+USE moodle;
+DELIMITER $
+CREATE PROCEDURE PopolaTabella (IN Tabella VARCHAR(30), IN valori text)
+BEGIN
+    DECLARE fine BOOLEAN DEFAULT FALSE;
+    DECLARE NomeAttributo VARCHAR(20);
+    
+    DECLARE cursore CURSOR FOR SELECT Nome FROM Attributo WHERE Attributo.NomeTabella = Tabella ORDER BY attributo.PossibileChiavePrimaria DESC;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET fine = TRUE;
+    
+    SET @sql = CONCAT('insert into ', Tabella, ' (');
+    
+    OPEN cursore;
+    read_loop: LOOP
+        FETCH cursore INTO NomeAttributo;
+        IF fine THEN
+            LEAVE read_loop;
+        END IF;
+        SET @sql = CONCAT(@sql, NomeAttributo, ', ');
+    END LOOP;
+    CLOSE cursore;
+    
+    SET @sql = LEFT(@sql, LENGTH(@sql) - 2);
+    SET @sql = CONCAT(@sql, ') VALUES (');
+    
+    -- Aggiungi singoli apici attorno ai valori
+    SET @sql = CONCAT(@sql, valori, ');');
+    
+    -- Debugging output (puoi rimuoverlo in produzione)
+    -- SELECT @sql;
+    
+    PREPARE stmt FROM @sql;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END $ 
+DELIMITER ;
+
