@@ -269,14 +269,12 @@ DELIMITER ;
 -- procedura per fare i vincoli di integrità fra tabelle
 
 DELIMITER $
-CREATE PROCEDURE Vincoli ( IN tabella2 VARCHAR(30),IN tabella1 VARCHAR(30), IN attributo1 VARCHAR(30),IN attributo2 VARCHAR(30))
+CREATE PROCEDURE Vincoli ( IN tabella2 VARCHAR(30),IN tabella1 VARCHAR(30), IN chiaviprimarie VARCHAR(500),IN chiaviesterne VARCHAR(500))
 BEGIN
-
-    SET @sql = CONCAT('ALTER TABLE ', tabella2, ' ADD ');
+	
+    SET @sql = CONCAT('ALTER TABLE ', tabella2, ' ADD FOREIGN KEY (', chiaviesterne, ') REFERENCES ', tabella1, '(', chiaviprimarie, ') ON DELETE CASCADE');
     
-	SET @sql = CONCAT(@sql, 'FOREIGN KEY (', attributo2, ') REFERENCES ', tabella1, '(', attributo1, ') ON DELETE CASCADE');
-    SET @sql = CONCAT(@sql, ';');
-    
+    select @sql;
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;

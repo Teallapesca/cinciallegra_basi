@@ -85,20 +85,24 @@
             <div class="messaggi-content" id="messaggiContent">
                 <!-- Contenuto dei messaggi qui -->
                 <?php
-                    $titoloTest = $_SESSION['titoloTest'];            
-                    $query1 = "SELECT * FROM MESSAGGIODOCENTE WHERE TitoloTest = '$titoloTest'";
-                    $result1 = $conn->query($query1);
-            
-                    if ($result1->num_rows > 0) {
-                        echo "<ul>";
-                        while ($row = $result1->fetch_assoc()) {
-                            echo "<li><b>{$row['MailDocente']} - {$row['DataInserimento']}</b><br>  {$row['TitoloMess']}<br> {$row['Testo']}</li>";
+                    $titoloTest = $_SESSION['titoloTest'];    
+                    if (isset($_GET['titolo'])) {//eseguirò tutto questo codice se non c'è stato alcun probelma di settaggio del test scelto
+                        $_SESSION['titoloTest']=$_GET['titolo'];
+                        $titoloTest = $_GET['titolo'];
+                        echo "<h1 class='ml-3'>".$_SESSION['titoloTest']."</h1>";        
+                        $query1 = "SELECT * FROM MESSAGGIODOCENTE WHERE TitoloTest = '$titoloTest'";
+                        $result1 = $conn->query($query1);
+                
+                        if ($result1->num_rows > 0) {
+                            echo "<ul>";
+                            while ($row = $result1->fetch_assoc()) {
+                                echo "<li><b>{$row['MailDocente']} - {$row['DataInserimento']}</b><br>  {$row['TitoloMess']}<br> {$row['Testo']}</li>";
+                            }
+                            echo "</ul>";
+                        } else {
+                            echo "Nessun messaggio trovato per questo test.";
                         }
-                        echo "</ul>";
-                    } else {
-                        echo "Nessun messaggio trovato per questo test.";
                     }
-
                 ?>
             </div>
         </div>
