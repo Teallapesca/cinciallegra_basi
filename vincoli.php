@@ -5,6 +5,7 @@
     ini_set('display_errors', 1);
     error_reporting(E_ALL);
     include 'connessione.php';
+    include 'ConnessioneMongoDB.php';
     mysqli_begin_transaction($conn);
     ?>
     <div class="titolo">
@@ -188,6 +189,7 @@
                         echo "ricerca fallita insert vincolo: " . mysqli_error($conn);
                     }else{
                         echo "inserimento vincolo effettuato";
+                        logEvent("Nuovo vincolo $tabella1 - $tabella inserito");
                     }
 
 

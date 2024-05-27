@@ -1,5 +1,6 @@
 <?php
-   
+   include 'ConnessioneMongoDB.php';
+   //funzione per controllare se tutto il test è corretto
     function controlloTotale($titoloTest, $mail, $conn){
         $num_righe=0;
         if(!empty($_SESSION["quesiti$titoloTest"])){
@@ -8,7 +9,7 @@
                 $progressivo=$quesito["progressivo"];
                 //$tipo=$quesito["tipo"];
     
-                $testo=$_SESSION["risposta$progressivo"];
+                //$testo=$_SESSION["risposta$progressivo"];
                 //$_SESSION["risposta$progressivo"]=$testo;
     
                 $query="SELECT * FROM risposta WHERE ProgressivoQuesito=$progressivo AND MailStudente='$mail' AND Esito=1;";
@@ -26,6 +27,7 @@
         return $num_righe;
     }
 
+    //controllo se la risposta al quesito chiuso è corretta
     function controlloRisposta($mail, $conn, $progressivo){
         $query="SELECT * FROM risposta WHERE ProgressivoQuesito=$progressivo AND MailStudente='$mail' AND Esito=1;";
         $risult = mysqli_query($conn, $query);
@@ -40,6 +42,7 @@
         return false;
     }
     
+    //funzione per salvare le risposte date nel test quando si esce
     function riempimento($titoloTest, $mail, $conn, $progressivo){
         $query =  "SELECT * FROM risposta WHERE TitoloTest = '$titoloTest' AND MailStudente='$mail';"; 
         $ris_codice = mysqli_query($conn, $query);
@@ -56,6 +59,8 @@
             }
         }
     }
+
+    //funzione per controllare se la risposta del quesito aperto è un codice o no
     function ControlloQuery($prima_parola){
         if($prima_parola=="SELECT"||$prima_parola=="UPDATE"||$prima_parola=="CREATE"||$prima_parola=="DELETE" ||$prima_parola=="INSERT"){
             return true;
@@ -65,6 +70,7 @@
         }
     }
 
+    //funzione per controllare se il codice scritto dallo studente è corretto
     function controlloCodice($conn, $progressivo, $risposta){
 
         $soluzione="";
@@ -114,6 +120,7 @@
         return $esito;
     }
 
+    //funzione per inserire o aggiornare la risposta dello studente
     function risposta($conn, $mail, $titoloTest, $progressivo, $testo, $esitorisp) {
                  
         //cerco se sono già state date risposte a questo quesito
@@ -140,7 +147,9 @@
                     $risris = mysqli_query($conn, $risposta);
                     if (!$risris) {
                         echo "Errore nell'inserimento della risposta2: " . mysqli_error($conn);
-                    }    
+                    }else{
+                        logEvent("Nuova risposta a $titoloTest inserita ");
+                    }
                 }
             }
             if (!mysqli_commit($conn)) {

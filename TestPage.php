@@ -103,6 +103,7 @@
     ini_set('display_errors', 1);
 	error_reporting(E_ALL);
 	include 'connessione.php';
+    include 'ConnessioneMongoDB.php';
 	mysqli_begin_transaction($conn);
     
     
@@ -119,8 +120,6 @@
         $testImg = $_SESSION['testImg'];
         $testImg = addslashes($testImg);
         
-
-        //echo "dati: ".$mail." ".$test_title." ".$visualizza;
         // Controlla se il test esiste già nel database
         $query = "SELECT * FROM test WHERE Titolo = '$test_title'";
         $result = mysqli_query($conn, $query);
@@ -129,7 +128,7 @@
             // Test già presente nel database
             echo "Test già presente nel database.";
         }else {
-            // Esegui la query per inserire il titolo del test nel database
+            // Esecuzione della query per inserire il test nel database
             $sql = "CALL CreaTest('$test_title', '$testImg', '$visualizza', '$mail')";
             
             $risultato=mysqli_query($conn, $sql);
@@ -138,6 +137,7 @@
                 echo "Errore durante la creazione del test: " . mysqli_error($conn);
                 
             } else {
+                logEvent("Nuovo test $test_title inserito");
                 echo "Test creato.";
             }
         }

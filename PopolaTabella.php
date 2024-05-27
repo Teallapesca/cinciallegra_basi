@@ -10,6 +10,7 @@
 			error_reporting(E_ALL);
 			include 'connessione.php';
 			mysqli_begin_transaction($conn);
+            include 'ConnessioneMongoDB.php';
 		?>
 		<div class="intesta">
 			<h1> Popolamento tabelle </h1>
@@ -58,7 +59,7 @@
                         $query="SELECT Nome, Tipo, PossibileChiavePrimaria
                                 FROM attributo
                                 WHERE NomeTabella='$tabella' ORDER BY attributo.PossibileChiavePrimaria DESC;";  //seleziono gli attributi della tabella selezionata
-                        //$query="CALL VisualizzaQuesiti('$tabella');"; //è commentata perchè non lo ancora caricata su phpmyadmin ma sul file sql c'è
+                       
                         $risult=mysqli_query($conn,$query);
 
                         if(!$risult){
@@ -70,7 +71,7 @@
                         else{
                             echo "tabella: " .$tabella ."<br><br>";
                             while($row = mysqli_fetch_array($risult))
-                            {//potrei fare un if che se il tipo è varchar mi mette nel value le virgolette
+                            {
                                 echo "
                                     {$row['Nome']} ({$row['Tipo']}):<br>
                                     <input type='text' name='nome_{$row['Nome']}' value=''><br><br>
@@ -102,31 +103,30 @@
                         $attr1="";
                         $chiave=$_SESSION["chiave"];
                         $valori="";
-                        //var_dump($_SESSION["attributi"]);
                         
                         foreach($_SESSION["attributi"] as $key => $attributo){
+
                             $valore = $_GET["nome_{$attributo["nome"]}"];
-        
-                            // Escapa il valore
                             $valore_esc = mysqli_real_escape_string($conn, $valore);
 
-                            // Verifica il tipo di dato e aggiungi apici singoli per le stringhe
+                            // Aggiungo gli apici se è un varchar 
                             if (strpos($attributo["tipo"], "VARCHAR") !== false || strpos($attributo["tipo"], "CHAR") !== false) {
                                 $valori .= "'" . $valore_esc . "', ";
                             } else {
                                 $valori .= $valore_esc . ", ";
                             }                         
                         }
+                        
                         $valori=rtrim($valori, ', ');
-                        //echo $valori;
+                     
                         $query='CALL PopolaTabella("'.$tabella.'", "'.$valori.'");';      
                         $risultato = mysqli_query($conn,$query);
-                        //echo "<br><br><pre>Query: $query</pre>";
 
                         if($risultato === false){
                             echo "errore nell popolamento della tabella" . mysqli_error($conn);}
                         else{
                                 echo "inserimento avvenuto con successo";
+                                logEvent("Nuova riga nella tabella $tabella inserita");
                         }
 
                     }

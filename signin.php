@@ -22,8 +22,7 @@
 	error_reporting(E_ALL);
 	include 'connessione.php';
 	mysqli_begin_transaction($conn);
-
-	//$pdo accesso controllato in mysql
+	include 'ConnessioneMongoDB.php';
 
 		if(isset($_GET["regStu"])){
 			$mail=$_GET['mail'];
@@ -32,12 +31,14 @@
 			$tel=$_GET['telefono'];
 			$matricola=$_GET['matricola'];
 			$anno=$_GET['anno'];
+
+			//chiamo la procedura che inserisce lo studente nella tabella
 			$query="CALL RegistrazioneStudente('$mail','$nome','$cognome', $tel, '$matricola', $anno);";
-			//$query = 'INSERT INTO studente (Mail, Nome, Cognome, Telefono, AnnoImmatricolazione, CodiceMatricola) VALUES("'.$mail.'"," ' .$nome .'","' .$cognome.'","' .$tel.'","'.$anno.'","'.$matricola.'");' ;
 			$risultato = mysqli_query($conn,$query);
 			if($risultato === false){
 				echo "errore nella ricerca" . die (mysqli_error($conn));}
 			else{
+				logEvent("Nuovo studente $mail registrato");
 				?>	
 			<div class="d-flex flex-column justify-content-center align-items-center">
 				<h2>Registrazione avvenuta con successo!</h2> 
@@ -45,7 +46,6 @@
 			</div>
 				<?php
 			}
-			// esecuzione query	
 			
 		}
 		else if(isset($_GET["regDoc"])){
@@ -55,12 +55,14 @@
 			$tel=$_GET['telefono'];
 			$corso=$_GET['corso'];
 			$dip=$_GET['dip'];
+
+			//chiamo la procedura che inserisce il docente nella tabella
 			$query="CALL RegistrazioneDocente('$mail','$nome','$cognome',$tel,'$corso','$dip');";
-			//$query = 'INSERT INTO docente (Mail ,Nome, Cognome, Telefono, Corso, Dipartimento) VALUES("'.$mail.'"," '.$nome.'","'.$cognome.'","'.$tel.'","'.$corso.'","'.$dip.'");' ;
 			$risultato = mysqli_query($conn,$query);
 			if($risultato === false){
 				echo "errore nella ricerca" . die(mysqli_error($conn));}
 			else{
+				logEvent("Nuovo docente $mail registrato");
 				?>	
 			<div class="d-flex flex-column justify-content-center align-items-center">
 				<h2>Registrazione avvenuta con successo!</h2> 
@@ -71,9 +73,6 @@
 		// esecuzione query	
 			
 		}
-
-		
-
 	
 	if (!mysqli_commit($conn)) {
         mysqli_rollback($conn);

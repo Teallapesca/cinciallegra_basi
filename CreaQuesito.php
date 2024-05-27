@@ -42,6 +42,7 @@
     error_reporting(E_ALL);
     include 'connessione.php';
     mysqli_begin_transaction($conn);
+    include 'ConnessioneMongoDB.php';
     ?>
     <div class="titolo">
         <h1>CREA QUESITO</h1>
@@ -139,6 +140,9 @@
                     if (!$ris) {
                         echo "inserimento quesito fallito: " . die(mysqli_error($conn));
                     }
+                    else{
+                        logEvent("Nuovo quesito $progQuesito inserito");
+                    }
 
                     //numerazione della prima opzione
                     $numerazione = 1;
@@ -155,6 +159,7 @@
                         if (!$risult1) {
                             echo "ricerca fallita: " . die(mysqli_error($conn));
                         }
+                        
     
                         //----op2
                         $numerazione = $numerazione + 1;
@@ -181,6 +186,7 @@
                         if (!$risultA) {
                             echo "ricerca fallita: " . die(mysqli_error($conn));
                         }
+                        logEvent("Nuova opzione $opzione3 inserita");
 
                     }
                     else{
@@ -196,6 +202,8 @@
                     $ris = mysqli_query($conn, $query);
                     if (!$ris) {
                         echo "inserimento quesito fallito: " . die(mysqli_error($conn));
+                    }else{
+                        logEvent("Nuovo quesito $progQuesito inserito");
                     }
 
                 }

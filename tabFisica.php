@@ -56,7 +56,7 @@
     unset( $_SESSION["tabelle"]);//elimino l'array così che possa essere ricreato da zero con le nuove tabelle
 
     mysqli_close($conn);
-    /*header('Location: CreaTabelle.php');
-    exit();*/
+    header('Location: CreaTabelle.php');
+    exit();
     echo "<br> <br> <a href=hpDocente.php> <- </a>";
 ?>

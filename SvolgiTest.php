@@ -95,7 +95,8 @@
         error_reporting(E_ALL);
         include 'connessione.php';
         mysqli_begin_transaction($conn);
-        include 'controllo.php';
+        include 'controlli.php';
+        include 'ConnessioneMongoDB.php';
     ?>
     <div class="intesta">
         <h1>SVOLGI IL TEST</h1>
@@ -194,6 +195,8 @@
                             $ris_ins = mysqli_query($conn, $inserimento);
                             if (!$ris_ins) {
                                 echo "Errore nell'inserimento in svolgimento: " . mysqli_error($conn);
+                            }else{
+                                logEvent("Nuovo test $titoloTest inserito in svolgimento");
                             }
                             if (!mysqli_commit($conn)) {
                                 mysqli_rollback($conn);
@@ -286,7 +289,6 @@
                             $quesito=$_SESSION["quesiti$titoloTest"][] = Array("progressivo" => $progressivo,
                             "descrizione" => $descrizione);
                         }
-                        //var_dump($_SESSION["quesiti$titoloTest"]);
                     }
 
                     $stmt->close();

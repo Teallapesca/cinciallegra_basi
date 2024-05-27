@@ -7,9 +7,15 @@ function logEvent($message) {
 
         // Creazione del documento da inserire
         $bulk = new MongoDB\Driver\BulkWrite;
+        $datetime = new DateTime('now', new DateTimeZone('Europe/Rome'));
+        
+        // Converti l'orario in UTC
+        $datetime->setTimezone(new DateTimeZone('UTC'));
+        
+        // Creazione del documento da inserire con il timestamp in UTC
         $document = [
             'message' => $message,
-            'timestamp' => new MongoDB\BSON\UTCDateTime()
+            'timestamp' => new MongoDB\BSON\UTCDateTime($datetime->getTimestamp() * 1000) // MongoDB\BSON\UTCDateTime richiede millisecondi
         ];
         $bulk->insert($document);
 
@@ -21,8 +27,4 @@ function logEvent($message) {
         echo "Errore durante la registrazione dell'evento: ", $e->getMessage(), "\n";
     }
 }
-
-logEvent('Nuovo bar registrato');
-logEvent('Nuovo loc creato');
-logEvent('Nuovo dfg aggiunto');
 ?>

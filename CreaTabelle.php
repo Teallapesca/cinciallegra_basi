@@ -18,6 +18,7 @@
 			error_reporting(E_ALL);
 			include 'connessione.php';
 			mysqli_begin_transaction($conn);
+            include 'ConnessioneMongoDB.php';
 		?>
 		<div class="titolo">
 			<h1>CREA TABELLE</h1>
@@ -116,6 +117,7 @@
                         echo "errore nella ricerca" . die (mysqli_error($conn));
                     } else{
                         echo "tabella inserita";
+                        logEvent("Nuova tabella esercizio ($nomeTabella) inserita");
                     }
                     for($i = 0; $i < $colonne; $i++) {
                         // Ottieni il valore dell'attributo dall'input dell'utente
@@ -140,6 +142,7 @@
                         // Verifica se la query ha avuto successo
                         if($result) {
                             echo "'$PK' Attributo '$attributo' inserito correttamente.<br>";
+                            logEvent("Nuovo attributo $attributo inserito");
                         } else {
                             echo "Errore nell'inserimento dell'attributo '$attributo'.<br>";
                         }

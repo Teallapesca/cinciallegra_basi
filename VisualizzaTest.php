@@ -16,6 +16,8 @@
 		<div class="principale">
             <?php
                 $docente = $_SESSION['mailDocente'];
+
+                //chiamo la procedura per visualizzare i test, ma solo quelli che ha creato il docente loggato
                 $query="CALL VisualizzazioneTestDoc('$docente')";
                 $risultato=mysqli_query($conn,$query);
 
