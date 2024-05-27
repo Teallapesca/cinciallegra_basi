@@ -1,5 +1,5 @@
 <?php
-   include 'ConnessioneMongoDB.php';
+   include_once 'ConnessioneMongoDB.php'; 
    //funzione per controllare se tutto il test è corretto
     function controlloTotale($titoloTest, $mail, $conn){
         $num_righe=0;

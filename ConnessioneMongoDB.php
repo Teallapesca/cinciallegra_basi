@@ -21,8 +21,6 @@ function logEvent($message) {
 
         // Inserimento nella collezione 'logs' del database 'mydatabase'
         $manager->executeBulkWrite('EventiCinciallegra.eventi', $bulk);
-        
-        echo "Evento registrato con successo!";
     } catch (MongoDB\Driver\Exception\Exception $e) {
         echo "Errore durante la registrazione dell'evento: ", $e->getMessage(), "\n";
     }

@@ -42,7 +42,7 @@
     error_reporting(E_ALL);
     include 'connessione.php';
     mysqli_begin_transaction($conn);
-    include 'ConnessioneMongoDB.php';
+    include_once 'ConnessioneMongoDB.php';
     ?>
     <div class="titolo">
         <h1>CREA QUESITO</h1>

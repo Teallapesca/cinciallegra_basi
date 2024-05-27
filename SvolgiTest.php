@@ -95,8 +95,8 @@
         error_reporting(E_ALL);
         include 'connessione.php';
         mysqli_begin_transaction($conn);
+        include_once 'ConnessioneMongoDB.php';
         include 'controlli.php';
-        include 'ConnessioneMongoDB.php';
     ?>
     <div class="intesta">
         <h1>SVOLGI IL TEST</h1>
