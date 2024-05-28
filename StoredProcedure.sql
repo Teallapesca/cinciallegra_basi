@@ -6,14 +6,14 @@ use moodle;
 /* 1) autenticazione sulla piattaforma. */
 /* who è 1 per docente e 2 per studente*/
 DELIMITER $
-CREATE PROCEDURE Autenticazione(IN InputMail VARCHAR(30), OUT who INT)
+CREATE PROCEDURE Autenticazione(IN InputMail VARCHAR(30), IN Pass VARCHAR(30), OUT who INT)
 BEGIN
     DECLARE countDocenti INT DEFAULT 0;
     DECLARE countStudenti INT DEFAULT 0;
    
 
-    SELECT COUNT(*) INTO countDocenti FROM DOCENTE WHERE docente.Mail = InputMail;
-    SELECT COUNT(*) INTO countStudenti FROM STUDENTE WHERE studente.Mail = InputMail;
+    SELECT COUNT(*) INTO countDocenti FROM DOCENTE WHERE docente.Mail = InputMail AND DOCENTE.Pass=Pass;
+    SELECT COUNT(*) INTO countStudenti FROM STUDENTE WHERE studente.Mail = InputMail AND studente.Pass=Pass;
 
     IF countDocenti = 1 THEN
         SET who = 1;
@@ -24,7 +24,7 @@ END$
 DELIMITER ;
 
 DELIMITER $  /* 1) registrazione sulla piattaforma*/
-CREATE PROCEDURE RegistrazioneStudente(IN Mail VARCHAR(30), IN Nome VARCHAR(30), IN Cognome VARCHAR(30), IN Telefono BIGINT, IN Matricola VARCHAR(16), IN AnnoImmatricolazione BIGINT )
+CREATE PROCEDURE RegistrazioneStudente(IN Mail VARCHAR(30), IN Nome VARCHAR(30), IN Cognome VARCHAR(30), IN Telefono BIGINT, IN Pass VARCHAR(30), IN Matricola VARCHAR(16), IN AnnoImmatricolazione BIGINT )
 BEGIN
     DECLARE countDocenti INT DEFAULT 0;
     DECLARE countStudenti INT DEFAULT 0;
@@ -33,12 +33,12 @@ BEGIN
     SET countStudenti = (SELECT COUNT(*) FROM DOCENTE WHERE (Mail = DOCENTE.Mail));
     
     IF(countDocenti = 0) AND (countStudenti = 0) THEN
-		INSERT INTO STUDENTE VALUES (Mail, Nome, Cognome, Telefono, AnnoImmatricolazione, Matricola);
+		INSERT INTO STUDENTE VALUES (Mail, Nome, Cognome, Telefono, Pass, AnnoImmatricolazione, Matricola);
 	END IF;
 END$
 
 DELIMITER $  /* 1) registrazione sulla piattaforma*/
-CREATE PROCEDURE RegistrazioneDocente(IN Mail VARCHAR(30), IN Nome VARCHAR(30), IN Cognome VARCHAR(30), IN Telefono BIGINT, IN Corso VARCHAR(30), IN Dipartimento VARCHAR(30) )
+CREATE PROCEDURE RegistrazioneDocente(IN Mail VARCHAR(30), IN Nome VARCHAR(30), IN Cognome VARCHAR(30), IN Telefono BIGINT, IN Pass VARCHAR(30), IN Corso VARCHAR(30), IN Dipartimento VARCHAR(30) )
 BEGIN
     DECLARE countDocenti INT DEFAULT 0;
     DECLARE countStudenti INT DEFAULT 0;
