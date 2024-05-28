@@ -27,7 +27,7 @@
 					<label for="floatingInput">Email address</label>
 				</div>
 				<div class="form-floating">
-					<input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+					<input type="password" class="form-control" id="floatingPassword" placeholder="Password" name='password'>
 					<label for="floatingPassword">Password</label>
 				</div>
 				<input class="btn btn-primary mt-3" type="submit" name="log" value="accedi">
@@ -46,8 +46,9 @@
 				if(isset($_GET["log"])){
 
 					$mail=$_GET["mail"];
+					$pass=$_GET["password"];
 					$who=0;
-					$query="CALL Autenticazione('$mail', @who);";
+					$query="CALL Autenticazione('$mail', '$pass', @who);";
 					$risultato = mysqli_query($conn,$query);
 					if(!$risultato){
 						echo "errore nella ricerca" . die (mysqli_error($conn));
@@ -68,7 +69,10 @@
 						}else{
 							echo "
 								<label class='mb-5 text-danger-emphasis bg-danger-subtle border border-danger-subtle rounde' data-bs-container=body data-bs-toggle=popover data-bs-placement=bottom data-bs-content=Bottom popover> Utente non trovato, <br> 
-								<a href=registrazione.php class='link-danger'>Registrati!!!!</a> </label>
+								<a href=registrazione.php class='link-danger'>Registrati!!!!</a> <br>
+								(O forse hai solo sbagliato password)
+								</label>
+
 								<br><br><br><br>
 							";
 						}

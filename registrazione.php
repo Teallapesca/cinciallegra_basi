@@ -41,13 +41,14 @@
             var nome = document.forms["regutente"]["nome"].value;
             var cognome = document.forms["regutente"]["cognome"].value;
             var telefono = document.forms["regutente"]["telefono"].value;
+            var password = document.forms["regutente"]["password"].value;
             var dip = document.forms["regutente"]["corso"].value;
             var corso = document.forms["regutente"]["dip"].value;
             var anno = document.forms["regutente"]["anno"].value;
             var matr = document.forms["regutente"]["matricola"].value;
 
             // Controlla se tutti i campi richiesti sono stati compilati o selezionati
-            if (email == "" || nome == "" || cognome == "" || !telefono || ((dip=="" || corso=="")&&(anno =="" || matr==""))) {
+            if (email == "" || nome == "" || cognome == "" || !telefono || password== "" || ((dip=="" || corso=="")&&(anno =="" || matr==""))) {
                 alert("Compila tutti i campi richiesti!");
                 return false; // Impedisci l'invio del modulo
             }
@@ -82,6 +83,10 @@
 
                         <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">Telefono</span> <input class="form-control"  type='number' name='telefono' > <br>
+                        </div>
+
+                        <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">Password</span> <input class="form-control"  type='text' name='password' > <br>
                         </div>
                     </div>
 

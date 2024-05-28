@@ -28,12 +28,13 @@
 			$mail=$_GET['mail'];
 			$nome=$_GET['nome'];
 			$cognome=$_GET['cognome'];
+			$pass=$_GET['password'];
 			$tel=$_GET['telefono'];
 			$matricola=$_GET['matricola'];
 			$anno=$_GET['anno'];
 
 			//chiamo la procedura che inserisce lo studente nella tabella
-			$query="CALL RegistrazioneStudente('$mail','$nome','$cognome', $tel, '$matricola', $anno);";
+			$query="CALL RegistrazioneStudente('$mail','$nome','$cognome', $tel, '$pass', '$matricola', $anno);";
 			$risultato = mysqli_query($conn,$query);
 			if($risultato === false){
 				echo "errore nella ricerca" . die (mysqli_error($conn));}
@@ -53,11 +54,12 @@
 			$nome=$_GET['nome'];
 			$cognome=$_GET['cognome'];
 			$tel=$_GET['telefono'];
+			$pass=$_GET['password'];
 			$corso=$_GET['corso'];
 			$dip=$_GET['dip'];
 
 			//chiamo la procedura che inserisce il docente nella tabella
-			$query="CALL RegistrazioneDocente('$mail','$nome','$cognome',$tel,'$corso','$dip');";
+			$query="CALL RegistrazioneDocente('$mail','$nome','$cognome',$tel,'$pass','$corso','$dip');";
 			$risultato = mysqli_query($conn,$query);
 			if($risultato === false){
 				echo "errore nella ricerca" . die(mysqli_error($conn));}
