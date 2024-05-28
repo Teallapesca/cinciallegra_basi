@@ -154,16 +154,19 @@
                 if (isset($_GET['titoloTest'])) {
                     $_SESSION['titoloTest'] = $_GET['titoloTest'];
                     $titoloTest = $_SESSION['titoloTest'];
-                    $fotoTest = $_SESSION['testImg'];
+                    $sql="SELECT Foto FROM Test WHERE Titolo = '$titoloTest'";
+                    $result = $conn->query($sql);
+                    while($row = $result->fetch_assoc()) {
+                        $fotoTest = $row["Foto"];
+                    }
                 } else {
                     $titoloTest = $_SESSION['titoloTest'];
-                    $fotoTest = $_SESSION['testImg'];
                 }
                 echo "<h1>$titoloTest</h1><br>";
 
-                echo "<img src='$fotoTest'>";
-
-
+                $relativePath = '/img/' . $fotoTest;
+                echo "<img src='" . htmlspecialchars($relativePath, ENT_QUOTES, 'UTF-8') . "' style = 'width:30%' alt='Foto'>";
+                
                 $query="CALL VisualizzazioneQuesiti('$titoloTest')";
                 $risultato=mysqli_query($conn,$query);
                 $num=0;
@@ -175,21 +178,6 @@
                         </p>
                     ";                        
                 }
-
-                /*
-                // leggi il contenuto del blob dal database
-                    $blob = $domanda_sondaggio["Foto"];
-
-                    // decodifica il contenuto del blob in una stringa base64
-                    $base64 = base64_encode($blob);
-
-                    // determina il tipo di immagine dal contenuto del blob con la funzione getimagesizefromstring e prendendo
-                    //il valore della chiave mime che dice il tipo dell'immagine
-                    $image_info = getimagesizefromstring($blob);
-                    $mime_type = $image_info["mime"];
-                    ?>
-                    <img width="10%" src="data:<?php echo $mime_type; ?>;base64,<?php echo $base64; ?>">
-                */
             ?>
 		</div>
 
