@@ -79,10 +79,10 @@
 <body>
 
     <h1>Creazione di un Nuovo Test</h1>
-    <form action="TestPage.php" method="POST" enctype="multipart/form-data">method="GET">
+    <form action="TestPage.php" method="POST" enctype="multipart/form-data">
         Titolo del Test:<br><br>
         <input type="text" name="test_title">
-        <br><br> <input type=checkbox name=visualizza> Visualizzazione delle risposte <br><br>
+        <br><br>
         <label for="img">Scegli immagine:</label>
         <input type="file" id="testImg" name="testImg"><br>
         <button type="submit" name="crea_test">Crea Test</button><br><br><br>
@@ -138,7 +138,7 @@
                 echo "Errore durante la creazione del test: " . mysqli_error($conn);
                 
             } else {
-                logEvent("Nuovo test $test_title inserito");
+                //logEvent("Nuovo test $test_title inserito");
                 echo "Test creato.";
             }
         }
