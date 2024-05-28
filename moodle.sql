@@ -9,6 +9,7 @@ USE moodle;
     Nome VARCHAR(40),
     Cognome VARCHAR(40) ,
     Telefono BIGINT,
+    Pass VARCHAR(40) ,
     
 /* Attributi speciali di cui solo il Docente dispone*/
     Corso VARCHAR(30),
@@ -21,7 +22,8 @@ USE moodle;
 	Mail VARCHAR(40) PRIMARY KEY,
     Nome VARCHAR(40),
     Cognome VARCHAR(40) ,
-    Telefono BIGINT, /*Il recapito telefonico è eventuale */
+    Telefono BIGINT, 
+    Pass VARCHAR(40) ,
     
 /* Attributi speciali di cui solo lo Studente dispone*/
     AnnoImmatricolazione BIGINT,
