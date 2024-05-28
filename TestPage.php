@@ -79,12 +79,12 @@
 <body>
 
     <h1>Creazione di un Nuovo Test</h1>
-    <form action="TestPage.php" method="GET">
+    <form action="TestPage.php" method="POST" enctype="multipart/form-data">method="GET">
         Titolo del Test:<br><br>
         <input type="text" name="test_title">
         <br><br> <input type=checkbox name=visualizza> Visualizzazione delle risposte <br><br>
         <label for="img">Scegli immagine:</label>
-        <input type="text" id="testImg" name="testImg"><br>
+        <input type="file" id="testImg" name="testImg"><br>
         <button type="submit" name="crea_test">Crea Test</button><br><br><br>
         </form>
         <h2>Inserisci i quesiti</h2>        
@@ -107,18 +107,19 @@
 	mysqli_begin_transaction($conn);
     
     
-	if(isset($_GET["crea_test"])) {
+	if(isset($_POST["crea_test"])) {
         $mail = $_SESSION['mailDocente'];
-        $_SESSION['test_title']=$_GET['test_title'];
+        $_SESSION['test_title']=$_POST['test_title'];
         $test_title=$_SESSION['test_title'];
         $visualizza=0;
-        if(isset($_GET['visualizza'])){
+        if(isset($_POST['visualizza'])){
             $visualizza=1;
         }
         
-        $_SESSION['testImg'] = $_GET['testImg'];
-        $testImg = $_SESSION['testImg'];
-        $testImg = addslashes($testImg);
+        $fileName = "";
+        if (isset($_FILES["testImg"])) {
+            $fileName = ($_FILES["testImg"]["name"]);
+        }
         
         // Controlla se il test esiste già nel database
         $query = "SELECT * FROM test WHERE Titolo = '$test_title'";
@@ -129,7 +130,7 @@
             echo "Test già presente nel database.";
         }else {
             // Esecuzione della query per inserire il test nel database
-            $sql = "CALL CreaTest('$test_title', '$testImg', '$visualizza', '$mail')";
+            $sql = "CALL CreaTest('$test_title', '$fileName', '$visualizza', '$mail')";
             
             $risultato=mysqli_query($conn, $sql);
             if ($risultato === false) {
