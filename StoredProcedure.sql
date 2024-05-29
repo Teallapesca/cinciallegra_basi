@@ -111,8 +111,8 @@ CREATE PROCEDURE NewSketchCodice (
 BEGIN
 	INSERT INTO QUESITO (Progressivo, TitoloTest, Difficolta, Descrizione, NumRisposte)
     VALUES (ProgressivoCodice, TitoloTest, Difficolta, DescrizioneQuesito, 0);
-    INSERT INTO SKETCH_CODICE (Progressivo, TitoloTest, Difficolta, Descrizione, NumRisposte, Soluzione)
-    VALUES (ProgressivoCodice, TitoloTest, Difficolta, DescrizioneQuesito, 0, Soluzione);
+    INSERT INTO SKETCH_CODICE (Progressivo, TitoloTest, Soluzione)
+    VALUES (ProgressivoCodice, TitoloTest, Soluzione);
 END $ DELIMITER ;
 DELIMITER $
 CREATE PROCEDURE NewQuesitoChiuso (
@@ -124,8 +124,8 @@ CREATE PROCEDURE NewQuesitoChiuso (
 BEGIN
 	INSERT INTO QUESITO (Progressivo, TitoloTest, Difficolta, Descrizione, NumRisposte)
     VALUES (ProgressivoChiuso, TitoloTest, Difficolta, DescrizioneQuesito, 0);
-    INSERT INTO QUESITO_CHIUSO (Progressivo, TitoloTest, Difficolta, Descrizione, NumRisposte)
-    VALUES (ProgressivoChiuso, TitoloTest, Difficolta, DescrizioneQuesito, 0);
+    INSERT INTO QUESITO_CHIUSO (Progressivo, TitoloTest)
+    VALUES (ProgressivoChiuso, TitoloTest);
 END $ DELIMITER ;
 
 /* 5) Abilitare / disabilitare la visualizzazione delle risposte per uno specifico test. */
