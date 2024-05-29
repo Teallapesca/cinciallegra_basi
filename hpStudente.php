@@ -31,7 +31,8 @@
 
         <?php
             if (isset($_GET["test"])) {
-                $query="CALL VisualizzazioneTest();";
+                $mail=$_SESSION['mailStudente'];
+                $query="CALL VisualizzazioneTest('$mail');";
 
                 $risult=mysqli_query($conn,$query);
 
@@ -49,11 +50,16 @@
                             $titoloTest = $row['Titolo'];
                             $_SESSION['titoloTest'] = $titoloTest;
                             echo "
-                            <a href='SvolgiTest.php?titolo=$titoloTest'> {$titoloTest} </a>({$row['DataTest']}, {$row['MailDocente']})  <span style='color: #808080;'> Stato: {$row['Stato']} </span> <br><br>
+                            <a href='SvolgiTest.php?titolo=$titoloTest'> {$titoloTest} </a>({$row['DataTest']}, {$row['MailDocente']})  
                             ";
                             $_SESSION['mailDocente'] = $row['MailDocente'];
+                            if($row['Stato']!=""){
+                                echo"<span style='color: #198754;'> Stato: {$row['Stato']} </span> ";
+                            }
+                            echo "<br><br>";
                         }
                     }
+                }
                 }
             }
             
