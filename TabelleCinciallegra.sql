@@ -67,9 +67,6 @@ USE cinciallegra;
   create table SKETCH_CODICE(  /* Ha senso differenziarli perché derivano da una generalizzazione Totale di quesito. */
 	Progressivo INT,
     TitoloTest VARCHAR(30),
-    Difficolta ENUM ('Basso','Medio','Alto'),
-    Descrizione VARCHAR(40),
-    NumRisposte INT,
     
     Soluzione VARCHAR(300),  /*La soluzione è la query come richiesta dal docente*/
     
@@ -80,10 +77,7 @@ USE cinciallegra;
 create table QUESITO_CHIUSO(
 	Progressivo INT,
     TitoloTest VARCHAR(30),
-    Difficolta ENUM ('Basso','Medio','Alto'),
-    Descrizione VARCHAR(40),
-    NumRisposte INT,
-    
+   
     OpzioneGiusta VARCHAR(1), /*L'opzione giusta è l'opzione segnata come esatta dal docente: a, b, c...*/
     
 	PRIMARY KEY (Progressivo, TitoloTest),
