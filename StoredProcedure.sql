@@ -47,7 +47,7 @@ BEGIN
     SET countStudenti = (SELECT COUNT(*) FROM DOCENTE WHERE (Mail = DOCENTE.Mail));
     
     IF(countDocenti = 0) AND (countStudenti = 0) THEN
-		INSERT INTO DOCENTE VALUES (Mail, Nome, Cognome, Telefono, Corso, Dipartimento);
+		INSERT INTO DOCENTE VALUES (Mail, Nome, Cognome, Telefono, Pass, Corso, Dipartimento);
 	END IF;
 END$
 
