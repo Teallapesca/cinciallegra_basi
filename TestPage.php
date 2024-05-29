@@ -73,23 +73,36 @@
             messaggiContent.style.display = "none";
         }
     }
+function validateForm() {
+            var titolo = document.forms["titoloTest"]["test_title"].value;            
+
+            // Controll0 se tutti i campi richiesti sono stati compilati o selezionati
+            if (titolo == "" ) {
+                alert("Inserisci il titolo!");
+                return false; // Impedisci l'invio del modulo
+            }
+            return true; // Consenti l'invio del modulo
+    }
+    
 </script>
 </head>
 
 <body>
 
     <h1>Creazione di un Nuovo Test</h1>
-    <form action="TestPage.php" method="POST" enctype="multipart/form-data">
+    <form name="titoloTest" action="TestPage.php" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
         Titolo del Test:<br><br>
         <input type="text" name="test_title">
         <br><br>
         <label for="img">Scegli immagine:</label>
         <input type="file" id="testImg" name="testImg"><br>
         <button type="submit" name="crea_test">Crea Test</button><br><br><br>
-        </form>
+    </form>
+    <div id="quesito">
         <h2>Inserisci i quesiti</h2>        
         <br>
-        <a href="CreaQuesito.php"><button type="button" name=quesito>Aggiungi Quesito</button></a>
+        <a href="CreaQuesito.php"><button type="button" name=quesito > Aggiungi Quesito</button></a>
+    <div>
   
 
     
