@@ -1,6 +1,6 @@
 <?php
     session_start();
-    $conn=mysqli_connect("localhost:8889","root","root","moodle");
+    $conn=mysqli_connect("localhost:8889","root","root","cinciallegra");
     // controllo sullo stato della connessione
     if (mysqli_connect_errno())
     {
