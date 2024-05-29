@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS moodle;
-CREATE DATABASE moodle;
-USE moodle;
+DROP DATABASE IF EXISTS cinciallegra;
+CREATE DATABASE cinciallegra;
+USE cinciallegra;
  
  /* Tabella del Docente */
  create table DOCENTE(
@@ -130,10 +130,11 @@ create table RIF_TABELLA_QUESITO(
 	ProgressivoQuesito INT,
     TitoloTest VARCHAR(30),
     NomeTabella VARCHAR(30),
+	 MailDocente VARCHAR(40),
     
-    PRIMARY KEY(ProgressivoQuesito, TitoloTest, NomeTabella),
+    PRIMARY KEY(ProgressivoQuesito, TitoloTest, NomeTabella, MailDocente),
     FOREIGN KEY (ProgressivoQuesito, TitoloTest) REFERENCES QUESITO(Progressivo, TitoloTest) ON DELETE CASCADE,
-    FOREIGN KEY (NomeTabella) REFERENCES TABELLA_ESERCIZIO(Nome) ON DELETE CASCADE
+    FOREIGN KEY (NomeTabella MailDocente) REFERENCES TABELLA_ESERCIZIO(Nome, MailDocente) ON DELETE CASCADE
 )engine=INNODB;
 
  create table ATTRIBUTO( /* Tabella relativa agli Attributi. */
