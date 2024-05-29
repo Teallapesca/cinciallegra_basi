@@ -49,7 +49,7 @@
                             $titoloTest = $row['Titolo'];
                             $_SESSION['titoloTest'] = $titoloTest;
                             echo "
-                            <a href='SvolgiTest.php?titolo=$titoloTest'> {$titoloTest} ({$row['DataTest']}, {$row['MailDocente']})  </a><br><br>
+                            <a href='SvolgiTest.php?titolo=$titoloTest'> {$titoloTest} </a>({$row['DataTest']}, {$row['MailDocente']})  <span style='color: #808080;'> Stato: {$row['Stato']} </span> <br><br>
                             ";
                             $_SESSION['mailDocente'] = $row['MailDocente'];
                         }
