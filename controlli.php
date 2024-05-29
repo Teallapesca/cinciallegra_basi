@@ -1,5 +1,21 @@
 <?php
    include_once 'ConnessioneMongoDB.php'; 
+//funzione per controllare se il visualizzarisposte del test è settato a true o a false
+function visualizzaRisposte($titoloTest, $mail, $conn){
+        $concluso=false;
+        $query="SELECT * FROM test WHERE Titolo='$titoloTest' AND VisualizzaRisposte=1;";
+        $risult = mysqli_query($conn, $query);
+        if (!$risult) {
+            echo "Errore nel controllo delle risposte: " . mysqli_error($conn);
+        }else{
+            if( mysqli_num_rows($risult)!= 0){
+                $concluso=true;
+            }
+        }
+        return $concluso;
+    }
+
+
    //funzione per controllare se tutto il test è corretto
     function controlloTotale($titoloTest, $mail, $conn){
         $num_righe=0;
