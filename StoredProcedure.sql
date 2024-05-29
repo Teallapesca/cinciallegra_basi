@@ -56,8 +56,7 @@ DELIMITER $  /* 2) Visualizzazione di tutti i test disponibili. (per lo studente
 CREATE PROCEDURE VisualizzazioneTest()
 BEGIN
     SELECT * 
-    FROM TEST as t, SVOLGIMENTO as s
-    where t.Titolo=s.TitoloTest;  
+    FROM TEST; 
 END$
 
 DELIMITER $  /* 2) Visualizzazione dei test disponibili creati da un determinato docente. */
@@ -230,7 +229,6 @@ SELECT Nome, Tipo, PossibileChiavePrimaria
 END $ DELIMITER ;
 
 -- procedura per creare la tabella fisica
-USE moodle;
 DELIMITER $
 CREATE PROCEDURE TabellaFisica (IN mail VARCHAR(30), IN Tabella VARCHAR(30))
 BEGIN
@@ -283,7 +281,6 @@ END $
 DELIMITER ;
 
 -- procedura per popolare la tabella
-USE moodle;
 DELIMITER $
 CREATE PROCEDURE PopolaTabella (IN Tabella VARCHAR(30), IN valori text)
 BEGIN

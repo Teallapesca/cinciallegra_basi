@@ -1,4 +1,5 @@
 DROP DATABASE IF EXISTS cinciallegra;
+DROP DATABASE IF EXISTS moodle;
 CREATE DATABASE cinciallegra;
 USE cinciallegra;
  

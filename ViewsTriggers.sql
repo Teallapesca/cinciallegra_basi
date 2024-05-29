@@ -1,4 +1,4 @@
-use moodle;
+use cinciallegra;
 
 /* STATISTICHE (Visibili da tutti gli Utenti) */
 /* 1) VISUALIZZARE LA CLASSIFICA DEGLI STUDENTI 
@@ -56,7 +56,6 @@ $ DELIMITER ;
 
 
 -- concluso
-use moodle;
 DELIMITER $
 CREATE TRIGGER Concluso
 AFTER INSERT ON Risposta
@@ -108,6 +107,20 @@ BEGIN
         UPDATE Svolgimento
         SET Stato = 'Concluso'
         WHERE svolgimento.MailStudente = NEW.MailStudente AND svolgimento.TitoloTest = NEW.TitoloTest;
+    END IF;
+END;
+$ DELIMITER ;
+
+-- Se il docente imposta VisualizzaRisposte = true
+DELIMITER $
+CREATE TRIGGER ConclusoVR
+AFTER UPDATE ON Test
+FOR EACH ROW
+BEGIN
+    IF NEW.VisualizzaRisposte = 1 THEN
+        UPDATE Svolgimento
+        SET Stato = 'Concluso'
+        WHERE Svolgimento.TitoloTest = NEW.Titolo;
     END IF;
 END;
 $ DELIMITER ;
