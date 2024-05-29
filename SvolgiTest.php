@@ -178,7 +178,7 @@
                     $_SESSION['titoloTest']=$_GET['titolo'];
                     $titoloTest = $_GET['titolo'];
                     echo "<h1 class='ml-3'>".$_SESSION['titoloTest']."</h1>";
-                    $concluso=visualizzaRisposte($titoloTest, $mail, $conn);
+                    $concluso=visualizzaRisposte($titoloTest, $conn);
                     //---inserimento in svolgimento 
                     $data=date('Y-m-d H:i:s');
                     $stato="";
@@ -504,68 +504,6 @@
             exit();
                 
         }
-        //se tutti i quesiti hanno ricevuto una risposta e questa è corretta si può concludere il test
-        
-        /*$num_righe=controlloTotale($titoloTest, $mail, $conn);
-        if($_SESSION['numQuesiti']==$num_righe){
-            
-
-
-        }*/
-    
-        /*else if(isset($_GET['Fine'])){
-
-            foreach ($_SESSION["quesiti$titoloTest"] as $quesito) {
-
-                $progressivo=$quesito["progressivo"];
-
-                if(isset($_SESSION["risposta$progressivo"])||($_SESSION["risposta$progressivo"]!="")){
-                    $testo=$_GET["risposta$progressivo"]; //potrei creare una procedura da mysql che faccia controllo ed inserimento da solo
-                    $_SESSION["risposta$progressivo"]=$testo;
-
-                    //cerco se sono già state date risposte a questo quesito
-                    $selezionato="SELECT * FROM risposta WHERE MailStudente='$mail' AND TitoloTest='$titoloTest' AND Progressivo='$progressivo';";
-                    $rissel = mysqli_query($conn, $selezionato);
-                    if (!$rissel) {
-                        echo "Errore nell'inserimento dela risposta: " . mysqli_error($conn);
-                    }else{
-                        if(mysqli_num_rows($rissel) != 0){
-                            //aggiorno con la nuova risposta del quesito
-                            $inserimento="UPDATE risposta SET Testo='$testo' WHERE MailStudente='$mail' AND TitoloTest='$titoloTest' AND Progressivo='$progressivo';";
-                            $ris_ins3 = mysqli_query($conn, $inserimento);
-                            if (!$ris_ins3) {
-                                echo "Errore nell'inserimento in svolgimento2: " . mysqli_error($conn);
-                            }
-                        }
-                        
-                    }
-
-                }
-            }
-
-            $stato="Concluso";
-            $inserimento="UPDATE svolgimento SET stato='$stato' WHERE MailStudente='$mail' AND TitoloTest='$titoloTest';";
-            $ris_ins = mysqli_query($conn, $inserimento);
-            if (!$ris_ins) {
-                echo "Errore nell'inserimento in svolgimento2: " . mysqli_error($conn);
-            }//fare update anche della data di fine
-
-            if (!mysqli_commit($conn)) {
-                mysqli_rollback($conn);
-                echo "Errore durante il commit della transazione. boo";
-            }
-    
-            // chiusura della connessione
-            mysqli_close($conn);
-            foreach ($_SESSION["quesiti$titoloTest"] as $quesito) {
-                $progressivo=$quesito["progressivo"];
-                unset($_SESSION["risposta$progressivo"]);
-            }
-            unset($_SESSION['titoloTest']);
-            header("Location: hpStudente.php");
-            exit();
-                
-        }*/
        
     ?>
     </div>
