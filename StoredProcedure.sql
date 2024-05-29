@@ -67,12 +67,15 @@ BEGIN
     WHERE MailDocente = Mail;
 END$
 
-DELIMITER $  /* 3) Visualizzazione dei quesiti presenti all’interno di ciascun test. */
-CREATE PROCEDURE VisualizzazioneQuesiti(IN Titolo VARCHAR(30))
+DELIMITER $  /* 2) Visualizzazione di tutti i test disponibili. (per lo studente) */
+CREATE PROCEDURE VisualizzazioneTest(IN Mail VARCHAR(30))
 BEGIN
-    SELECT *
-    FROM QUESITO
-    WHERE TitoloTest = Titolo;
+    
+   SELECT t.Titolo, t.DataTest, t.MailDocente, s.Stato
+    FROM TEST as t
+    LEFT JOIN svolgimento as s
+    ON t.Titolo=s.TitoloTest
+    AND s.MailStudente=Mail;
 END$
 
 /*---------------------------------------------------------------------------------*/
