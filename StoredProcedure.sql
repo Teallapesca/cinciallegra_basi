@@ -56,7 +56,8 @@ DELIMITER $  /* 2) Visualizzazione di tutti i test disponibili. (per lo studente
 CREATE PROCEDURE VisualizzazioneTest()
 BEGIN
     SELECT * 
-    FROM TEST; 
+    FROM TEST as t, SVOLGIMENTO as s
+    where t.Titolo=s.TitoloTest;  
 END$
 
 DELIMITER $  /* 2) Visualizzazione dei test disponibili creati da un determinato docente. */
