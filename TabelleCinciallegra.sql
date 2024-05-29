@@ -134,7 +134,7 @@ create table RIF_TABELLA_QUESITO(
     
     PRIMARY KEY(ProgressivoQuesito, TitoloTest, NomeTabella, MailDocente),
     FOREIGN KEY (ProgressivoQuesito, TitoloTest) REFERENCES QUESITO(Progressivo, TitoloTest) ON DELETE CASCADE,
-    FOREIGN KEY (NomeTabella MailDocente) REFERENCES TABELLA_ESERCIZIO(Nome, MailDocente) ON DELETE CASCADE
+    FOREIGN KEY (NomeTabella, MailDocente) REFERENCES TABELLA_ESERCIZIO(Nome, MailDocente) ON DELETE CASCADE
 )engine=INNODB;
 
  create table ATTRIBUTO( /* Tabella relativa agli Attributi. */
