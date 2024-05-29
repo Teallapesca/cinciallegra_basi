@@ -1,5 +1,5 @@
 /* OPERAZIONI SUI DATI */
-use moodle;
+use cinciallegra;
 
 /*---------------------------------------------------------------------------------*/
 /*OPERAZIONI che riguardano TUTTI GLI UTENTI:*/
