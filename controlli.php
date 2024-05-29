@@ -1,7 +1,7 @@
 <?php
    include_once 'ConnessioneMongoDB.php'; 
 //funzione per controllare se il visualizzarisposte del test è settato a true o a false
-function visualizzaRisposte($titoloTest, $mail, $conn){
+function visualizzaRisposte($titoloTest, $conn){
         $concluso=false;
         $query="SELECT * FROM test WHERE Titolo='$titoloTest' AND VisualizzaRisposte=1;";
         $risult = mysqli_query($conn, $query);
