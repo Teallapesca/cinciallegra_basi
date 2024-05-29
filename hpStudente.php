@@ -60,7 +60,6 @@
                         }
                     }
                 }
-                }
             }
             
             // chiusura della connessione
