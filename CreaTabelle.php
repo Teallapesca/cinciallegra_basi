@@ -1,6 +1,10 @@
 <!doctype html>
 <html>
     <head>
+        <title>Creazione tabella</title>
+        <link type="text/css" rel="stylesheet" href="stile.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
         <script>
             function validateNome() {
                 var nomeTabella = document.forms["regutente"]["nomeTabella"].value;
@@ -14,16 +18,15 @@
     </head>
 	<body>
 		<?php
+            
 			ini_set('display_errors', 1);
 			error_reporting(E_ALL);
 			include 'connessione.php';
 			mysqli_begin_transaction($conn);
             include 'ConnessioneMongoDB.php';
+            include 'Navbar.php';
 		?>
-		<div class="titolo">
-			<h1>CREA TABELLE</h1>
-		</div>
-		<div class="principale">
+		<div class="m-5 d-flex flex-column justify-content-center align-items-center" style="padding-top: 100px;">
 			<form name="nuovaTabella" method="GET" action="CreaTabelle.php" onsubmit="return validateNome()">
 				Inserisci il nome della tabella<br><br>
 				<input type="text" name="nomeTabella" value=""><br><br>
