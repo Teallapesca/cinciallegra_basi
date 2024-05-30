@@ -16,11 +16,7 @@
         include 'Navbar.php' 
     ?> 
 
-    <!--<div class="student-image">
-       <h1 style="color: white" class="mb-5 hero-text"> <?php echo "benvenuto " . $_SESSION['mailStudente']; ?> </h1>
-    </div>-->
-    
-	<div class="d-flex flex-row  justify-content-center mt-5">
+	<div class="d-flex flex-row  justify-content-center mt-5" style="padding-top: 100px;">
 		<form name="visTest" method="GET" action="hpStudente.php">
             <input  class="btn btn-primary btn-lg m-4" type="submit" name="test" value="visualizza test">
         </form>
