@@ -41,7 +41,7 @@ FOR EACH ROW
    BEGIN
 	UPDATE quesito
 	SET NumRisposte = NumRisposte + 1
-	WHERE NEW.ProgressivoQuesito = quesito.Progressivo;
+	WHERE NEW.ProgressivoQuesito = quesito.Progressivo and NEW.TitoloTest=quesito.TitoloTest;
    END;
 $ DELIMITER ;
 
