@@ -24,7 +24,7 @@ END$
 DELIMITER ;
 
 DELIMITER $  /* 1) registrazione sulla piattaforma*/
-CREATE PROCEDURE RegistrazioneStudente(IN Mail VARCHAR(30), IN Nome VARCHAR(30), IN Cognome VARCHAR(30), IN Telefono BIGINT, IN Pass VARCHAR(30), IN Matricola VARCHAR(16), IN AnnoImmatricolazione BIGINT )
+CREATE PROCEDURE RegistrazioneStudente(IN Mail VARCHAR(30), IN Nome VARCHAR(30), IN Cognome VARCHAR(30), IN Telefono BIGINT, IN Pass VARCHAR(30), IN Matricola VARCHAR(16), IN AnnoImmatricolazione BIGINT, out registrazione BOOLEAN)
 BEGIN
     DECLARE countDocenti INT DEFAULT 0;
     DECLARE countStudenti INT DEFAULT 0;
@@ -34,11 +34,12 @@ BEGIN
     
     IF(countDocenti = 0) AND (countStudenti = 0) THEN
 		INSERT INTO STUDENTE VALUES (Mail, Nome, Cognome, Telefono, Pass, AnnoImmatricolazione, Matricola);
+          set registrazione=true;
 	END IF;
 END$
 
 DELIMITER $  /* 1) registrazione sulla piattaforma*/
-CREATE PROCEDURE RegistrazioneDocente(IN Mail VARCHAR(30), IN Nome VARCHAR(30), IN Cognome VARCHAR(30), IN Telefono BIGINT, IN Pass VARCHAR(30), IN Corso VARCHAR(30), IN Dipartimento VARCHAR(30) )
+CREATE PROCEDURE RegistrazioneDocente(IN Mail VARCHAR(30), IN Nome VARCHAR(30), IN Cognome VARCHAR(30), IN Telefono BIGINT, IN Pass VARCHAR(30), IN Corso VARCHAR(30), IN Dipartimento VARCHAR(30), out registrazione BOOLEAN)
 BEGIN
     DECLARE countDocenti INT DEFAULT 0;
     DECLARE countStudenti INT DEFAULT 0;
@@ -48,9 +49,9 @@ BEGIN
     
     IF(countDocenti = 0) AND (countStudenti = 0) THEN
 		INSERT INTO DOCENTE VALUES (Mail, Nome, Cognome, Telefono, Pass, Corso, Dipartimento);
+        set registrazione=true;
 	END IF;
 END$
-
 
 DELIMITER $  /* 2) Visualizzazione di tutti i test disponibili. (per lo studente) */
 CREATE PROCEDURE VisualizzazioneTest()
