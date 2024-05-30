@@ -35,8 +35,9 @@
 
         <?php
             if (isset($_GET["test"])) {
-                $query="CALL VisualizzazioneTest();";
-
+		$mail=$_SESSION['mailStudente'];
+                $query="CALL VisualizzazioneTest('$mail');";
+		    
                 $risult=mysqli_query($conn,$query);
 
                 if(!$risult){
