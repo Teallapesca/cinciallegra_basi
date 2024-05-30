@@ -53,11 +53,12 @@ BEGIN
 	END IF;
 END$
 
-DELIMITER $  /* 2) Visualizzazione di tutti i test disponibili. (per lo studente) */
-CREATE PROCEDURE VisualizzazioneTest()
+DELIMITER $  /* 3) Visualizzazione dei quesiti presenti all’interno di ciascun test. */
+CREATE PROCEDURE VisualizzazioneQuesiti(IN Titolo VARCHAR(30))
 BEGIN
-    SELECT * 
-    FROM TEST; 
+    SELECT *
+    FROM QUESITO
+    WHERE TitoloTest = Titolo;
 END$
 
 DELIMITER $  /* 2) Visualizzazione dei test disponibili creati da un determinato docente. */
