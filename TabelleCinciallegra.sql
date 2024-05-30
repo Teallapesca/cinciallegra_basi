@@ -59,7 +59,7 @@ USE cinciallegra;
 	Progressivo INT,
     TitoloTest VARCHAR(30),
     Difficolta ENUM ('Basso','Medio','Alto'),
-    Descrizione VARCHAR(100),
+    Descrizione VARCHAR(400),
     NumRisposte INT,
     
 	PRIMARY KEY (Progressivo, TitoloTest), 
