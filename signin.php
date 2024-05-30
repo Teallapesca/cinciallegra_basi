@@ -22,7 +22,7 @@
 	error_reporting(E_ALL);
 	include 'connessione.php';
 	mysqli_begin_transaction($conn);
-	include 'ConnessioneMongoDB.php';
+	include_once 'ConnessioneMongoDB.php';
 
 		if(isset($_GET["regStu"])){
 			$mail=$_GET['mail'];
@@ -34,18 +34,31 @@
 			$anno=$_GET['anno'];
 
 			//chiamo la procedura che inserisce lo studente nella tabella
-			$query="CALL RegistrazioneStudente('$mail','$nome','$cognome', $tel, '$pass', '$matricola', $anno);";
+			$query="CALL RegistrazioneStudente('$mail','$nome','$cognome', $tel, '$pass', '$matricola', $anno, @registrazione);";
 			$risultato = mysqli_query($conn,$query);
 			if($risultato === false){
 				echo "errore nella ricerca" . die (mysqli_error($conn));}
 			else{
-				logEvent("Nuovo studente $mail registrato");
-				?>	
-			<div class="d-flex flex-column justify-content-center align-items-center">
-				<h2>Registrazione avvenuta con successo!</h2> 
-				<br><br><a class="btn btn-primary" href=login.php>Accedi</a><br><br>	
-			</div>
-				<?php
+				$result = mysqli_query($conn, "SELECT @registrazione");
+				$row = mysqli_fetch_array($result);
+				$registrazione = $row[0];
+				if($registrazione){
+					logEvent("Nuovo studente $mail registrato");
+					echo "
+					<div class='d-flex flex-column justify-content-center align-items-center'>
+						<h2>Registrazione avvenuta con successo!</h2> 
+						<br><br><a class='btn btn-primary' href=login.php>Accedi</a><br><br>
+					</div>
+					";
+				}else{
+					echo "
+						<label class='mb-5 text-danger-emphasis bg-danger-subtle border border-danger-subtle rounde data-bs-container=body data-bs-toggle=popover data-bs-placement=bottom data-bs-content=Bottom popover'> 
+						Esiste già un utente con questa email, <br> 
+						<a href=login.php class='link-danger'>Accedi!!!!</a> <br>
+						</label>
+					";
+
+				}
 			}
 			
 		}
@@ -59,21 +72,32 @@
 			$dip=$_GET['dip'];
 
 			//chiamo la procedura che inserisce il docente nella tabella
-			$query="CALL RegistrazioneDocente('$mail','$nome','$cognome',$tel,'$pass','$corso','$dip');";
+			$query="CALL RegistrazioneDocente('$mail','$nome','$cognome',$tel,'$pass','$corso','$dip', @registrazione);";
 			$risultato = mysqli_query($conn,$query);
 			if($risultato === false){
-				echo "errore nella ricerca" . die(mysqli_error($conn));}
+				echo "errore nella ricerca" . die(mysqli_error($conn));
+			}
 			else{
-				logEvent("Nuovo docente $mail registrato");
-				?>	
-			<div class="d-flex flex-column justify-content-center align-items-center">
-				<h2>Registrazione avvenuta con successo!</h2> 
-				<br><br><a class="btn btn-primary" href=login.php>Accedi</a><br><br>
-			</div>
-				<?php
+				$result = mysqli_query($conn, "SELECT @registrazione");
+				$row = mysqli_fetch_array($result);
+				$registrazione = $row[0];
+				if($registrazione){
+					logEvent("Nuovo docente $mail registrato");
+					echo "
+					<div class='d-flex flex-column justify-content-center align-items-center'>
+						<h2>Registrazione avvenuta con successo!</h2> 
+						<br><br><a class='btn btn-primary' href=login.php>Accedi</a><br><br>
+					</div>
+					";
+				}else{
+					echo "
+						<label class='mb-5 text-danger-emphasis bg-danger-subtle border border-danger-subtle rounde data-bs-container=body data-bs-toggle=popover data-bs-placement=bottom data-bs-content=Bottom popover'> 
+						Esiste già un utente con questa email, <br> 
+						<a href=login.php class='link-danger'>Accedi!!!!</a> <br>
+						</label>
+					";
 				}
-		// esecuzione query	
-			
+			}
 		}
 	
 	if (!mysqli_commit($conn)) {
