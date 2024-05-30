@@ -213,7 +213,7 @@
                 $_SESSION['tabella']=$_GET['nt'];
                 $tabella=$_SESSION['tabella'];
 
-                $query="insert into rif_tabella_quesito(ProgressivoQuesito, TitoloTest, NomeTabella) values ('$progQuesito', '$test', '$tabella')";
+                $query="insert into rif_tabella_quesito(ProgressivoQuesito, TitoloTest, NomeTabella, MailDocente) values ('$progQuesito', '$test', '$tabella', '$mail')";
                 $risultato = mysqli_query($conn, $query);
                 if (!$risultato) {
                     echo "inserimento fallito: " . die(mysqli_error($conn));
