@@ -16,8 +16,8 @@
     </style>
 </head>
 	<body class="d-flex flex-column align-items-center justify-content-center page-size">
-
-	<a href="HomePage.html">Esci</a>
+	<h3>Accedi</h3>
+	
 		<div class="card mt-5" style="width: 20%; padding: 2px;">
 			<div class="card-body">
 			<form name="accesso" method="GET" action="login.php">
@@ -36,6 +36,7 @@
 			
 			</div>
 		</div>
+			<a href="HomePage.html">Esci</a>
 
 			<?php
 			ini_set('display_errors', 1);

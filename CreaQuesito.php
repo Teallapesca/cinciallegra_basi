@@ -2,6 +2,10 @@
 <html>
 
 <head>
+<link type="text/css" rel="stylesheet" href="grafica.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
     <script>
         function mostraTesto(tipo) {
             var quesitoChiuso = document.getElementById("quesitoChiuso");
@@ -44,16 +48,22 @@
     mysqli_begin_transaction($conn);
     include_once 'ConnessioneMongoDB.php';
     ?>
-    <div class="titolo">
+    <div class="intesta">
+    <a href="hpDocente.php">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-circle-fill">
+                <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
+                </svg>
+            </a>
         <h1>CREA QUESITO</h1>
     </div>
     <div class="principale">
         <form name="quesito" method="GET" action="CreaQuesito.php" onsubmit="return validateForm()">
-            Descrizione quesito<br><br>
-            <input type="text" name="descQuesito" value=""><br><br>
-            Difficoltà quesito: <input type=radio name=difficolta value=basso> Basso &nbsp &nbsp
+            <label>Descrizione quesito</label><br><br>
+            <input type="text" name="descQuesito" value="" class="textfield"><br><br>
+            <label>Difficoltà quesito:&emsp;</label><input type=radio name=difficolta value=basso> Basso &nbsp &nbsp
             <input type=radio name=difficolta value=medio> Medio &nbsp &nbsp
             <input type=radio name=difficolta value=alto> Alto <br><br>
+            <label>Tabella di riferimento:&emsp;</label>
             <select name="nt">
                 <option> Seleziona La tabella </option>
                 <?php
@@ -79,7 +89,7 @@
 
                 ?>
             </select> <br><br>
-            Tipo di risposta:
+            <label>Tipo di risposta:&emsp;</label>
             <input type=radio name=tipo value=chiuso onChange="mostraTesto('chiuso')"> Quesito chiuso &nbsp &nbsp
             <input type=radio name=tipo value=sketch onChange="mostraTesto('sketch')"> Sketch di codice <br><br>
 
@@ -94,7 +104,7 @@
                 inserisci la soluzione: &nbsp&nbsp <input type=text name=testosketch>
             </div>
             <br>
-            <input type="submit" name="Creaquesito" value="Crea">
+            <input type="submit" name="Creaquesito" value="Crea" class='button'>
         </form>
 
         <?php
@@ -227,7 +237,6 @@
         
             mysqli_close($conn);
         ?>
-        <br> <br> <a href=TestPage.php> <- </a>
     </div>
 </body>
 

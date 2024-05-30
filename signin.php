@@ -43,7 +43,7 @@
 				$row = mysqli_fetch_array($result);
 				$registrazione = $row[0];
 				if($registrazione){
-					logEvent("Nuovo studente $mail registrato");
+					//logEvent("Nuovo studente $mail registrato");
 					echo "
 					<div class='d-flex flex-column justify-content-center align-items-center'>
 						<h2>Registrazione avvenuta con successo!</h2> 
@@ -82,7 +82,7 @@
 				$row = mysqli_fetch_array($result);
 				$registrazione = $row[0];
 				if($registrazione){
-					logEvent("Nuovo docente $mail registrato");
+					//logEvent("Nuovo docente $mail registrato");
 					echo "
 					<div class='d-flex flex-column justify-content-center align-items-center'>
 						<h2>Registrazione avvenuta con successo!</h2> 

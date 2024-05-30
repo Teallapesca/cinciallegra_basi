@@ -57,7 +57,7 @@
     </script>
 </head>
 <body class="d-flex flex-column align-items-center justify-content-start page-size">
-<a href="HomePage.html" style="margin-top:60px; margin-bottom:-40px;">Esci</a>
+    <h3 style="margin-top: 40px; margin-bottom: -30px">Registrazione</h3>
     <div class="card mt-5">
         <div class="card-body">
             <div>
@@ -119,7 +119,7 @@
             </div>
         </div>
     </div>
-
+    <a href="HomePage.html" style="padding-bottom:-40px;">Esci</a>
 
 </body>
 </html>
