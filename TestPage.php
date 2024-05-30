@@ -3,110 +3,36 @@
 
 <head>
     <title>Creazione Test</title>
-    <link type="text/css" rel="stylesheet" href="stile.css">
-    <style>
-        form {
-            margin-bottom: 20px; /* Aggiunge spazio sotto il modulo */
-        }
-    </style>
-    <style>
-                .messaggi-dropdown {
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                }
-                .messaggi-icon {
-                    background: none;
-                    border: none;
-                    cursor: pointer;
-                }
-                .messaggi-content {
-                    display: none;
-                    position: absolute;
-                    top: 30px;
-                    right: 0;
-                    width: 200px;
-                    background-color: #f9f9f9;
-                    border: 1px solid #ddd;
-                    padding: 10px;
-                    z-index: 1;
-                }
-                .messaggi-scrivi {
-                    position: fixed;
-                    top: 20px;
-                    right: 160px;
-                }
-                .messaggi-icon {
-                    background: none;
-                    border: none;
-                    cursor: pointer;
-                }
-                .messaggi-form {
-                    display: none;
-                    position: absolute;
-                    top: 30px;
-                    right: 60;
-                    background-color: #f9f9f9;
-                    border: 1px solid #ddd;
-                    padding: 10px;
-                    z-index: 1;
-                }
-            </style>
-            
-<script>
-    function leggiMessaggi() {
-        var messaggiContent = document.getElementById("messaggiContent");
-        if (messaggiContent.style.display === "block") {
-            messaggiContent.style.display = "none";
-        } else {
-            messaggiContent.style.display = "block";
-            messaggiForm.style.display = "none";
-        }
-    }
-
-    function scriviMessaggi() {
-        var messaggiForm = document.getElementById("messaggiForm");
-        if (messaggiForm.style.display === "block") {
-            messaggiForm.style.display = "none";
-        } else {
-            messaggiForm.style.display = "block";
-            messaggiContent.style.display = "none";
-        }
-    }
-function validateForm() {
-            var titolo = document.forms["titoloTest"]["test_title"].value;            
-
-            // Controll0 se tutti i campi richiesti sono stati compilati o selezionati
-            if (titolo == "" ) {
-                alert("Inserisci il titolo!");
-                return false; // Impedisci l'invio del modulo
-            }
-            return true; // Consenti l'invio del modulo
-    }
+    <link type="text/css" rel="stylesheet" href="grafica.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     
-</script>
+     </style>
+            
 </head>
 
 <body>
-
-    <h1>Creazione di un Nuovo Test</h1>
-    <form name="titoloTest" action="TestPage.php" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
-        Titolo del Test:<br><br>
-        <input type="text" name="test_title">
+    <div class="intesta">
+            <a href="hpDocente.php">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-circle-fill">
+                <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
+                </svg>
+            </a>
+            <h1 class=title>CREAZIONE DI UN NUOVO TEST</h1>
+    </div>
+    <div class="principale">
+    <form action="TestPage.php" method="POST" enctype="multipart/form-data">
+        <label>Titolo del Test:</label><br><br>
+        <input type="text" name="test_title" class="textfield">
         <br><br>
-        <label for="img">Scegli immagine:</label>
-        <input type="file" id="testImg" name="testImg"><br>
-        <button type="submit" name="crea_test">Crea Test</button><br><br><br>
-    </form>
-    <div id="quesito">
+        <label for="img">Scegli immagine: (facoltativo) &emsp;</label><br><br>
+        <input type="file" id="testImg" name="testImg"><br><br>
+        <button type="submit" name="crea_test" class="button">Crea Test</button><br><br><br>
+        </form>
         <h2>Inserisci i quesiti</h2>        
         <br>
-        <a href="CreaQuesito.php"><button type="button" name=quesito > Aggiungi Quesito</button></a>
-    <div>
-  
-
-    
-    <a href=hpDocente.php><h2><-</h2></a>
+        <a href="CreaQuesito.php"><button type="button" name=quesito class="button">Aggiungi Quesito</button></a>
+    </div>
 </body>
 
 </html>

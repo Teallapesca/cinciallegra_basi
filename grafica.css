@@ -1,0 +1,154 @@
+.messaggi-dropdown {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+}
+.messaggi-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.messaggi-icon:hover{
+    color:navy;
+    background: none;
+}
+
+.messaggi-content {
+    display: none;
+    position: absolute;
+    top: 30px;
+    right: 0;
+    width: 200px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 10px;
+    z-index: 1;
+}
+.messaggi-scrivi {
+    position: fixed;
+    top: 20px;
+    right: 160px;
+}
+.messaggi-form {
+    display: none;
+    position: absolute;
+    top: 30px;
+    right: 60;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 10px;
+    z-index: 1;
+}
+
+form {
+margin-bottom: 20px; /* Aggiunge spazio sotto il modulo */
+margin-top: 30px;
+}
+
+svg{
+color:navy;
+background-size: 50px;
+position: absolute;
+size: 50px;
+left: 50px;
+}
+.bg-color {
+border: 2px solid black; 
+background-color: #394867;
+color: white;
+}
+
+.button {
+background-color: #212A3E; /* Sfondo del bottone */
+color: white; /* Colore del testo del bottone */
+border-radius: 10px; /* Bordo arrotondato */
+padding: 10px 20px; /* Spazio intorno al testo */
+font-size: 15px; /* Dimensione del testo */
+cursor: pointer; /* Mostra il cursore a forma di mano */
+top: 50%; /* Posizione al centro verticalmente */
+border: none;
+}
+
+.textfield{
+background-color: white; /* Sfondo del bottone */
+color: black; /* Colore del testo del bottone */
+border: solid;
+border-color: grey;
+border-radius: 10px; /* Bordo arrotondato */
+padding: 10px 20px; /* Spazio intorno al testo */
+font-size: 15px; /* Dimensione del testo */
+margin-top: 8px; /* Posizione al centro verticalmente */
+}
+
+label{
+font-weight: bold;
+font-size: 20px;
+}
+
+.sobrio{
+    font-weight: normal;
+    font-size:18px;
+}
+
+button:hover {
+background-color: #415379; /* Cambia il colore del background al passaggio del mouse */
+}
+
+.principale{
+    text-align: center;
+}
+
+.intesta {
+background-color: #DCDCDC;
+padding: 20px 0;
+position: relative;
+overflow: auto;
+font-weight: bold;
+color: navy;
+text-align: center;
+}
+.messaggi{
+    color:black;
+    font-weight:normal;
+}
+
+.margine-sinistra {
+margin-left: 25px;
+}
+
+a{
+font-size: 20px;
+}
+
+.classifiche-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Spazio tra le classifiche */
+    margin-top: 10px;
+}
+
+.classifica {
+    flex: 1 1 calc(33% - 20px); /* Distribuisci lo spazio equamente tra le classifiche */
+    border-right: 1px solid #ccc;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.lab-class{
+    font-size: 15px;
+    font-style: italic;
+    font-weight: normal;
+}
+
+table {
+    margin-left:180px;
+    border-collapse: separate; /* Necessario per far funzionare border-spacing */
+    border-spacing: 10px; /* Distanza tra le celle */
+    width: 70%;
+}
+th, td {
+    padding: 10px; /* Spaziatura interna delle celle */
+    border: 1px solid black; /* Bordo per le celle */
+    text-align: center; /* Allineamento del testo */
+}

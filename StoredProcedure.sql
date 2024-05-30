@@ -154,8 +154,6 @@ CREATE PROCEDURE InserimentoMessaggioDocente (
     IN MailDocente VARCHAR(40))
 BEGIN
     -- Inserimento del messaggio nella tabella MESSAGGIO
-    INSERT INTO MESSAGGIODOCENTE (TitoloMess, Testo, DataInserimento, TitoloTest,  MailDocente, MailStudente)
-    VALUES (TitoloMessaggio, TestoMessaggio, NOW(), TitoloTest, MailDocente, NULL);
 
     INSERT INTO MESSAGGIODOCENTE (TitoloMess, Testo, DataInserimento, TitoloTest,  MailDocente)
     VALUES (TitoloMessaggio, TestoMessaggio, NOW(), TitoloTest, MailDocente);
