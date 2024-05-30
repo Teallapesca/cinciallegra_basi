@@ -58,18 +58,12 @@
                         ";
                         
                     }
-                    if (!mysqli_commit($conn)) {
-                        mysqli_rollback($conn);
-                        echo "Errore durante il commit della transazione.";
-                    }
-                
-                    // chiusura della connessione
-                    mysqli_close($conn);
+                   
 				}
             
                 if(isset($_GET["col"])){
                     $_SESSION['numCol'] = $_GET["numCol"];
-                    
+                    echo "<form>";
                     if($_SESSION['numCol']!=null){
                         $colonne = intval($_SESSION['numCol']);
                         for($i=0; $i<$colonne; $i++){
@@ -117,23 +111,17 @@
                                     <option value='DOUBLE'>DOUBLE</option>
                                     </select></td>
                                     <td><select name='PK[]'>
-                                    <option value='SI'selected>SI</option>
-                                    <option value='NO'>NO</option>
+                                    <option value='SI'>SI</option>
+                                    <option value='NO' selected>NO</option>
                                     </select></td>
                                 </tr>
                                 </table>
                                 ";
                             }
                         }
-                        if (!mysqli_commit($conn)) {
-                            mysqli_rollback($conn);
-                            echo "Errore durante il commit della transazione.";
-                        }
-                    
-                        // chiusura della connessione
-                        mysqli_close($conn);
+                       
                         echo "<br><input type='submit' name='conf' value='Conferma attributi' class='button' style='margin-bottom:50px'>";
-                        
+                        echo "<form>";
                     }
                 }
                 if(isset($_GET["conf"])) {
