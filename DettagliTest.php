@@ -42,14 +42,14 @@
             </a>
 			
             <h1>DETTAGLI TEST</h1>
-
+        </div>
             <div class="messaggi-dropdown">
                 <button class="messaggi-icon" onclick="leggiMessaggi()"><u>Messaggi ricevuti</u></button>
                 <div class="messaggi-content" id="messaggiContent">
                     <!-- Contenuto dei messaggi qui -->
                     <?php
                         $titoloTest = $_SESSION['titoloTest'];
-                        echo "<h1 class='messaggi'>".$_SESSION['titoloTest']."</h1>";        
+                        echo "<h4>".$_SESSION['titoloTest']."</h4>";        
                         $query1 = "SELECT * FROM MESSAGGIOSTUDENTE WHERE TitoloTest = '$titoloTest'";
                         $result1 = $conn->query($query1);
                 

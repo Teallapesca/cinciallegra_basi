@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="page-size">
 <head>
-    <link type="text/css" rel="stylesheet" href="stile.css">
+    <link type="text/css" rel="stylesheet" href="grafica.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <style>
@@ -57,6 +57,7 @@
     </script>
 </head>
 <body class="d-flex flex-column align-items-center justify-content-start page-size">
+<a href="HomePage.html" style="margin-top:60px; margin-bottom:-40px;">Esci</a>
     <div class="card mt-5">
         <div class="card-body">
             <div>

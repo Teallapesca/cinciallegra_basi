@@ -1,12 +1,12 @@
 <!doctype html>
 <html>
 <head>
-    <link type="text/css" rel="stylesheet" href="stile.css">
+    <link type="text/css" rel="stylesheet" href="grafica.css">
     <meta charset="UTF-8">
     <title>Svolgimento test</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <style>
+    <!--<style>
     .fixed-left {
       position: fixed;
       top: 20%;
@@ -23,49 +23,7 @@
       margin-right: -20px; /* Margine sinistro negativo */
       /* padding-bottom: 100px; */ /* Imposta lo spazio sotto il div destro */
     }
-    .messaggi-dropdown {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-        }
-        .messaggi-icon {
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-        .messaggi-content {
-            display: none;
-            position: absolute;
-            top: 30px;
-            right: 0;
-            width: 200px;
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            padding: 10px;
-            z-index: 1;
-        }
-        .messaggi-scrivi {
-            position: fixed;
-            top: 20px;
-            right: 160px;
-        }
-        .messaggi-icon {
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-        .messaggi-form {
-            display: none;
-            --position: absolute;
-            top: 30px;
-            right: 60;
-            width: 1000px;
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            padding: 10px;
-            z-index: 1;
-        }
-    </style>
+    </style>-->
             
     <script>
         function leggiMessaggi() {
@@ -106,19 +64,20 @@
         <div class="messaggi-content" id="messaggiContent">
             <!-- Contenuto dei messaggi qui -->
             <?php
-              /*  $titoloTest = $_SESSION['titoloTest'];            
-                $query1 = "SELECT * FROM MESSAGGIODOCENTE WHERE TitoloTest = '$titoloTest'";
-                $result1 = $conn->query($query1);
-        
-                if (mysqli_num_rows($result1) > 0) {
-                    echo "<ul>";
-                    while ($row = $result1->fetch_assoc()) {
-                        echo "<li><b>{$row['MailDocente']} - {$row['DataInserimento']}</b><br>  {$row['TitoloMess']}<br> {$row['Testo']}</li>";
-                    }
-                    echo "</ul>";
-                } else {
-                    echo "Nessun messaggio trovato per questo test.";
-                }*/
+              $titoloTest = $_SESSION['titoloTest'];            
+              echo "<h4>".$_SESSION['titoloTest']."</h4>";        
+              $query1 = "SELECT * FROM MESSAGGIODOCENTE WHERE TitoloTest = '$titoloTest'";
+              $result1 = $conn->query($query1);
+      
+              if ($result1->num_rows > 0) {
+                  echo "<ul>";
+                  while ($row = $result1->fetch_assoc()) {
+                      echo "<li class='messaggi'><b>{$row['MailDocente']} - {$row['DataInserimento']}</b><br>  {$row['TitoloMess']}<br> {$row['Testo']}</li>";
+                  }
+                  echo "</ul>";
+              } else {
+                  echo "<p class='messaggi'>Nessun messaggio trovato per questo test.</p>";
+              }
 
             ?>
         </div>
@@ -128,17 +87,17 @@
         
         <button class="messaggi-icon" onclick="scriviMessaggi()"><u>Inserisci messaggio</u></button>
         <div class="messaggi-form" id="messaggiForm">
-            <form name="invio-messaggio" method="GET" action="SvolgiTest.php?titolo=<?php $_SESSION['titoloTest'] ?>">
-                <label>Oggetto del messaggio:<label><br>
-                <input type='text' name='titoloMess' value=''><br>
-                <label>Testo del messaggio:<label><br>
-                <input type='text' name='testoMess' value='' style='height: 100px'><br><br>
-                <input type='submit' name='invio' value='Invia messaggio'>
-            </form>
+        <form name="invio-messaggio" method="GET" action="SvolgiTest.php?titoloTest=<?php $_SESSION['titoloTest']?>">
+                        <label class='messaggi'>Oggetto del messaggio:<label>
+                        <input type='text' name='titoloMess' value='' class="textfield"><br><br>
+                        <label class='messaggi'>Testo del messaggio:<label>
+                        <input type='text' name='testoMess' value='' style='height: 100px' class="textfield"><br><br>
+                        <input type='submit' name='invio' value='Invia messaggio' class="button">
+                    </form>
             
             <!-- Contenuto dei messaggi qui -->
             <?php
-               /* if (isset($_GET['invio'])) {
+               if (isset($_GET['invio'])) {
                     $titoloMess = $_GET['titoloMess'];
                     $testoMess = $_GET['testoMess'];
                     $titoloTest = $_SESSION['titoloTest'];
@@ -152,22 +111,21 @@
                         echo "errore nella ricerca" . die (mysqli_error($conn));
                     }
                     else {
-                        echo "<label>Messaggio inviato</label>";
+                        echo "<label class='sobrio'>Messaggio inviato</label>";
                     }
 
                     if (!mysqli_commit($conn)) {
                         mysqli_rollback($conn);
                         echo "Errore durante il commit della transazione.";
                     }
-                }*/
+                }
 
             ?>
             
         </div>
     </div>
 
-    <div class="principale container-fluid">
-        <div class="container text-center">
+    <div class="principale">
             <?php
 
                 $test=$_SESSION['titoloTest'];//non dovrebbe servire, ma per ora teniamolo
@@ -177,39 +135,52 @@
                 if (isset($_GET['titolo'])) {//eseguirò tutto questo codice se non c'è stato alcun probelma di settaggio del test scelto
                     $_SESSION['titoloTest']=$_GET['titolo'];
                     $titoloTest = $_GET['titolo'];
-                    echo "<h1 class='ml-3'>".$_SESSION['titoloTest']."</h1>";
-                    $concluso=visualizzaRisposte($titoloTest, $conn);
-                    //---inserimento in svolgimento 
-                    $data=date('Y-m-d H:i:s');
-                    $stato="";
-                    $mail=$_SESSION['mailStudente'];
-                    //controlla se il test selezionato è in svolgimento
-                    if($concluso==false){
-                        $entrata="SELECT * FROM svolgimento WHERE MailStudente='$mail' AND TitoloTest='$titoloTest';";
-                        $ris_entr = mysqli_query($conn, $entrata);
-                        if (!$ris_entr) {
-                            echo "Errore nella query: " . mysqli_error($conn);
-                        } else {
-                            if(mysqli_num_rows($ris_entr) == 0){//se non c'è lo inserisce con stato aperto (che è di default)
-                                $stato="Aperto";
-                                $inserimento="INSERT INTO svolgimento(MailStudente, TitoloTest, DataInizio) VALUES ('$mail', '$titoloTest', '$data');";
-                                $ris_ins = mysqli_query($conn, $inserimento);
-                                if (!$ris_ins) {
-                                    echo "Errore nell'inserimento in svolgimento: " . mysqli_error($conn);
-                                }else{
-                                    logEvent("Nuovo test $titoloTest inserito in svolgimento");
-                                }
-                                if (!mysqli_commit($conn)) {
-                                    mysqli_rollback($conn);
-                                    echo "Errore durante il commit della transazione. boo";
-                                }
-                            }
+                    $sql="SELECT Foto FROM Test WHERE Titolo = '$titoloTest'";
+                    $result = $conn->query($sql);
+
+                if ($result === false) {
+                    // Stampa l'errore della query
+                    echo "Errore nella query SQL: " . $conn->error;
+                    exit();
+                }
+                
+                $fotoTest = '';
+                if ($row = $result->fetch_assoc()) {
+                    $fotoTest = $row['Foto'];
+                }
+
+                echo "<h1 class='ml-3'>".$_SESSION['titoloTest']."</h1>";
+
+                $relativePath = '/img/' . $fotoTest;
+                echo "<img src='" . htmlspecialchars($relativePath, ENT_QUOTES, 'UTF-8') . "' style = 'width:30%'>";
+                   
+                //---inserimento in svolgimento 
+                $data=date('Y-m-d H:i:s');
+                $stato="";
+                $mail=$_SESSION['mailStudente'];
+                //controlla se il test selezionato è in svolgimento
+                $entrata="SELECT * FROM svolgimento WHERE MailStudente='$mail' AND TitoloTest='$titoloTest';";
+                $ris_entr = mysqli_query($conn, $entrata);
+                if (!$ris_entr) {
+                    echo "Errore nella query: " . mysqli_error($conn);
+                } else {
+                    if(mysqli_num_rows($ris_entr) == 0){//se non c'è lo inserisce con stato aperto (che è di default)
+                        $stato="Aperto";
+                        $inserimento="INSERT INTO svolgimento(MailStudente, TitoloTest, DataInizio) VALUES ('$mail', '$titoloTest', '$data');";
+                        $ris_ins = mysqli_query($conn, $inserimento);
+                        if (!$ris_ins) {
+                            echo "Errore nell'inserimento in svolgimento: " . mysqli_error($conn);
+                        }else{
+                            //logEvent("Nuovo test $titoloTest inserito in svolgimento");
+                        }
+                        if (!mysqli_commit($conn)) {
+                            mysqli_rollback($conn);
+                            echo "Errore durante il commit della transazione. boo";
                         }
                     }
+                }
             ?>
-        </div>
-        <div class="row">
-        <div class="d-none d-sm-block  col fixed-left">
+        <div class="principale">
             <?php
                     //---visualizza tabelle
                     $tabelle = [];
@@ -261,7 +232,7 @@
                     }
             ?>
         </div>
-        <div class="container text-center col scroll-right"">
+        <div class="principale">
         <form name="test" method="GET" action="SvolgiTest.php?titolo=<?php $_SESSION['titoloTest'] ?>">
             <?php
                     //---visualizzazione quesiti
@@ -318,38 +289,15 @@
                             if(mysqli_num_rows($ris_chiuso)==0){
                                 $tipo="codice";
                                if($giusto==false){
-                                //se la risposta data non è corretta
-                                    if($concluso){
-                                        //se il test è stato dichiarato concluso dal docente
-                                        $risposta="SELECT Soluzione from sketch_codice where Progressivo='$progressivo' and TitoloTest='$titoloTest';";
-                                        $riri = mysqli_query($conn, $risposta);
-                                        if (!$riri) {
-                                            echo "Errore nella ricerca della soluzione: " . mysqli_error($conn);
-                                        }else{
-                                            while ($row = mysqli_fetch_array($riri, MYSQLI_ASSOC)) { 
-                                                $soluzione=$row['Soluzione'];
-                                            }
-                                            //visualizza la soluzione
-                                            $risp=$_SESSION["risposta$progressivo"];
-                                            echo "<input type='text' name='risposta$progressivo' value='$risp' readonly><br><br>";
-                                            echo "<br><span style='color: #cb3234;'>Risposta errata</span><br>";
-                                            echo "<br><span style='color: #cb3234;'>La risposta corretta è ".$soluzione."</span><br>";
-                                        }
+                                    if (($_SESSION["risposta$progressivo"]!="")) {
+                                        //se la variabile di risposta di questo quesito non è vuoto, vado già ad inserire il suo valore nel value del textbox
+                                        $risp=$_SESSION["risposta$progressivo"];
+                                        echo "<input type='text' name='risposta$progressivo' value='$risp'><br><br>";
+                                        
                                     }else{
-                                        //altrimenti se non è stato concluso e non è stata data la risposta corretta
-                                        //posso compilare tranquillamente il quesito
-                                        if (($_SESSION["risposta$progressivo"]!="")) {
-                                            //se la variabile di risposta di questo quesito non è vuoto, vado già ad inserire il suo valore nel value del textbox
-                                            $risp=$_SESSION["risposta$progressivo"];
-                                            echo "<input type='text' name='risposta$progressivo' value='$risp'><br><br>";
-                                            
-                                        }else{
-                                            //altrimenti faccio un textbox vuoto
-                                            echo "<input type=text name='risposta$progressivo' value=''><br><br>";
-                                        }
-
+                                        //altrimenti faccio un textbox vuoto
+                                        echo "<input type=text name='risposta$progressivo' value=''><br><br>";
                                     }
-                                    
                                 }else{
                                     if (($_SESSION["risposta$progressivo"]!="")) {
                                         //se la variabile di risposta di questo quesito non è vuoto, vado già ad inserire il suo valore nel value del textbox
@@ -377,49 +325,18 @@
                                     }
                                     echo "<span style='color: #198754;'>Risposta corretta</span><br>";
                                 }else{
-                                    if($concluso){
-                                        //se il test è stato dichiarato concluso dal docente
-                                        $risposta="SELECT OpzioneGiusta from quesito_chiuso where Progressivo='$progressivo' and TitoloTest='$titoloTest';";
-                                        $riri = mysqli_query($conn, $risposta);
-                                        if (!$riri) {
-                                            echo "Errore nella ricerca della soluzione: " . mysqli_error($conn);
-                                        }else{
-                                            while ($row = mysqli_fetch_array($riri, MYSQLI_ASSOC)) { 
-                                                $soluzione=$row['OpzioneGiusta'];
-                                            }
-                                            //visualizza la soluzione
-                                            while($rowOP = mysqli_fetch_array($ris_chiuso, MYSQLI_ASSOC)){
-                                                $testoOp = $rowOP['Testo'];
-                                                $numOP=$rowOP['Numerazione'];
-                                                //se la variabile risposta è piena 
-                                                if (($_SESSION["risposta$progressivo"]=="$numOP")) {//se la session è uguale al valore dell'opzione la restituisco già checkata
-                                                    echo "<input type=radio name='risposta$progressivo' value='$numOP' checked>$testoOp<br>";
-                                                }
-                                                else{
-                                                    echo "<input type=radio name='risposta$progressivo' value='$numOP' disabled>$testoOp<br>";
-                
-                                                }
-                                            }
-                                            echo "<br><span style='color: #cb3234;'>Risposta errata</span><br>";
-                                            echo "<br><span style='color: #cb3234;'>La risposta corretta è la ".$soluzione."</span><br>";
+                                    while($rowOP = mysqli_fetch_array($ris_chiuso, MYSQLI_ASSOC)){
+                                        $testoOp = $rowOP['Testo'];
+                                        $numOP=$rowOP['Numerazione'];
+                                        //se la variabile risposta è piena 
+                                        if (($_SESSION["risposta$progressivo"]=="$numOP")) {//se la session è uguale al valore dell'opzione la restituisco già checkata
+                                            echo "<input type=radio name='risposta$progressivo' value='$numOP' checked>$testoOp<br>";
                                         }
-                                    }else{
-
-                                        while($rowOP = mysqli_fetch_array($ris_chiuso, MYSQLI_ASSOC)){
-                                            $testoOp = $rowOP['Testo'];
-                                            $numOP=$rowOP['Numerazione'];
-                                            //se la variabile risposta è piena 
-                                            if (($_SESSION["risposta$progressivo"]=="$numOP")) {//se la session è uguale al valore dell'opzione la restituisco già checkata
-                                                echo "<input type=radio name='risposta$progressivo' value='$numOP' checked>$testoOp<br>";
-                                            }
-                                            else{
-                                                echo "<input type=radio name='risposta$progressivo' value='$numOP'>$testoOp<br>";
-            
-                                            }
+                                        else{
+                                            echo "<input type=radio name='risposta$progressivo' value='$numOP'>$testoOp<br>";
+        
                                         }
-
                                     }
-
                                 }
                                 
                             }
@@ -436,7 +353,7 @@
             <br> ---------------------------------------- <br>
             <br>
             <input type="hidden" name="titolo" value="<?php echo $_SESSION['titoloTest']; ?>">            
-            <input type="submit" name="esci" value="Esci" Class="btn btn-primary">
+            <input type="submit" name="esci" value="Esci" Class="button">
         </form>
         </div>
             </div>
@@ -504,6 +421,78 @@
             exit();
                 
         }
+        //se tutti i quesiti hanno ricevuto una risposta e questa è corretta si può concludere il test
+        
+        /*$num_righe=controlloTotale($titoloTest, $mail, $conn);
+        if($_SESSION['numQuesiti']==$num_righe){
+            
+
+
+        }*/
+    
+        /*else if(isset($_GET['Fine'])){
+
+            foreach ($_SESSION["quesiti$titoloTest"] as $quesito) {
+
+                $progressivo=$quesito["progressivo"];
+
+                if(isset($_SESSION["risposta$progressivo"])||($_SESSION["risposta$progressivo"]!="")){
+                    $testo=$_GET["risposta$progressivo"]; //potrei creare una procedura da mysql che faccia controllo ed inserimento da solo
+                    $_SESSION["risposta$progressivo"]=$testo;
+
+                    //cerco se sono già state date risposte a questo quesito
+                    $selezionato="SELECT * FROM risposta WHERE MailStudente='$mail' AND TitoloTest='$titoloTest' AND Progressivo='$progressivo';";
+                    $rissel = mysqli_query($conn, $selezionato);
+                    if (!$rissel) {
+                        echo "Errore nell'inserimento dela risposta: " . mysqli_error($conn);
+                    }else{
+                        if(mysqli_num_rows($rissel) != 0){
+                            //aggiorno con la nuova risposta del quesito
+                            $inserimento="UPDATE risposta SET Testo='$testo' WHERE MailStudente='$mail' AND TitoloTest='$titoloTest' AND Progressivo='$progressivo';";
+                            $ris_ins3 = mysqli_query($conn, $inserimento);
+                            if (!$ris_ins3) {
+                                echo "Errore nell'inserimento in svolgimento2: " . mysqli_error($conn);
+                            }
+                        }
+                        else{ //in questo caso io sto inserendo la nuova risposta (quesito o codice)
+                            if(isset($_GET["risposta$progressivo"])){
+                                //se è stato premuto un radio inserisco la risposta
+                                $risposta="INSERT INTO risposta(Progressivo, TitoloTest, MailStudente, Testo) VALUES ('$progressivo','$titoloTest', '$mail', '$testo' );";
+                                $risris = mysqli_query($conn, $risposta);
+                                if (!$risris) {
+                                    echo "Errore nell'inserimento dela risposta: " . mysqli_error($conn);
+                                }
+                            }
+
+                        }
+                    }
+
+                }
+            }
+
+            $stato="Concluso";
+            $inserimento="UPDATE svolgimento SET stato='$stato' WHERE MailStudente='$mail' AND TitoloTest='$titoloTest';";
+            $ris_ins = mysqli_query($conn, $inserimento);
+            if (!$ris_ins) {
+                echo "Errore nell'inserimento in svolgimento2: " . mysqli_error($conn);
+            }//fare update anche della data di fine
+
+            if (!mysqli_commit($conn)) {
+                mysqli_rollback($conn);
+                echo "Errore durante il commit della transazione. boo";
+            }
+    
+            // chiusura della connessione
+            mysqli_close($conn);
+            foreach ($_SESSION["quesiti$titoloTest"] as $quesito) {
+                $progressivo=$quesito["progressivo"];
+                unset($_SESSION["risposta$progressivo"]);
+            }
+            unset($_SESSION['titoloTest']);
+            header("Location: hpStudente.php");
+            exit();
+                
+        }*/
        
     ?>
     </div>

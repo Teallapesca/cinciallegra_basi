@@ -24,6 +24,9 @@
     border: 1px solid #ddd;
     padding: 10px;
     z-index: 1;
+    max-height:300px;
+    min-width: 350px;
+    overflow-y: auto;
 }
 .messaggi-scrivi {
     position: fixed;
@@ -39,6 +42,7 @@
     border: 1px solid #ddd;
     padding: 10px;
     z-index: 1;
+    text-align: center;
 }
 
 form {
@@ -95,6 +99,10 @@ button:hover {
 background-color: #415379; /* Cambia il colore del background al passaggio del mouse */
 }
 
+.button:hover {
+    background-color: #415379; /* Cambia il colore del background al passaggio del mouse */
+    }
+
 .principale{
     text-align: center;
 }
@@ -111,6 +119,7 @@ text-align: center;
 .messaggi{
     color:black;
     font-weight:normal;
+    font-size: 16px;
 }
 
 .margine-sinistra {

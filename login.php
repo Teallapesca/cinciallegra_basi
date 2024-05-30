@@ -17,6 +17,7 @@
 </head>
 	<body class="d-flex flex-column align-items-center justify-content-center page-size">
 
+	<a href="HomePage.html">Esci</a>
 		<div class="card mt-5" style="width: 20%; padding: 2px;">
 			<div class="card-body">
 			<form name="accesso" method="GET" action="login.php">

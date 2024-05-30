@@ -16,19 +16,26 @@
         include 'Navbar.php' 
     ?> 
 
-	<div class="d-flex flex-row  justify-content-center mt-5" style="padding-top: 100px;">
+    <!--<div class="student-image">
+       <h1 style="color: white" class="mb-5 hero-text"> <?php echo "benvenuto " . $_SESSION['mailStudente']; ?> </h1>
+    </div>-->
+    <div class="m-5 d-flex flex-column justify-content-center align-items-center" style="padding-top: 100px;">
+        <div class="d-flex flex-row align-items-center" style="display: block;">
+          
+    
+	<!--<div class="d-flex flex-row  justify-content-center mt-5">-->
 		<form name="visTest" method="GET" action="hpStudente.php">
-            <input  class="btn btn-primary btn-lg m-4" type="submit" name="test" value="visualizza test">
+            <input  class="btn btn-primary btn-lg m-4" type="submit" name="test" value="Visualizza test">
         </form>
         <form method="POST" action="hpStudente.php">
+            <button  class="btn btn-primary btn-lg m-4" type="submit" name="classifiche">Classifiche</button>
             <button  class="btn btn-primary btn-lg m-4" type="submit" name="logout">Logout</button>
         </form>
     </div>
 
         <?php
             if (isset($_GET["test"])) {
-                $mail=$_SESSION['mailStudente'];
-                $query="CALL VisualizzazioneTest('$mail');";
+                $query="CALL VisualizzazioneTest();";
 
                 $risult=mysqli_query($conn,$query);
 
@@ -46,13 +53,9 @@
                             $titoloTest = $row['Titolo'];
                             $_SESSION['titoloTest'] = $titoloTest;
                             echo "
-                            <a href='SvolgiTest.php?titolo=$titoloTest'> {$titoloTest} </a>({$row['DataTest']}, {$row['MailDocente']})  
+                            <a href='SvolgiTest.php?titolo=$titoloTest'> {$titoloTest} ({$row['DataTest']}, {$row['MailDocente']})  </a><br><br>
                             ";
                             $_SESSION['mailDocente'] = $row['MailDocente'];
-                            if($row['Stato']!=""){
-                                echo"<span style='color: #198754;'> Stato: {$row['Stato']} </span> ";
-                            }
-                            echo "<br><br>";
                         }
                     }
                 }
@@ -60,6 +63,11 @@
             
             // chiusura della connessione
             mysqli_close($conn);
+
+            if (isset($_POST["classifiche"])) {
+                header('Location: ClassificheS.php');
+                exit();
+            }
 
             if (isset($_POST["logout"])) {
                 session_destroy();
