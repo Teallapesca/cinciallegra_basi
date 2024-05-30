@@ -33,6 +33,18 @@ CREATE VIEW ClassificaQuesiti(Descrizione, Conteggio) AS (
 );
 
 /* TRIGGERS */
+
+DELIMITER $
+CREATE TRIGGER NumeroRisposte
+AFTER INSERT ON Risposta
+FOR EACH ROW
+   BEGIN
+	UPDATE quesito
+	SET NumRisposte = NumRisposte + 1
+	WHERE NEW.ProgressivoQuesito = quesito.Progressivo;
+   END;
+$ DELIMITER ;
+
 DELIMITER $
 CREATE TRIGGER InCompletamento
 AFTER INSERT ON Risposta
