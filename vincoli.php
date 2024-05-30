@@ -150,9 +150,7 @@
                         echo "ricerca fallita: " . mysqli_error($conn);
                         }
                         else{
-                            if (mysqli_num_rows($ris_attri) == 0) {
-                                echo "non ci sono righe" ;
-                            }
+                            
                             echo "<tr>
                                     <td>".$nomepk."</td>
                                     <td>
