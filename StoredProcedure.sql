@@ -110,7 +110,7 @@ CREATE PROCEDURE NewSketchCodice (
 	IN ProgressivoCodice INT,
     IN TitoloTest VARCHAR(30),
     IN Difficolta VARCHAR(5),
-    IN DescrizioneQuesito VARCHAR(40),
+    IN DescrizioneQuesito VARCHAR(400),
     IN Soluzione VARCHAR(300)
 )
 BEGIN
@@ -124,7 +124,7 @@ CREATE PROCEDURE NewQuesitoChiuso (
 	IN ProgressivoChiuso INT,
     IN TitoloTest VARCHAR(30),
     IN Difficolta VARCHAR(5),
-    IN DescrizioneQuesito VARCHAR(40)
+    IN DescrizioneQuesito VARCHAR(400)
 )
 BEGIN
 	INSERT INTO QUESITO (Progressivo, TitoloTest, Difficolta, Descrizione, NumRisposte)
