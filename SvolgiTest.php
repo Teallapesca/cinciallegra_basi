@@ -131,10 +131,11 @@
                 $test=$_SESSION['titoloTest'];//non dovrebbe servire, ma per ora teniamolo
                 $mail=$_SESSION['mailStudente']; 
                 $_SESSION["quesiti$test"]=[];//creo l'array che conterrà i miei quesiti
-               
+                               
                 if (isset($_GET['titolo'])) {//eseguirò tutto questo codice se non c'è stato alcun probelma di settaggio del test scelto
                     $_SESSION['titoloTest']=$_GET['titolo'];
                     $titoloTest = $_GET['titolo'];
+                    echo "<h1>$titoloTest</h1>";
                     $sql="SELECT Foto FROM Test WHERE Titolo = '$titoloTest'";
                     $result = $conn->query($sql);
 
@@ -149,10 +150,10 @@
                     $fotoTest = $row['Foto'];
                 }
 
-                echo "<h1 class='ml-3'>".$_SESSION['titoloTest']."</h1>";
-
-                $relativePath = '/img/' . $fotoTest;
-                echo "<img src='" . htmlspecialchars($relativePath, ENT_QUOTES, 'UTF-8') . "' style = 'width:30%'>";
+                if($fotoTest != ''){
+                    $relativePath = '/img/' . $fotoTest;
+                    echo "<img src='" . htmlspecialchars($relativePath, ENT_QUOTES, 'UTF-8') . "' style = 'width:30%'>";
+                }
                    
                 //---inserimento in svolgimento 
                 $data=date('Y-m-d H:i:s');
