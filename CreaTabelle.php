@@ -121,7 +121,7 @@
                         }
                        
                         echo "<br><input type='submit' name='conf' value='Conferma attributi' class='button' style='margin-bottom:50px'>";
-                        echo "<form>";
+                        echo "</form>";
                     }
                 }
                 if(isset($_GET["conf"])) {
@@ -135,7 +135,7 @@
                         echo "errore nella ricerca" . die (mysqli_error($conn));
                     } else{
                         echo "tabella inserita";
-                        logEvent("Nuova tabella esercizio ($nomeTabella) inserita");
+                        //logEvent("Nuova tabella esercizio ($nomeTabella) inserita");
                     }
                     for($i = 0; $i < $colonne; $i++) {
                         // Ottieni il valore dell'attributo dall'input dell'utente
@@ -160,7 +160,7 @@
                         // Verifica se la query ha avuto successo
                         if($result) {
                             echo "'$PK' Attributo '$attributo' inserito correttamente.<br>";
-                            logEvent("Nuovo attributo $attributo inserito");
+                            //logEvent("Nuovo attributo $attributo inserito");
                         } else {
                             echo "Errore nell'inserimento dell'attributo '$attributo'.<br>";
                         }
@@ -182,4 +182,3 @@
         </div>
 	</body>
 </html>
-

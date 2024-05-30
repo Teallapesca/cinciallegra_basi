@@ -1,7 +1,9 @@
 <!doctype html>
 <html>
 	<head>
-		<link type="text/css" rel="stylesheet" href="stile.css">
+        <link type="text/css" rel="stylesheet" href="grafica.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
         <title>Cinciallegra-Popolamento tabelle</title>
 	</head>
 	<body>
@@ -13,7 +15,12 @@
             include 'ConnessioneMongoDB.php';
 		?>
 		<div class="intesta">
-			<h1> Popolamento tabelle </h1>
+        <a href="hpDocente.php">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-circle-fill">
+                <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
+                </svg>
+            </a>
+			<h1> POPOLAMENTO TABELLE</h1>
 		</div>
 		<div class="principale">
             <form name=sceltaTabella method=GET action=PopolaTabella.php>
@@ -44,7 +51,7 @@
                 
                     ?>
                 </select> <br><br>
-                <input type=submit name=scelta value=scegli /><br><br>
+                <input type=submit name=scelta value=Scegli class='button'/><br><br>
                 </form>
 
             <form name='attributi' method='GET' action='PopolaTabella.php'>
@@ -69,11 +76,11 @@
                             echo "non ci sono righe";
                         }
                         else{
-                            echo "tabella: " .$tabella ."<br><br>";
+                            echo "<label class='sobrio'>Tabella: " .$tabella ."</label><br><br>";
                             while($row = mysqli_fetch_array($risult))
                             {
                                 echo "
-                                    {$row['Nome']} ({$row['Tipo']}):<br>
+                                    <label class='sobrio'>{$row['Nome']} ({$row['Tipo']}):</label><br>
                                     <input type='text' name='nome_{$row['Nome']}' value=''><br><br>
                                 ";
                                 if($row['PossibileChiavePrimaria']==1 && !isset($_SESSION["chiave"])){
@@ -81,7 +88,7 @@
                                 }
                                 $_SESSION["attributi"][]=Array("nome" => $row['Nome'],"tipo" => $row['Tipo']);
                             }
-                            echo "<input type='submit' name=submit value='Invia'>";
+                            echo "<input type='submit' name=submit value='Invia' class='button'>";
                         }
 
                         if (!mysqli_commit($conn)) {
@@ -140,7 +147,6 @@
             
             ?>
 		</div>
-        <a href=hpDocente.php><-</a>
 	</body>
     <?php
     
