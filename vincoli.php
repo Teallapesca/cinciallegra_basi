@@ -134,7 +134,7 @@
                     </tr>";
 
                     foreach($_SESSION["primarykey"] as $chiave){
-                        echo $chiave."<br>";
+                        
                         $primarykey = $chiave;
                         $valoriSeparati = explode("-", $primarykey);
                         $nomepk = $valoriSeparati[0];
@@ -185,7 +185,6 @@
                 $chiaviprimarie="";
                 $chiaviesterne="";
                 foreach($_SESSION["primarykey"] as $chiave){
-                    echo $chiave."<br>";
                     $primarykey = $chiave;
                     $valoriSeparati = explode("-", $primarykey);
                     $nomepk = $valoriSeparati[0];
@@ -200,7 +199,6 @@
                     if (!$inserimento) {
                         echo "ricerca fallita insert vincolo: " . mysqli_error($conn);
                     }else{
-                        echo "inserimento vincolo effettuato";
                         logEvent("Nuovo vincolo $tabella1 - $tabella inserito");
                     }
 
@@ -209,26 +207,24 @@
                     $chiaviprimarie=rtrim($chiaviprimarie, ', ');
                     $chiaviesterne=rtrim($chiaviesterne, ', ');
 
-                    echo "<br>" .$chiaviprimarie ."<br>" .$chiaviesterne;
                     
                     $key='CALL Vincoli("'.$tabella.'", "'.$tabella1.'", "'.$chiaviprimarie.'", "'.$chiaviesterne.'");';
                     $foreign = mysqli_query($conn, $key);
                     if (!$foreign) {
                         echo "chiave primaria fallita: " . mysqli_error($conn);
                     }
-                    else{ echo "creazione vincolo fisico effettuato";}
+                    else{ echo "creazione vincolo fisico effettuato";
+                        echo "
+                        <form name=aggiungi method=GET action='vincoli.php'>
+                            <input type=submit name=aggiungi value='Crea vincolo' class='button'>
+                        </form>
+                        ";
+                    }
                     
                 
             }
-        
-            if (!mysqli_commit($conn)) {
-                mysqli_rollback($conn);
-                echo "Errore durante il commit della transazione.";
-            }
         ?>
-        <form name=aggiungi method=GET action='vincoli.php'>
-            <input type=submit name=aggiungi value="Crea vincolo" class='button'>
-        </form>
+        
     </div>
 
     <?php
