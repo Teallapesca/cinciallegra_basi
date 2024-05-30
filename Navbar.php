@@ -1,11 +1,13 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
     $mail="";
     $nome="";
+
     if($_SESSION['aut']==1){
         $mail=$_SESSION['mailDocente'];
         $query="SELECT Nome FROM docente WHERE Mail='$mail';";
-        
     }else{
         $mail=$_SESSION['mailStudente'];
         $query="SELECT Nome FROM studente WHERE Mail='$mail';";
@@ -14,8 +16,10 @@ session_start();
     if($risultato === false){
         echo "errore nella ricerca" . mysqli_error($conn);}
     else{
-        $row = mysqli_fetch_array($risultato);
-        $nome=$row[0];
+        if (mysqli_num_rows($risultato) > 0) {
+            $row = mysqli_fetch_array($risultato);
+            $nome = $row['Nome']; 
+        }
     }
 ?>
 <nav class="fixed-top navbar navbar-expand-lg bg-body-tertiary" style="height: 100px;">
