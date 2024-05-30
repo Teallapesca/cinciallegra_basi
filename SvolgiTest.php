@@ -6,24 +6,6 @@
     <title>Svolgimento test</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <!--<style>
-    .fixed-left {
-      position: fixed;
-      top: 20%;
-      bottom: 0;
-      left: 0;
-      width: 400px; /* Larghezza del div sinistro */
-      height:80%;
-      background-color: #ffffff; /* Colore di sfondo del div sinistro */
-      overflow: bottom;
-    }
-    .scroll-right {
-      position: relative;
-      margin-left: 200px; /* Larghezza del div sinistro */
-      margin-right: -20px; /* Margine sinistro negativo */
-      /* padding-bottom: 100px; */ /* Imposta lo spazio sotto il div destro */
-    }
-    </style>-->
             
     <script>
         function leggiMessaggi() {
@@ -55,9 +37,6 @@
         mysqli_begin_transaction($conn);
         include_once 'ConnessioneMongoDB.php';
         include 'controlli.php';
-        if (isset($_GET['titolo'])) {//eseguirò tutto questo codice se non c'è stato alcun probelma di settaggio del test scelto
-            $_SESSION['titoloTest']=$_GET['titolo'];
-        }
     ?>
     <div class="intesta">
         <h1>SVOLGI IL TEST</h1>
@@ -67,6 +46,10 @@
         <div class="messaggi-content" id="messaggiContent">
             <!-- Contenuto dei messaggi qui -->
             <?php
+            $titoloTest = $_SESSION['titoloTest'];    
+            if (isset($_GET['titolo'])) {//eseguirò tutto questo codice se non c'è stato alcun probelma di settaggio del test scelto
+                $_SESSION['titoloTest']=$_GET['titolo'];
+                $titoloTest = $_GET['titolo'];
               $titoloTest = $_SESSION['titoloTest'];            
               echo "<h4>".$_SESSION['titoloTest']."</h4>";        
               $query1 = "SELECT * FROM MESSAGGIODOCENTE WHERE TitoloTest = '$titoloTest'";
@@ -81,22 +64,23 @@
               } else {
                   echo "<p class='messaggi'>Nessun messaggio trovato per questo test.</p>";
               }
+            }
 
             ?>
         </div>
     </div>
 
-    <div class="messaggi-scrivi">
-        
+    <div class="messaggi-scrivi">        
         <button class="messaggi-icon" onclick="scriviMessaggi()"><u>Inserisci messaggio</u></button>
         <div class="messaggi-form" id="messaggiForm">
-        <form name="invio-messaggio" method="GET" action="SvolgiTest.php?titoloTest=<?php $_SESSION['titoloTest']?>">
-                        <label class='messaggi'>Oggetto del messaggio:<label>
-                        <input type='text' name='titoloMess' value='' class="textfield"><br><br>
-                        <label class='messaggi'>Testo del messaggio:<label>
-                        <input type='text' name='testoMess' value='' style='height: 100px' class="textfield"><br><br>
-                        <input type='submit' name='invio' value='Invia messaggio' class="button">
-                    </form>
+        <form name="invio-messaggio" method="GET" action="SvolgiTest.php">
+        <input type="hidden" name="titolo" value="<?php echo htmlspecialchars($_SESSION['titoloTest']); ?>">
+            <label class='messaggi'>Oggetto del messaggio:<label>
+            <input type='text' name='titoloMess' value='' class="textfield"><br><br>
+            <label class='messaggi'>Testo del messaggio:<label>
+            <input type='text' name='testoMess' value='' style='height: 100px' class="textfield"><br><br>
+            <input type='submit' name='invio' value='Invia messaggio' class="button">
+        </form>
             
             <!-- Contenuto dei messaggi qui -->
             <?php
@@ -188,6 +172,7 @@
                         }
                     }
             ?>
+        </div>
         <div class="principale">
             <?php
                     //---visualizza tabelle
