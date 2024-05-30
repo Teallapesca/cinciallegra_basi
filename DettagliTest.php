@@ -33,6 +33,7 @@
 			error_reporting(E_ALL);
 			include 'connessione.php';
 			mysqli_begin_transaction($conn);
+			include 'controlli.php';
 		?>
 		<div class="intesta">
             <a href="VisualizzaTest.php" name="esci" id="esci">
@@ -152,7 +153,15 @@
                 ?>
 
                 <form method="get" action="DettagliTest.php?titoloTest=<?php $_SESSION['titoloTest']?>">
-                    <label class="sobrio">Visualizza risposte&emsp;</label><input type='checkbox' id='VisRisp' name='VisRisp' value='VisRisp'><br><br>
+                <?php
+                    $vis=visualizzaRisposte($titoloTest, $conn);
+                    if($vis){
+                        echo "<label class=sobrio>Visualizza risposte&emsp;</label> <input type='checkbox' id='VisRisp' name='VisRisp' value='VisRisp' checked><br><br>";
+                    }
+                    else{
+                        echo "<label class=sobrio>Visualizza risposte&emsp;</label><input type='checkbox' id='VisRisp' name='VisRisp' value='VisRisp'><br><br>";
+                    }
+                ?>
                     <label class="sobrio">Elimina test&emsp;</label><input type='checkbox' id='elimina' name='elimina' value='elimina'><br><br>
                     <input type='submit' name='conferma' id='conferma' value='Conferma' class="button"><br><br>
                     <!--<input type='submit' name='elimina' id='elimina' value='Elimina Test' class="button">-->
@@ -183,9 +192,13 @@
                         exit(); // Termina l'esecuzione dello script dopo il reindirizzamento
                         
                     }
-                     if (isset($_GET['VisRisp'])){
+                	if (isset($_GET['VisRisp'])){
                         $visualizza = 1;
-                        $query4 = "UPDATE TEST SET VisualizzaRisposte = $visualizza WHERE Titolo = '$titoloTest'";
+                    }
+                    else{
+                        $visualizza = 0;
+                    }
+                    $query4 = "UPDATE TEST SET VisualizzaRisposte = $visualizza WHERE Titolo = '$titoloTest'";
                         $stmt4 = $conn->prepare($query4);
                         if ($stmt4->execute()) {
                             // Esegui operazioni dopo il successo dell'esecuzione della query
@@ -195,7 +208,6 @@
                             echo "Errore nell'esecuzione della query: " . $stmt4->error;
                         }
                         $stmt4->close(); // Chiudi la query preparata
-                    }
                     if (!mysqli_commit($conn)) {
                         mysqli_rollback($conn);
                         echo "Errore durante il commit della transazione. quii??";
