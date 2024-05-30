@@ -29,13 +29,8 @@
         <input type="file" id="testImg" name="testImg"><br><br>
         <button type="submit" name="crea_test" class="button">Crea Test</button><br><br><br>
         </form>
-        <h2>Inserisci i quesiti</h2>        
-        <br>
-        <a href="CreaQuesito.php"><button type="button" name=quesito class="button">Aggiungi Quesito</button></a>
-    </div>
-</body>
-
-</html>
+        
+  
 
 <?php
 // Connessione al database
@@ -79,6 +74,11 @@
             } else {
                 //logEvent("Nuovo test $test_title inserito");
                 echo "Test creato.";
+                echo "
+                    <h2>Inserisci i quesiti</h2>        
+                    <br>
+                    <a href='CreaQuesito.php'><button type='button' name=quesito class='button'>Aggiungi Quesito</button></a>
+                ";
             }
         }
     }
@@ -90,3 +90,7 @@
 
     mysqli_close($conn);
 ?>
+  </div>
+</body>
+
+</html>
