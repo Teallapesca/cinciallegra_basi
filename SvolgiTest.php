@@ -55,6 +55,9 @@
         mysqli_begin_transaction($conn);
         include_once 'ConnessioneMongoDB.php';
         include 'controlli.php';
+        if (isset($_GET['titolo'])) {//eseguirò tutto questo codice se non c'è stato alcun probelma di settaggio del test scelto
+            $_SESSION['titoloTest']=$_GET['titolo'];
+        }
     ?>
     <div class="intesta">
         <h1>SVOLGI IL TEST</h1>
@@ -478,78 +481,6 @@
             exit();
                 
         }
-        //se tutti i quesiti hanno ricevuto una risposta e questa è corretta si può concludere il test
-        
-        /*$num_righe=controlloTotale($titoloTest, $mail, $conn);
-        if($_SESSION['numQuesiti']==$num_righe){
-            
-
-
-        }*/
-    
-        /*else if(isset($_GET['Fine'])){
-
-            foreach ($_SESSION["quesiti$titoloTest"] as $quesito) {
-
-                $progressivo=$quesito["progressivo"];
-
-                if(isset($_SESSION["risposta$progressivo"])||($_SESSION["risposta$progressivo"]!="")){
-                    $testo=$_GET["risposta$progressivo"]; //potrei creare una procedura da mysql che faccia controllo ed inserimento da solo
-                    $_SESSION["risposta$progressivo"]=$testo;
-
-                    //cerco se sono già state date risposte a questo quesito
-                    $selezionato="SELECT * FROM risposta WHERE MailStudente='$mail' AND TitoloTest='$titoloTest' AND Progressivo='$progressivo';";
-                    $rissel = mysqli_query($conn, $selezionato);
-                    if (!$rissel) {
-                        echo "Errore nell'inserimento dela risposta: " . mysqli_error($conn);
-                    }else{
-                        if(mysqli_num_rows($rissel) != 0){
-                            //aggiorno con la nuova risposta del quesito
-                            $inserimento="UPDATE risposta SET Testo='$testo' WHERE MailStudente='$mail' AND TitoloTest='$titoloTest' AND Progressivo='$progressivo';";
-                            $ris_ins3 = mysqli_query($conn, $inserimento);
-                            if (!$ris_ins3) {
-                                echo "Errore nell'inserimento in svolgimento2: " . mysqli_error($conn);
-                            }
-                        }
-                        else{ //in questo caso io sto inserendo la nuova risposta (quesito o codice)
-                            if(isset($_GET["risposta$progressivo"])){
-                                //se è stato premuto un radio inserisco la risposta
-                                $risposta="INSERT INTO risposta(Progressivo, TitoloTest, MailStudente, Testo) VALUES ('$progressivo','$titoloTest', '$mail', '$testo' );";
-                                $risris = mysqli_query($conn, $risposta);
-                                if (!$risris) {
-                                    echo "Errore nell'inserimento dela risposta: " . mysqli_error($conn);
-                                }
-                            }
-
-                        }
-                    }
-
-                }
-            }
-
-            $stato="Concluso";
-            $inserimento="UPDATE svolgimento SET stato='$stato' WHERE MailStudente='$mail' AND TitoloTest='$titoloTest';";
-            $ris_ins = mysqli_query($conn, $inserimento);
-            if (!$ris_ins) {
-                echo "Errore nell'inserimento in svolgimento2: " . mysqli_error($conn);
-            }//fare update anche della data di fine
-
-            if (!mysqli_commit($conn)) {
-                mysqli_rollback($conn);
-                echo "Errore durante il commit della transazione. boo";
-            }
-    
-            // chiusura della connessione
-            mysqli_close($conn);
-            foreach ($_SESSION["quesiti$titoloTest"] as $quesito) {
-                $progressivo=$quesito["progressivo"];
-                unset($_SESSION["risposta$progressivo"]);
-            }
-            unset($_SESSION['titoloTest']);
-            header("Location: hpStudente.php");
-            exit();
-                
-        }*/
        
     ?>
     </div>
