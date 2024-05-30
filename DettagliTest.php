@@ -49,20 +49,23 @@
                 <div class="messaggi-content" id="messaggiContent">
                     <!-- Contenuto dei messaggi qui -->
                     <?php
-			$_SESSION['titoloTest']=$_GET['titolo'];
-                        $titoloTest = $_SESSION['titoloTest'];
-                        echo "<h4>".$_SESSION['titoloTest']."</h4>";        
-                        $query1 = "SELECT * FROM MESSAGGIOSTUDENTE WHERE TitoloTest = '$titoloTest'";
-                        $result1 = $conn->query($query1);
+                    $titoloTest = $_SESSION['titoloTest'];    
+                        if (isset($_GET['titolo'])) {//eseguirò tutto questo codice se non c'è stato alcun probelma di settaggio del test scelto
+                            $_SESSION['titoloTest']=$_GET['titolo'];
+                            $titoloTest = $_GET['titolo'];
+                            echo "<h4>".$_SESSION['titoloTest']."</h4>";        
+                            $query1 = "SELECT * FROM MESSAGGIOSTUDENTE WHERE TitoloTest = '$titoloTest'";
+                            $result1 = $conn->query($query1);
                 
-                        if ($result1->num_rows > 0) {
-                            echo "<ul>";
-                            while ($row = $result1->fetch_assoc()) {
-                                echo "<li class='messaggi'><b>{$row['MailStudente']} - {$row['DataInserimento']}</b><br>  {$row['TitoloMess']}<br> {$row['Testo']}</li>";
+                            if ($result1->num_rows > 0) {
+                                echo "<ul>";
+                                while ($row = $result1->fetch_assoc()) {
+                                    echo "<li class='messaggi'><b>{$row['MailStudente']} - {$row['DataInserimento']}</b><br>  {$row['TitoloMess']}<br> {$row['Testo']}</li>";
+                                }
+                                echo "</ul>";
+                            } else {
+                                echo "<p class='messaggi'>Nessun messaggio trovato per questo test.</p>";
                             }
-                            echo "</ul>";
-                        } else {
-                            echo "<p class='messaggi'>Nessun messaggio trovato per questo test.</p>";
                         }
                     ?>
                 </div>
@@ -152,7 +155,7 @@
                 //$query->close();
                 ?>
 
-                <form method="get" action="DettagliTest.php?titoloTest=<?php $_SESSION['titoloTest']?>">
+<form method="get" action="DettagliTest.php?titoloTest=<?php $_SESSION['titoloTest']?>">
                 <?php
                     $vis=visualizzaRisposte($titoloTest, $conn);
                     if($vis){
@@ -195,9 +198,6 @@
                 	if (isset($_GET['VisRisp'])){
                         $visualizza = 1;
                     }
-                    else{
-                        $visualizza = 0;
-                    }
                     $query4 = "UPDATE TEST SET VisualizzaRisposte = $visualizza WHERE Titolo = '$titoloTest'";
                         $stmt4 = $conn->prepare($query4);
                         if ($stmt4->execute()) {
@@ -216,9 +216,7 @@
                     exit(); // Termina l'esecuzione dello script dopo il reindirizzamento
                     
 
-                }
-
-                
+                }   
     
             ?>
 		</div>
