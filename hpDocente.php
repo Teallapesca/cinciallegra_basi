@@ -16,7 +16,7 @@
         include 'Navbar.php' 
     ?> 
 
-    <div class="m-5 d-flex flex-column justify-content-center align-items-center">
+    <div class="m-5 d-flex flex-column justify-content-center align-items-center" style="padding-top: 100px;">
         <div class="d-flex flex-row align-items-center" style="display: block;">
             <button onclick="toggleDropdown('tabelleDropdown')" class="btn btn-primary btn-lg m-4">Tabelle <?php  $_SESSION['prima']=1; //per mostrare la scelta della prima tabella in vincoli.php?></button>
             <button id="button-style" onclick="openPage('CreaTest')" class="btn btn-primary btn-lg m-4">Crea test</button>
@@ -36,12 +36,7 @@
         <!-- Fine Dropdown Menu -->
     </div>
 
-    <?php
-            if (!mysqli_commit($conn)) {
-                mysqli_rollback($conn);
-                echo "Errore durante il commit della transazione.";
-            }
-    
+    <?php    
             // chiusura della connessione
             mysqli_close($conn);
         if (isset($_GET["logout"])) {
