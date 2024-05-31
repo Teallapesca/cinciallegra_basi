@@ -72,7 +72,7 @@
                 echo "Errore durante la creazione del test: " . mysqli_error($conn);
                 
             } else {
-                //logEvent("Nuovo test $test_title inserito");
+                logEvent("Nuovo test $test_title inserito");
                 echo "Test creato.";
                 echo "
                     <h2>Inserisci i quesiti</h2>        
