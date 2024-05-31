@@ -162,7 +162,7 @@
                                 if (!$ris_ins) {
                                     echo "Errore nell'inserimento in svolgimento: " . mysqli_error($conn);
                                 }else{
-                                    //logEvent("Nuovo test $titoloTest inserito in svolgimento");
+                                    logEvent("Nuovo test $titoloTest inserito in svolgimento");
                                 }
                                 if (!mysqli_commit($conn)) {
                                     mysqli_rollback($conn);
