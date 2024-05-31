@@ -197,7 +197,7 @@
                     // Itera sulle tabelle e sugli attributi di ciascuna tabella
                     foreach ($tabelle as $tabella => $attributi) {
                         echo "<h4 class='text-xxl-start'>".$tabella."</h4>";
-                        echo "<table  class='table table-bordered table-sm w-25 p-3'>";
+                        echo "<table class='table table-bordered table-sm w-25 p-3' style='margin-left:auto; margin-right:auto'>";
                         echo "<tr>";
                         // Stampa gli attributi come intestazioni della tabella
                         foreach ($attributi as $attributo) {
