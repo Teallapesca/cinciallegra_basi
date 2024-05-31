@@ -135,7 +135,7 @@
                         echo "errore nella ricerca" . die (mysqli_error($conn));
                     } else{
                         echo "tabella inserita";
-                        //logEvent("Nuova tabella esercizio ($nomeTabella) inserita");
+                        logEvent("Nuova tabella esercizio ($nomeTabella) inserita");
                     }
                     for($i = 0; $i < $colonne; $i++) {
                         // Ottieni il valore dell'attributo dall'input dell'utente
