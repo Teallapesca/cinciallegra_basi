@@ -89,7 +89,7 @@ BEGIN
     -- Se è la prima risposta, aggiorna lo stato del test a "InCompletamento"
     IF numeroRisposte = numeroQuesiti THEN
         UPDATE Svolgimento
-        SET Stato = 'Concluso'
+        SET Stato = 'Concluso' AND DataFine=NOW()
         WHERE svolgimento.MailStudente = NEW.MailStudente AND svolgimento.TitoloTest = NEW.TitoloTest;
     END IF;
 END;
@@ -117,7 +117,7 @@ BEGIN
     -- Se è la prima risposta, aggiorna lo stato del test a "InCompletamento"
     IF numeroRisposte = numeroQuesiti THEN
         UPDATE Svolgimento
-        SET Stato = 'Concluso'
+        SET Stato = 'Concluso' AND DataFine=NOW()
         WHERE svolgimento.MailStudente = NEW.MailStudente AND svolgimento.TitoloTest = NEW.TitoloTest;
     END IF;
 END;
@@ -131,7 +131,7 @@ FOR EACH ROW
 BEGIN
     IF NEW.VisualizzaRisposte = 1 THEN
         UPDATE Svolgimento
-        SET Stato = 'Concluso'
+        SET Stato = 'Concluso' AND DataFine=NOW()
         WHERE Svolgimento.TitoloTest = NEW.Titolo;
     END IF;
 END;
