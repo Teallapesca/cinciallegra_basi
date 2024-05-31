@@ -131,7 +131,7 @@ FOR EACH ROW
 BEGIN
     IF NEW.VisualizzaRisposte = 1 THEN
         UPDATE Svolgimento
-        SET Stato = 'Concluso' AND DataFine=NOW()
+        SET Stato = 'Concluso', DataFine=NOW()
         WHERE Svolgimento.TitoloTest = NEW.Titolo;
     END IF;
 END;
