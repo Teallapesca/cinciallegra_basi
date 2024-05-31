@@ -49,11 +49,11 @@
                 <div class="messaggi-content" id="messaggiContent">
                     <!-- Contenuto dei messaggi qui -->
                     <?php
-                    $titoloTest = $_SESSION['titoloTest'];    
-                        if (isset($_GET['titolo'])) {//eseguirò tutto questo codice se non c'è stato alcun probelma di settaggio del test scelto
+                        $titoloTest = $_SESSION['titoloTest'];    
+                        /*if (isset($_GET['titolo'])) {//eseguirò tutto questo codice se non c'è stato alcun probelma di settaggio del test scelto
                             $_SESSION['titoloTest']=$_GET['titolo'];
-                            $titoloTest = $_GET['titolo'];
-                            echo "<h4>".$_SESSION['titoloTest']."</h4>";        
+                            $titoloTest = $_GET['titolo'];*/
+                            echo "<h4>$titoloTest</h4>";        
                             $query1 = "SELECT * FROM MESSAGGIOSTUDENTE WHERE TitoloTest = '$titoloTest'";
                             $result1 = $conn->query($query1);
                 
@@ -66,7 +66,7 @@
                             } else {
                                 echo "<p class='messaggi'>Nessun messaggio trovato per questo test.</p>";
                             }
-                        }
+                        //}
                     ?>
                 </div>
             </div>
